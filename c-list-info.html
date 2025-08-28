@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Construction Site Management</title>
+
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      /* Basic Styles */
+      body {
+        font-family: "Noto Sans Devanagari", sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px 0;
+      }
+
+      .mobile-container {
+        width: 375px;
+        min-height: 812px;
+        background-color: #ffffff;
+        border-radius: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Header Styles */
+      .page-header {
+        background-color: #16a085;
+        color: white;
+        padding: 55px 20px 20px 20px;
+        position: relative;
+      }
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header-title-section {
+        text-align: center;
+        flex-grow: 1;
+      }
+      .header-title-section h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0;
+      }
+      .header-title-section p {
+        font-size: 14px;
+        margin: 0;
+        opacity: 0.9;
+      }
+      .header-content a {
+        color: white;
+        font-size: 20px;
+      }
+      .header-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .header-btn {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .btn-rate {
+        background-color: #2980b9;
+        color: white;
+      }
+      .btn-resource {
+        background-color: #e74c3c;
+        color: white;
+      }
+
+      /* Main Content Styles */
+      .content-area {
+        flex-grow: 1;
+        padding: 20px;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Summary Cards */
+      .summary-cards {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+      .summary-card {
+        flex: 1;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+      }
+      .card-income {
+        background-color: #e8f5e9;
+        border: 1px solid #c8e6c9;
+      }
+      .card-expense {
+        background-color: #ffebee;
+        border: 1px solid #ffcdd2;
+      }
+      .summary-card .icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      .icon-income {
+        color: #4caf50;
+      }
+      .icon-expense {
+        color: #f44336;
+      }
+      .summary-card .amount {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+      }
+      .summary-card .label {
+        font-size: 14px;
+        color: #555;
+      }
+
+      /* Recent Activities */
+      .activities-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .activities-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+      }
+      .btn-filter {
+        background-color: #16a085;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .btn-filter i {
+        margin-right: 5px;
+      }
+
+      /* Activity List */
+      .activity-list {
+        background-color: white;
+        border-radius: 12px;
+        padding: 10px;
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+      .activity-list table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .activity-list th,
+      .activity-list td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+      }
+      .activity-list th {
+        background-color: #f8f9fa;
+      }
+      .activity-list tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Action Buttons at bottom of content */
+      .content-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .content-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: white;
+      }
+      .btn-add-income {
+        background-color: #2980b9;
+      }
+      .btn-add-expense {
+        background-color: #e74c3c;
+      }
+
+      /* Bottom Navigation Bar */
+      .bottom-nav {
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        background-color: white;
+        border-top: 1px solid #e0e0e0;
+      }
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #757575;
+        font-size: 12px;
+        text-decoration: none;
+        flex: 1;
+      }
+      .nav-item i {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .nav-item.active {
+        color: #16a085;
+      }
+      .nav-item.active .icon-wrapper {
+        border-bottom: 2px solid #16a085;
+        padding-bottom: 2px;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 12px;
+        width: 320px;
+        box-sizing: border-box;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .modal-close-btn {
+        background: none;
+        border: none;
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+        color: #555;
+      }
+
+      .modal-content label {
+        display: block;
+        margin-top: 12px;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .modal-content input,
+      .modal-content textarea,
+      .modal-content select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+
+      .modal-content textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+
+      .btn-save {
+        margin-top: 20px;
+        width: 100%;
+        background-color: #2980b9;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="mobile-container">
+      <!-- Page Header -->
+    <!-- Page Header -->
+<header class="page-header">
+  <div class="header-content">
+    <a href="c-site-list.html" class="back-arrow" onclick="history.back(); return false;">
+      <i class="fas fa-chevron-left"></i>
+    </a>
+    <div class="header-title-section">
+      <h1 id="site-name">लोड गर्दै...</h1>
+      <p id="site-address"></p>
+    </div>
+    <a href="#" class="options-menu"><i class="fas fa-ellipsis-v"></i></a>
+  </div>
+  <div class="header-actions">
+    <button class="header-btn btn-rate">
+      <i class="fas fa-tag"></i> दर निर्धारण
+    </button>
+    <a id="resource-btn" class="header-btn btn-resource" href="#">
+      <i class="fas fa-cogs"></i> रिसोर्स
+    </a>
+  </div>
+</header>
+
+
+      <!-- Main Content -->
+      <main class="content-area">
+        <div class="summary-cards">
+          <div class="summary-card card-income">
+            <div class="icon icon-income">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="amount" id="total-income">रु ०</div>
+            <div class="label">आम्दानी</div>
+          </div>
+          <div class="summary-card card-expense">
+            <div class="icon icon-expense">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="amount" id="total-expense">रु ०</div>
+            <div class="label">खर्च</div>
+          </div>
+        </div>
+
+        <div class="content-actions">
+          <button id="open-income-modal" class="content-btn btn-add-income">
+            <i class="fas fa-plus"></i> आम्दानी थप्नुहोस्
+          </button>
+          <button id="open-expense-modal" class="content-btn btn-add-expense">
+            <i class="fas fa-minus"></i> खर्च थप्नुहोस्
+          </button>
+        </div>
+
+        <div class="activity-list" id="activity-list">
+          <p id="loading-activities">गतिविधिहरु लोड गर्दै...</p>
+          <p id="no-activities" style="display: none">
+            कुनै गतिविधिहरु फेला परेनन्।
+          </p>
+          <p id="activity-error" style="display: none; color: red">
+            गतिविधिहरु लोड गर्न असफल भयो।
+          </p>
+          <p
+            id="auth-error-message"
+            style="display: none; color: orange; font-weight: 700"
+          >
+            ⚠️ कृपया लगइन गर्नुहोस्।
+          </p>
+
+          <table id="activities-table" style="display: none; width: 100%">
+            <thead>
+              <tr>
+                <th>मिति</th>
+                <th>शिर्षक</th>
+                <th>प्रकार</th>
+                <th>रकम</th>
+                <th>टिप्पणी</th>
+                <th>कार्य</th>
+              </tr>
+            </thead>
+            <tbody id="activities-tbody"></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <!-- Income Modal -->
+    <div id="income-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>आम्दानी थप्नुहोस्</h2>
+          <button
+            id="close-income-modal"
+            class="modal-close-btn"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="income-form">
+          <label for="income-title">शीर्षक</label>
+          <input type="text" id="income-title" name="title" required />
+
+          <label for="income-amount">रकम</label>
+          <input
+            type="number"
+            id="income-amount"
+            name="amount"
+            min="0"
+            step="0.01"
+            required
+          />
+
+          <label for="income-date">मिति</label>
+          <input type="date" id="income-date" name="date" required />
+
+          <label for="income-notes">टिप्पणी</label>
+          <textarea id="income-notes" name="remark" rows="3"></textarea>
+
+          <button type="submit" class="btn-save">सेभ गर्नुहोस्</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add this inside your <body> right after the income modal -->
+
+    <!-- Expense Modal -->
+    <div id="expense-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>खर्च थप्नुहोस्</h2>
+          <button
+            id="close-expense-modal"
+            class="modal-close-btn"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="expense-form">
+          <label for="expense-title">शीर्षक</label>
+          <input type="text" id="expense-title" name="title" required />
+
+          <label for="expense-amount">रकम</label>
+          <input
+            type="number"
+            id="expense-amount"
+            name="amount"
+            min="0"
+            step="0.01"
+            required
+          />
+
+          <label for="expense-date">मिति</label>
+          <input type="date" id="expense-date" name="date" required />
+
+          <label for="expense-notes">टिप्पणी</label>
+          <textarea id="expense-notes" name="remark" rows="3"></textarea>
+
+          <button type="submit" class="btn-save">सेभ गर्नुहोस्</button>
+        </form>
+      </div>
+    </div>
+
+  <script>
+const API_BASE = "http://192.168.1.209:8000/api";
+const token = localStorage.getItem("auth_token");
+
+const incomeModal = document.getElementById("income-modal");
+const openIncomeBtn = document.getElementById("open-income-modal");
+const closeIncomeBtn = document.getElementById("close-income-modal");
+const incomeForm = document.getElementById("income-form");
+
+const expenseModal = document.getElementById("expense-modal");
+const openExpenseBtn = document.getElementById("open-expense-modal");
+const closeExpenseBtn = document.getElementById("close-expense-modal");
+const expenseForm = document.getElementById("expense-form");
+
+const activityTable = document.getElementById("activities-table");
+const tbody = document.getElementById("activities-tbody");
+
+let totalIncome = 0;
+let totalExpense = 0;
+const SITE_ID = new URLSearchParams(window.location.search).get("id") || 1;
+
+
+// Dynamically set Resource button link
+const resourceBtn = document.getElementById("resource-btn");
+if (resourceBtn) {
+    resourceBtn.href = `site-resources.html?id=${SITE_ID}`;
+}
+
+
+
+// ---------- Formatting ----------
+function formatCurrency(amount) {
+  return "रु " + (amount || 0).toLocaleString("ne-NP", { maximumFractionDigits: 0 });
+}
+
+function formatDateDisplay(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date)) return "-";
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+}
+
+// ---------- Totals ----------
+function updateTotalsDisplay() {
+  document.getElementById("total-income").textContent = formatCurrency(totalIncome);
+  document.getElementById("total-expense").textContent = formatCurrency(totalExpense);
+}
+
+// ---------- Table Row ----------
+function addRowToTable(data) {
+  const tr = document.createElement("tr");
+  const title = data.title || data.income_expense?.title || "-";
+  const credit = Number(data.credit) || 0;
+  const debit = Number(data.debit) || 0;
+
+  const isIncome = credit > 0;
+  const amount = isIncome ? credit : debit;
+  const type = isIncome ? "आम्दानी" : "खर्च";
+
+  // Update totals
+  if (isIncome) totalIncome += amount;
+  else totalExpense += amount;
+
+  tr.innerHTML = `
+    <td>${formatDateDisplay(data.date)}</td>
+    <td>${title}</td>
+    <td>${type}</td>
+    <td>${formatCurrency(amount)}</td>
+    <td>${data.remark || ""}</td>
+    <td><button disabled>...</button></td>
+  `;
+
+  tbody.appendChild(tr);
+}
+
+
+// ---------- Load Site ----------
+async function loadSiteInfo() {
+  try {
+    const res = await fetch(`${API_BASE}/sites/${SITE_ID}`, {
+      headers: token ? { Authorization: `Bearer ${token}`, Accept: "application/json" } : { Accept: "application/json" }
+    });
+    const site = await res.json();
+    document.getElementById("site-name").textContent = site.name || "नाम उपलब्ध छैन";
+    document.getElementById("site-address").textContent = `${site.address || "ठेगाना उपलब्ध छैन"} | ${site.owner?.phone_no || "फोन नम्बर उपलब्ध छैन"}`;
+  } catch (err) {
+    console.error(err);
+    document.getElementById("site-name").textContent = "साइट डाटा लोड गर्न सकेन";
+    document.getElementById("site-address").textContent = "";
+  }
+}
+
+
+
+// ---------- Load Finance ----------
+
+async function loadFinanceRecords() {
+  totalIncome = 0;
+  totalExpense = 0;
+  tbody.innerHTML = "";
+
+  if (!token) {
+    document.getElementById("auth-error-message").style.display = "block";
+    activityTable.style.display = "none";
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/finance/site/${SITE_ID}/details`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+    });
+    if (!res.ok) throw new Error(`Failed to fetch finance records: ${res.status}`);
+    const data = await res.json();
+
+    const records = data.finance_records || [];
+    if (records.length === 0) {
+      document.getElementById("no-activities").style.display = "block";
+      activityTable.style.display = "none";
+      updateTotalsDisplay();
+      return;
+    }
+
+    document.getElementById("no-activities").style.display = "none";
+    activityTable.style.display = "table";
+
+    records.forEach(item => addRowToTable(item));
+
+    updateTotalsDisplay();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("activity-error").style.display = "block";
+    activityTable.style.display = "none";
+  }
+}
+
+
+
+// ---------- Modal ----------
+function openModal(modal) { modal.style.display = "flex"; }
+function closeModal(modal) { modal.style.display = "none"; }
+
+openIncomeBtn.addEventListener("click", () => {
+  incomeForm.reset();
+  incomeForm.querySelector("#income-date").value = new Date().toISOString().split("T")[0];
+  openModal(incomeModal);
+});
+closeIncomeBtn.addEventListener("click", () => closeModal(incomeModal));
+incomeModal.addEventListener("click", e => { if (e.target === incomeModal) closeModal(incomeModal); });
+
+openExpenseBtn.addEventListener("click", () => {
+  expenseForm.reset();
+  expenseForm.querySelector("#expense-date").value = new Date().toISOString().split("T")[0];
+  openModal(expenseModal);
+});
+closeExpenseBtn.addEventListener("click", () => closeModal(expenseModal));
+expenseModal.addEventListener("click", e => { if (e.target === expenseModal) closeModal(expenseModal); });
+
+// ---------- Form Submit ----------
+async function handleIncomeSubmit(e) {
+  e.preventDefault();
+  if (!token) return alert("कृपया लगइन गर्नुहोस्।");
+
+  const amount = parseFloat(incomeForm.querySelector("#income-amount").value) || 0;
+  const date = incomeForm.querySelector("#income-date").value;
+  const remark = incomeForm.querySelector("#income-notes").value.trim();
+  const title = incomeForm.querySelector("#income-title").value.trim();
+
+  if (amount <= 0 || !date) return alert("कृपया मान्य विवरण प्रविष्ट गर्नुहोस्।");
+
+  try {
+    const resIncomeExpense = await fetch(`${API_BASE}/income-expense`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ title, remarks: remark, type: "other" })
+    });
+    const incomeExpenseData = await resIncomeExpense.json();
+
+    await fetch(`${API_BASE}/finance`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ site_id: Number(SITE_ID), debit: 0, credit: amount, remark, date, income_expense_id: incomeExpenseData.id })
+    });
+
+    await loadFinanceRecords();
+    alert("आम्दानी सफलतापूर्वक थपियो।");
+    closeModal(incomeModal);
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+}
+
+async function handleExpenseSubmit(e) {
+  e.preventDefault();
+  if (!token) return alert("कृपया लगइन गर्नुहोस्।");
+
+  const amount = parseFloat(expenseForm.querySelector("#expense-amount").value) || 0;
+  const date = expenseForm.querySelector("#expense-date").value;
+  const remark = expenseForm.querySelector("#expense-notes").value.trim();
+  const title = expenseForm.querySelector("#expense-title").value.trim();
+
+  if (amount <= 0 || !date) return alert("कृपया मान्य विवरण प्रविष्ट गर्नुहोस्।");
+
+  try {
+    const resIncomeExpense = await fetch(`${API_BASE}/income-expense`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ title, remarks: remark, type: "other" })
+    });
+    const incomeExpenseData = await resIncomeExpense.json();
+
+    await fetch(`${API_BASE}/finance`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ site_id: Number(SITE_ID), debit: amount, credit: 0, remark, date, income_expense_id: incomeExpenseData.id })
+    });
+
+    await loadFinanceRecords();
+    alert("खर्च सफलतापूर्वक थपियो।");
+    closeModal(expenseModal);
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+}
+
+incomeForm.addEventListener("submit", handleIncomeSubmit);
+expenseForm.addEventListener("submit", handleExpenseSubmit);
+
+// ---------- On Page Load ----------
+document.addEventListener("DOMContentLoaded", () => {
+  loadSiteInfo();
+  loadFinanceRecords();
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const rows = document.querySelectorAll('.site-row');
+
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            const siteId = row.dataset.id;
+
+            // Optional: store in localStorage
+            localStorage.setItem('current_site_id', siteId);
+
+            // Redirect to resources page with ID in URL
+            window.location.href = `site-resources.html?id=${siteId}`;
+        });
+    });
+});
+</script>
+
+
+
+  </body>
+</html>

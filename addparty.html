@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>नयाँ पार्टी थप्नुहोस्</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans Devanagari", sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px 0;
+      }
+
+      .mobile-container {
+        width: 375px;
+        min-height: 812px;
+        background-color: #ffffff;
+        border-radius: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .page-header {
+        background-color: #16a085;
+        color: white;
+        padding: 55px 20px 20px 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .page-header h1 {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .back-btn {
+        position: absolute;
+        left: 20px;
+        top: 55px;
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .content-area {
+        flex-grow: 1;
+        padding: 20px;
+        background-color: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      label {
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: #333;
+      }
+
+      input[type="text"],
+      input[type="tel"] {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        width: 100%;
+      }
+
+      .button-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .save-btn,
+      .cancel-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        color: white;
+      }
+
+      .save-btn {
+        background-color: #2980b9;
+      }
+
+      .cancel-btn {
+        background-color: #e74c3c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Header -->
+      <div class="page-header">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <h1>नयाँ पार्टी थप्नुहोस्</h1>
+      </div>
+
+      <!-- Form -->
+      <div class="content-area">
+        <div>
+          <label for="party-name">पार्टीको नाम</label>
+          <input type="text" id="party-name" placeholder="नाम लेख्नुहोस्" />
+        </div>
+        <div>
+          <label for="phone-number">फोन नम्बर</label>
+          <input type="tel" id="phone-number" placeholder="९८xxxxxxxx" />
+        </div>
+
+        <div class="button-row">
+          <button class="save-btn" onclick="saveParty()">
+            जानकारी बचत गर्नुहोस्
+          </button>
+          <button class="cancel-btn" onclick="goBack()">रद्द गर्नुहोस्</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://192.168.1.209:8000/api";
+      const TOKEN = localStorage.getItem("auth_token");
+
+      // Redirect to login if token not found
+      if (!TOKEN) {
+        alert("कृपया लगइन गर्नुहोस्।");
+        window.location.href = "login.html";
+      }
+
+      // Extract real token if it has a userID prefix
+      const REAL_TOKEN = TOKEN.includes("|") ? TOKEN.split("|")[1] : TOKEN;
+
+      // Go back function
+      function goBack() {
+        window.location.href = "party.html";
+      }
+
+      // Save party function
+      async function saveParty() {
+        const name = document.getElementById("party-name").value.trim();
+        const phone = document.getElementById("phone-number").value.trim();
+
+        if (!name || !phone) {
+          alert("कृपया सबै विवरणहरू भर्नुहोस्।");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API_BASE}/parties`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${REAL_TOKEN}`,
+            },
+            body: JSON.stringify({ name, phone_no: phone }),
+          });
+
+          // Read the response as text first
+          const text = await res.text();
+          let data;
+          try {
+            data = JSON.parse(text); // Try parsing JSON
+          } catch (e) {
+            console.error("API response is not JSON:", text);
+            alert(
+              "API बाट JSON प्रतिक्रिया प्राप्त भएन। सर्भरको जवाफ console मा हेर्नुहोस्।"
+            );
+            return;
+          }
+
+          console.log("Status:", res.status, "Response:", data);
+
+          if (!res.ok) {
+            const msg = data.errors
+              ? Object.values(data.errors).flat().join("\n")
+              : data.message || "त्रुटि भयो।";
+            throw new Error(msg);
+          }
+
+          alert("पार्टी सफलतापूर्वक थपियो।");
+          goBack();
+        } catch (error) {
+          console.error(error);
+          alert(
+            error.message || "डेटा बचत गर्न सकिएन। कृपया पुन: प्रयास गर्नुहोस्।"
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

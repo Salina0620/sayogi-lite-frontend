@@ -1,0 +1,875 @@
+/* General Reset and Body Styling */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #f0f2f5; /* Light grey background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 375px; /* Typical mobile width */
+    height: 812px; /* Typical mobile height */
+    background-color: #ffffff;
+    border-radius: 30px; /* Rounded corners to simulate phone */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #006F4D; /* Dark green */
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.back-arrow {
+    font-size: 24px;
+    color: #ffffff;
+    text-decoration: none;
+    padding-right: 10px; /* Spacing for the arrow */
+}
+
+.page-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    flex-grow: 1;
+    text-align: center;
+    transform: translateX(-15px); /* Adjust for back arrow push */
+}
+
+/* Page 1 Specific Header Buttons */
+.delete-button {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.delete-icon {
+    font-size: 18px;
+    line-height: 1; /* Ensure icon is aligned */
+}
+
+
+/* Page 2 Specific Header Buttons */
+.new-button {
+    background-color: #4CAF50; /* A slightly brighter green for the new button */
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.new-button:hover {
+    background-color: #45a049;
+}
+
+
+/* Main Content Area */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling for content if needed */
+    background-color: #f8f8f8; /* Slightly off-white for main content */
+}
+
+/* Page 1 - Note Card */
+.note-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.note-card.green-border {
+    border: 2px solid #006F4D; /* Green border */
+    background-color: #e6f4ea; /* Very light green background */
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item-list li {
+    font-size: 16px;
+    color: #555555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.item-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* Page 1 - Footer and Update Button */
+.footer {
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-top: 1px solid #eeeeee;
+    text-align: center;
+}
+
+.update-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #007BFF; /* Blue color */
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.update-button:hover {
+    background-color: #0056b3;
+}
+
+
+/* Page 2 - Note List */
+.note-list {
+    margin-top: 10px;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.list-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.item-details {
+    display: flex;
+    flex-direction: column; /* ensures title is above remarks */
+}
+
+.activity-title {
+    font-weight: bold;
+}
+
+.activity-description {
+    margin-top: 4px; /* optional spacing */
+    font-size: 0.9em;
+    color: #555; /* optional for lighter text */
+}
+
+.item-date {
+    font-size: 13px;
+    color: #777777;
+    margin: 5px 0 0;
+}
+
+.arrow-right {
+    font-size: 20px;
+    color: #cccccc;
+}
+/* Page 2 - Alert Item Styling (UPDATED) */
+.list-item.alert {
+    background-color: #f8d7da; /* Light red background for the whole card */
+    border: 2px solid #dc3545; /* Strong red border */
+    color: #721c24; /* Dark red text color for all content in the alert card */
+}
+
+.list-item.alert .item-title,
+.list-item.alert .item-date {
+    color: #721c24; /* Ensure text colors match the alert theme */
+    font-weight: 600; /* Make text a bit bolder for emphasis */
+}
+
+.list-item.alert .alert-icon {
+    color: #dc3545; /* Keep exclamation icon red */
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.alert-icon {
+    color: #dc3545; /* Red icon color */
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 5px;
+    line-height: 1; /* Ensure icon is aligned */
+}
+
+/* For better icon integration, if using Font Awesome */
+/* 
+.fa-arrow-left, .fa-trash, .fa-chevron-right, .fa-exclamation-circle {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+}
+*/
+
+
+/* Existing styles from previous request are assumed to be present */
+
+/* New styles for the "Edit Note" page */
+
+.info-section {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-top: 20px;
+}
+
+.document-icon {
+    font-size: 60px;
+    color: #cccccc;
+    margin-bottom: 10px;
+}
+
+.info-text {
+    font-size: 17px;
+    color: #555555;
+    margin: 0;
+    font-weight: 500;
+}
+
+.info-subtext {
+    font-size: 14px;
+    color: #777777;
+    margin: 5px 0 0;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.note-input {
+    width: calc(100% - 20px); /* Adjust for padding */
+    padding: 12px 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #333333;
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.note-input::placeholder {
+    color: #a0a0a0;
+}
+
+.note-input:focus {
+    border-color: #006F4D; /* Green accent on focus */
+}
+
+/* Reusing .note-card and .green-border from previous example for the note content */
+.note-content-textarea {
+    width: calc(100% - 24px); /* Adjust for padding */
+    min-height: 150px; /* Make it resizable */
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #333333;
+    outline: none;
+    resize: vertical; /* Allow vertical resizing */
+    transition: border-color 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    background-color: #e6f4ea; /* Match card background */
+}
+
+.note-content-textarea:focus {
+    border-color: #006F4D;
+}
+
+
+.priority-checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+/* Custom Checkbox Styling */
+.custom-checkbox {
+    /* Hide default checkbox */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #006F4D; /* Green border */
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    margin-right: 10px;
+    outline: none;
+    background-color: #ffffff;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.custom-checkbox:checked {
+    background-color: #006F4D; /* Green when checked */
+    border-color: #006F4D;
+}
+
+.custom-checkbox:checked::before {
+    content: '✓'; /* Checkmark character */
+    font-size: 18px;
+    color: #ffffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1;
+}
+
+.checkbox-label {
+    font-size: 16px;
+    color: #333333;
+    cursor: pointer;
+    user-select: none; /* Prevent text selection on label */
+}
+
+/* Footer Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center; /* Center the buttons */
+    padding-top: 5px; /* Adjust if needed */
+}
+
+.save-button,
+.cancel-button {
+    flex: 1; /* Allow buttons to take equal space */
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    max-width: 160px; /* Limit width */
+}
+
+.save-button {
+    background-color: #006F4D; /* Green save button */
+    color: #ffffff;
+}
+
+.save-button:hover {
+    background-color: #005a3e;
+}
+
+.cancel-button {
+    background-color: #e0e0e0; /* Light grey cancel button */
+    color: #555555;
+}
+
+.cancel-button:hover {
+    background-color: #d0d0d0;
+}
+
+
+/* Delete Button Styling */
+.delete-button {
+    background-color: #dc3545; /* Red background */
+    color: #ffffff;            /* White text */
+    border: none;
+    padding: 8px 12px;         /* Smaller padding */
+    border-radius: 25px;       /* Fully rounded */
+    cursor: pointer;
+    font-size: 14px;           /* Slightly smaller text */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+/* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Slightly lighter overlay */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 25% auto;           /* Slightly lower on screen */
+    padding: 15px 20px;         /* Smaller padding */
+    border-radius: 20px;        /* Rounded modal */
+    width: 75%;
+    max-width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Subtle shadow */
+    font-size: 14px;            /* Smaller text inside modal */
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    gap: 10px; /* Space between buttons */
+}
+
+/* Rounded Modal Buttons */
+.delete-button-modal {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 8px 16px;          /* Smaller padding */
+    border-radius: 25px;         /* Fully rounded */
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1;                     /* Fill available space */
+}
+
+.delete-button-modal:hover {
+    background-color: #c82333;
+}
+
+.cancel-button-modal {
+    background-color: #e0e0e0;
+    color: #555;
+    padding: 8px 16px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1;
+}
+
+.cancel-button-modal:hover {
+    background-color: #d0d0d0;
+}
+
+
+
+
+
+/* party info */
+
+/* General Reset and Body Styling */
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #f0f2f5; /* Light grey background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 375px; /* Typical mobile width */
+    height: 812px; /* Typical mobile height */
+    background-color: #ffffff;
+    border-radius: 30px; /* Rounded corners to simulate phone */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Needed for absolute positioning of bottom-navigation */
+}
+
+/* Header Styling */
+.header {
+    display: flex;
+    justify-content: flex-start; /* Align items to the start */
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #006F4D; /* Dark green */
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.back-arrow {
+    font-size: 24px;
+    color: #ffffff;
+    text-decoration: none;
+    padding-right: 10px; /* Spacing for the arrow */
+}
+
+.header-text-group {
+    flex-grow: 1;
+    text-align: center;
+    /* Adjust based on the actual width of back arrow and potential right-side elements */
+    /* For centered text despite left-aligned arrow, you might need to push it slightly left */
+    transform: translateX(-15px); /* Compensate for back-arrow taking space */
+}
+
+.page-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: #ffffff;
+}
+
+.page-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: #e0e0e0; /* Lighter color for subtitle */
+    margin: 2px 0 0;
+}
+
+/* Main Content Area */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto; /* Enable scrolling for content if needed */
+    background-color: #f8f8f8; /* Slightly off-white for main content */
+    padding-bottom: 90px; /* Make space for the fixed bottom navigation and floating button */
+}
+
+/* Total Amount Card */
+.total-amount-card {
+    background-color: #fce4e4; /* Light red background */
+    border: 1px solid #dc3545; /* Red border */
+    border-radius: 10px;
+    padding: 15px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.total-amount-label {
+    font-size: 14px;
+    color: #555555;
+    margin: 0;
+}
+
+.total-amount-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #dc3545; /* Red color for the amount */
+    margin: 5px 0 0;
+}
+
+/* Activities Section Heading */
+.section-heading {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Activity List Items */
+.activity-list {
+    margin-bottom: 20px; /* Space above floating button */
+}
+
+.activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.activity-item:last-child {
+    margin-bottom: 0;
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.activity-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333333;
+    margin: 0;
+}
+
+.activity-description {
+    font-size: 13px;
+    color: #777777;
+    margin: 5px 0 0;
+}
+
+.activity-amount-date {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 15px; /* Space between text and amount */
+}
+
+.activity-amount {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.activity-amount.negative {
+    color: #dc3545; /* Red for negative amounts */
+}
+
+.activity-amount.positive {
+    color: #28a745; /* Green for positive amounts */
+}
+
+.activity-date-bubble {
+    font-size: 12px;
+    background-color: #e0e0e0;
+    color: #555555;
+    padding: 4px 8px;
+    border-radius: 15px;
+    margin-top: 5px;
+    display: inline-block; /* Allows padding and border-radius */
+}
+
+/* Floating Action Button */
+.floating-action-button {
+    position: absolute; /* Position relative to .page-container */
+    bottom: 80px; /* Above the bottom navigation */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #dc3545; /* Red button */
+    color: #ffffff;
+    border: none;
+    border-radius: 30px; /* Highly rounded corners */
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 20; /* Above other content */
+    transition: background-color 0.2s ease;
+}
+
+.floating-action-button:hover {
+    background-color: #c82333;
+}
+
+.button-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* Bottom Navigation */
+.bottom-navigation {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+    border-top: 1px solid #eeeeee;
+    padding: 10px 0;
+    position: absolute; /* Position relative to .page-container */
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* Fixed height for the nav bar */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 30;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #888888; /* Default icon/text color */
+    font-size: 12px;
+    padding: 5px 0;
+    flex: 1; /* Distribute items evenly */
+}
+
+.nav-item.active {
+    color: #006F4D; /* Green for active item */
+}
+
+.nav-icon {
+    font-size: 22px;
+    margin-bottom: 4px;
+}
+
+.nav-label {
+    font-weight: 500;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: absolute; /* Changed to absolute to stay within .page-container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100; /* Ensure it's on top of everything */
+    opacity: 0; /* Hidden by default */
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1; /* Show when active */
+    visibility: visible;
+}
+
+/* Modal Content Box */
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    width: 90%; /* Adjust width for mobile */
+    max-width: 340px; /* Max width for larger screens */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9); /* Start slightly smaller */
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1); /* Scale to full size when active */
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+    margin-top: 0;
+    margin-bottom: 25px; /* Spacing below title */
+    text-align: center;
+}
+
+/* Form Group and Labels */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 15px;
+    color: #555555;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Modal Inputs */
+.modal-input,
+.modal-textarea {
+    width: calc(100% - 24px); /* Adjust for padding and border */
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333333;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.modal-input::placeholder,
+.modal-textarea::placeholder {
+    color: #a0a0a0;
+}
+
+.modal-input:focus,
+.modal-textarea:focus {
+    border-color: #006F4D; /* Green accent on focus */
+    box-shadow: 0 0 0 2px rgba(0, 111, 77, 0.2); /* Light green shadow */
+}
+
+.modal-textarea {
+    min-height: 80px; /* Make textarea larger */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+/* Modal Action Buttons */
+.modal-action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.modal-save-button,
+.modal-cancel-button {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    max-width: 140px; /* Limit individual button width */
+}
+
+.modal-save-button {
+    background-color: #006F4D; /* Green save button */
+    color: #ffffff;
+}
+
+.modal-save-button:hover {
+    background-color: #005a3e;
+}
+
+.modal-cancel-button {
+    background-color: #e0e0e0; /* Light grey cancel button */
+    color: #555555;
+}
+
+.modal-cancel-button:hover {
+    background-color: #d0d0d0;
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नोटहरु</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page-container">
+    <header class="header">
+        <a href="home.html" class="back-arrow">&#8592;</a>
+        <h1 class="page-title">नोटहरु</h1>
+        <a href="createnote.html">
+            <button class="new-button">+ नयाँ</button>
+        </a>
+    </header>
+    <main class="content">
+        <div class="note-list" id="note-list">
+            <!-- Notes will be dynamically added here -->
+        </div>
+    </main>
+</div>
+
+<script>
+const API_BASE = "http://192.168.1.209:8000/api";
+const token = localStorage.getItem("auth_token");
+
+if (!token) {
+    alert("You are not logged in!");
+    window.location.href = "login.html";
+}
+
+// Fetch all notes
+async function loadNotes() {
+    try {
+        const res = await fetch(`${API_BASE}/notes`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error("नोटहरू लोड गर्न असफल");
+
+        const notes = await res.json();
+        const listContainer = document.getElementById("note-list");
+        listContainer.innerHTML = "";
+
+        notes.forEach(note => {
+            const div = document.createElement("div");
+            div.className = "list-item";
+            div.innerHTML = `
+                <div class="item-details">
+                    ${note.high_priority ? '<span class="alert-icon">!</span>' : ''}
+                    <div>
+                        <p class="item-title">${note.title}</p>
+                        <p class="item-date">मिति ${new Date(note.created_at).toLocaleDateString('ne-NP')}</p>
+                    </div>
+                </div>
+                <span class="arrow-right">&#8594;</span>
+            `;
+            // Clicking opens the note detail page
+            div.addEventListener("click", () => {
+                window.location.href = `note.html?id=${note.id}`;
+            });
+            listContainer.appendChild(div);
+        });
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+loadNotes();
+</script>
+</body>
+</html>

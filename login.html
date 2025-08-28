@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project Sayogi - Login</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="CSS/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body class="login-page-body">
+    <div class="mobile-container standalone-login">
+      <div class="login-content-wrapper">
+        <div class="logo-container">
+          <svg
+            class="logo-svg"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g transform="translate(5,5)">
+              <path
+                d="M 45 0 A 45 45 0 1 1 44.9 0 Z"
+                fill="none"
+                stroke="#1AB189"
+                stroke-width="10"
+              />
+              <path
+                d="M 70 22.5 A 25 25 0 1 1 69.9 22.5 Z"
+                fill="none"
+                stroke="#34495e"
+                stroke-width="10"
+                transform="translate(-25, -22.5) scale(1.8)"
+              />
+              <path d="M50,35 v30 a15,15 0 0,0 0,-30 Z" fill="#34495e" />
+            </g>
+          </svg>
+          <div class="logo-text">
+            <span class="logo-part-blue">Project</span
+            ><span class="logo-part-green">Sayogi</span>
+          </div>
+        </div>
+
+        <div class="login-form-wrapper">
+          <h1 class="login-title">स्वागत छ</h1>
+          <p class="login-subtitle">आफ्नो खाता पहुँच गर्न लगइन गर्नुहोस्</p>
+
+          <form id="loginForm">
+            <div class="mb-3">
+              <label for="phone" class="form-label">फोन नम्बर</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="phone"
+                value="+९७७-९८२९६७७६४२"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-login w-100">लगइन</button>
+            <div id="feedback" class="mt-3 text-danger"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap Modal for messages -->
+    <div
+      class="modal fade"
+      id="messageModal"
+      tabindex="-1"
+      aria-labelledby="messageModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="messageModalLabel">सन्देश</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" id="modalMessage">
+            <!-- Message text will be injected here -->
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              ठिक छ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const phoneInput = document.getElementById("phone");
+          const feedback = document.getElementById("feedback");
+          const modalMessage = document.getElementById("modalMessage");
+          let phone = phoneInput.value.trim();
+
+          feedback.textContent = "";
+
+          try {
+            const response = await fetch(
+              "http://192.168.1.209:8000/api/login",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                },
+                body: JSON.stringify({ phone: phone }),
+              }
+            );
+
+            const data = await response.json();
+           if (response.ok) {
+  const { user_id, otp, token, user } = data;
+
+  if (user && user.verified) {
+    // ✅ Already verified
+    localStorage.setItem("auth_token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    window.location.href = "home.html";
+  } else {
+    // ❗ Not verified (user object may not be present)
+    modalMessage.textContent =
+      data.message || "OTP पठाइयो। कृपया आफ्नो फोन जाँच गर्नुहोस्।";
+
+    const myModalEl = document.getElementById("messageModal");
+    const myModal = new bootstrap.Modal(myModalEl);
+    myModal.show();
+
+    myModalEl.addEventListener(
+      "hidden.bs.modal",
+      function () {
+        window.location.href = `otp.html?user_id=${user_id}&phone=${encodeURIComponent(
+          phone
+        )}`;
+      },
+      { once: true }
+    );
+  }
+
+
+            } else {
+              modalMessage.textContent = data.message || "लगइन असफल भयो।";
+              var myModal = new bootstrap.Modal(
+                document.getElementById("messageModal")
+              );
+              myModal.show();
+            }
+          } catch (error) {
+            console.error("Login Error:", error);
+            feedback.textContent =
+              "सर्भरमा समस्या भयो। कृपया पछि प्रयास गर्नुहोस्।";
+          }
+        });
+    </script>
+  </body>
+</html>

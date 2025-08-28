@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>सुजुकी इलेक्ट्रानिक सप्लायर्स</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- For real icons, you would link a library like Font Awesome here: -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+  </head>
+  <body>
+    <div class="page-container">
+      <header class="header">
+        <a href="party.html" class="back-arrow">&#8592;</a>
+        <!-- Assuming 'parties.html' is the list page -->
+        <div class="header-text-group">
+          <h1 class="page-title" id="party-name">पार्टी नाम</h1>
+          <p class="page-subtitle" id="party-phone">फोन नम्बर</p>
+        </div>
+        <!-- No right-side button in this header -->
+      </header>
+
+      <main class="content with-bottom-nav">
+        <div class="total-amount-card">
+          <p class="total-amount-label">कुल रकम</p>
+          <p class="total-amount-value" id="total-amount">रू ०</p>
+        </div>
+
+        <h2 class="section-heading">हल्का गतिविधिहरु</h2>
+        <div class="activity-list" id="activity-list">
+          <!-- Activities will be dynamically loaded here by JavaScript -->
+        </div>
+      </main>
+
+      <!-- Floating Action Button to open the modal -->
+      <button class="floating-action-button" id="add-expense-btn">
+        <span class="button-icon">💰</span> खर्च थप्नुहोस्
+      </button>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-navigation">
+        <a href="#" class="nav-item">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">होम</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">🏗️</span>
+          <span class="nav-label">साइट</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">कारोबारहरु</span>
+        </a>
+        <a href="#" class="nav-item active">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">पार्टीहरु</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="nav-icon">💬</span>
+          <span class="nav-label">अक</span>
+        </a>
+      </nav>
+
+      <!-- MODAL HTML STARTS HERE -->
+      <div class="modal-overlay" id="expense-modal">
+        <!-- No 'active' class here by default -->
+        <div class="modal-content">
+          <h3 class="modal-title">खर्च थप्नुहोस्</h3>
+          <!-- Added a title for the modal -->
+          <div class="form-group">
+            <label for="itemName">वस्तुको नाम</label>
+            <input
+              type="text"
+              id="itemName"
+              class="modal-input"
+              placeholder="वस्तुको नाम..."
+            />
+          </div>
+          <div class="form-group">
+            <label for="amount">रकम</label>
+            <input
+              type="number"
+              id="amount"
+              class="modal-input"
+              placeholder="रू १,०००"
+            />
+          </div>
+          <div class="form-group">
+            <label for="date">मिति</label>
+            <input type="date" id="date" class="modal-input" />
+          </div>
+          <div class="form-group">
+            <label for="description">कैफियत</label>
+            <textarea
+              id="description"
+              class="modal-textarea"
+              placeholder="केहि लेख्नुहोस्"
+            ></textarea>
+          </div>
+
+          <div class="modal-action-buttons">
+            <button class="modal-save-button" id="save-expense-btn">
+              बचत गर्नुहोस्
+            </button>
+            <button class="modal-cancel-button" id="cancel-expense-btn">
+              रद्द गर्नुहोस्
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- MODAL HTML ENDS HERE -->
+    </div>
+    <script>
+      const API_BASE = "http://192.168.1.209:8000/api";
+      const RAW_TOKEN = localStorage.getItem("auth_token");
+
+      // Redirect if no token
+      if (!RAW_TOKEN) {
+        alert("कृपया लगइन गर्नुहोस्।");
+        window.location.href = "login.html";
+      }
+
+      const TOKEN = RAW_TOKEN.includes("|")
+        ? RAW_TOKEN.split("|")[1]
+        : RAW_TOKEN;
+      const PARTY_ID = new URLSearchParams(window.location.search).get(
+        "party_id"
+      );
+
+      // Redirect if no party ID
+      if (!PARTY_ID) {
+        alert("पार्टी पहिचान छैन!");
+        window.location.href = "parties.html";
+      }
+
+      // Load party details
+
+      async function loadParty() {
+        try {
+          const res = await fetch(`${API_BASE}/parties/${PARTY_ID}`, {
+            headers: { Authorization: `Bearer ${TOKEN}` },
+          });
+          if (!res.ok)
+            throw new Error(`Error fetching party: ${res.statusText}`);
+          const party = await res.json();
+          document.getElementById("party-name").textContent = party.name;
+          document.getElementById("party-phone").textContent =
+            party.phone_no || "";
+        } catch (err) {
+          console.error("Failed to load party data:", err);
+          alert("पार्टी डेटा लोड गर्न असफल भयो।");
+        }
+      }
+
+      // Load expenses and site resources
+      async function loadExpenses() {
+        try {
+          const container = document.getElementById("activity-list");
+          container.innerHTML = "";
+          let total = 0;
+
+          // Fetch party expenses
+          // Fetch party expenses
+          const res1 = await fetch(
+            `${API_BASE}/party-expenses?party_id=${PARTY_ID}`,
+            {
+              headers: { Authorization: `Bearer ${TOKEN}` },
+            }
+          );
+          const partyExpensesJson = await res1.json();
+          if (!res1.ok)
+            throw new Error(partyExpensesJson.message || res1.statusText);
+
+          const partyExpenses = partyExpensesJson.data || [];
+          console.log("Party Expenses:", partyExpenses);
+
+          // Fetch site resources
+        //   const res2 = await fetch(
+        //     `${API_BASE}/site-resources?party_id=${PARTY_ID}`,
+        //     {
+        //       headers: { Authorization: `Bearer ${TOKEN}` },
+        //     }
+        //   );
+        //   const siteResourcesJson = await res2.json();
+        //   if (!res2.ok)
+        //     throw new Error(siteResourcesJson.message || res2.statusText);
+        //   const siteResources = Array.isArray(siteResourcesJson)
+        //     ? siteResourcesJson
+        //     : siteResourcesJson.data || [];
+
+        //   console.log("Site Resources:", siteResources);
+
+          // Combine and sort activities by date
+          const activities = [
+            ...partyExpenses.map((exp) => ({
+              item_name: exp.title,
+              remarks: exp.remarks || "",
+              amount: exp.amount,
+              date: exp.date,
+            //   party_name: exp.party_name || "Unknown Party",
+            })),
+            // ...siteResources.map((res) => ({
+            //   item_name: res.item_name,
+            //   remarks: res.remarks || "",
+            //   amount: res.amount,
+            //   date: res.date,
+            //   party_name: res.party_name || "Unknown Party",
+            // })),
+          ];
+
+          activities.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+          if (activities.length === 0) {
+            container.innerHTML =
+              '<p style="text-align:center;">कुनै गतिविधि फेला परेन।</p>';
+            document.getElementById("total-amount").textContent = "रू ०";
+            return;
+          }
+
+          activities.forEach((act) => {
+            total += parseFloat(act.amount) || 0;
+            const div = document.createElement("div");
+            div.className = "activity-item";
+            div.innerHTML = `
+        <div class="item-details">
+            <p class="activity-title">${act.item_name}</p>
+            <p class="activity-description">${act.remarks}</p>
+        </div>
+        <div class="activity-amount-date">
+            <p class="activity-amount" style="color: red;">- रू ${Math.abs(
+              act.amount
+            ).toLocaleString("ne-NP")}</p>
+            <span class="activity-date-bubble">${new Date(
+              act.date
+            ).toLocaleDateString("ne-NP")}</span>
+        </div>
+      `;
+            container.appendChild(div);
+          });
+
+          document.getElementById(
+            "total-amount"
+          ).textContent = `रू ${total.toLocaleString("ne-NP")}`;
+        } catch (err) {
+          console.error("Failed to load activities:", err);
+          alert("गतिविधि डेटा लोड गर्न असफल भयो।");
+        }
+      }
+
+      // Modal logic
+      const modal = document.getElementById("expense-modal");
+      const openBtn = document.getElementById("add-expense-btn");
+      const cancelBtn = document.getElementById("cancel-expense-btn");
+      const saveBtn = document.getElementById("save-expense-btn");
+
+      openBtn.addEventListener("click", () => modal.classList.add("active"));
+      cancelBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+        document.getElementById("itemName").value = "";
+        document.getElementById("amount").value = "";
+        document.getElementById("date").value = "";
+        document.getElementById("description").value = "";
+      });
+
+      // Save expense
+      saveBtn.addEventListener("click", async () => {
+        const title = document.getElementById("itemName").value.trim();
+        const amount = parseFloat(document.getElementById("amount").value);
+        const date = document.getElementById("date").value;
+        const remarks = document.getElementById("description").value.trim();
+
+        if (!title || isNaN(amount) || !date) {
+          alert("कृपया सबै आवश्यक विवरण भर्नुहोस्!");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${API_BASE}/party-expenses`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${TOKEN}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              party_id: PARTY_ID,
+              title,
+              amount,
+              date,
+              remarks,
+            }),
+          });
+
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.message || res.statusText);
+
+          alert("खर्च सफलतापूर्वक थपियो!");
+          modal.classList.remove("active");
+          document.getElementById("itemName").value = "";
+          document.getElementById("amount").value = "";
+          document.getElementById("date").value = "";
+          document.getElementById("description").value = "";
+
+          loadExpenses(); // reload activities
+        } catch (err) {
+          console.error("Failed to save expense:", err);
+          alert(`खर्च बचत गर्न असफल भयो: ${err.message}`);
+        }
+      });
+
+      // Initial load
+      loadParty();
+      loadExpenses();
+    </script>
+  </body>
+</html>

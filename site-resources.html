@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>कखग साइट रिसोर्स</title>
+    <style>
+      :root {
+        --primary-green: #20907a;
+        --secondary-green: #369a84;
+        --accent-blue: #2578a9;
+        --light-gray: #f7f7f7;
+        --border-color: #eee;
+        --text-dark: #333;
+        --text-light: #fff;
+        --text-muted: #666;
+      }
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #e0e0e0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+        box-sizing: border-box;
+      }
+      .iphone-frame {
+        width: 430px;
+        height: 932px;
+        background: #fff;
+        border-radius: 40px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding-top: env(safe-area-inset-top, 50px);
+        padding-bottom: env(safe-area-inset-bottom, 34px);
+      }
+      .app-header {
+        background: var(--primary-green);
+        color: var(--text-light);
+        padding: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+      }
+      .app-header .back-arrow {
+        font-size: 1.8rem;
+        cursor: pointer;
+        padding-left: 0.3rem;
+      }
+      .app-header .header-title {
+        flex-grow: 1;
+        text-align: center;
+      }
+      .app-header .header-title h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      .app-header .header-title p {
+        margin: 0;
+        font-size: 0.8rem;
+        opacity: 0.9;
+      }
+      .filter-btn {
+        background: var(--secondary-green);
+        color: var(--text-light);
+        border: none;
+        padding: 0.4rem 0.9rem;
+        border-radius: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        white-space: nowrap;
+        height: 32px;
+      }
+      .filter-btn svg {
+        height: 0.9em;
+        width: auto;
+      }
+      .filter-btn:hover {
+        background: #2a7e67;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        background: #fff;
+        margin: 0.7rem 0.8rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .recent-resources-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.8rem;
+      }
+      .recent-resources-header h2 {
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+      }
+      th,
+      td {
+        padding: 0.8rem 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+      }
+      th {
+        color: var(--text-muted);
+        font-weight: normal;
+        font-size: 0.9rem;
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .add-resource-btn-bottom {
+        background: var(--accent-blue);
+        color: var(--text-light);
+        border: none;
+        padding: 0.9rem 1.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: center;
+        width: calc(100% - 2rem);
+        position: sticky;
+        bottom: 0;
+        margin-top: auto;
+        align-self: center;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        margin-bottom: 1rem;
+      }
+      .add-resource-btn-bottom:hover {
+        background: #1e638d;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+      }
+      .modal-content {
+        background: #fff;
+        padding: 25px;
+        max-width: 90%;
+        width: 400px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .modal-content h3 {
+        margin-top: 0;
+        color: var(--text-dark);
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: #555;
+        font-weight: 500;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        font-size: 0.95rem;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .modal-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+        gap: 10px;
+      }
+      .modal-buttons .btn {
+        flex: 1;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+        color: var(--text-light);
+      }
+      .modal-buttons .btn.save {
+        background: var(--accent-blue);
+      }
+      .modal-buttons .btn.cancel {
+        background: #6c757d;
+      }
+      .modal-buttons .btn.save:hover {
+        background: #0056b3;
+      }
+      .modal-buttons .btn.cancel:hover {
+        background: #5a6268;
+      }
+
+      .table-wrapper {
+        width: 100%; /* Full width */
+        max-height: 450px; /* Adjust height as needed */
+        overflow-x: auto; /* Horizontal scroll if needed */
+        overflow-y: auto; /* Vertical scroll */
+        border-radius: 8px;
+      }
+
+      .table-wrapper table {
+        width: 100%; /* Make table stretch full width */
+        min-width: 800px; /* Optional: forces horizontal scroll on small screens */
+        border-collapse: collapse;
+      }
+
+      .table-wrapper th,
+      .table-wrapper td {
+        padding: 0.8rem 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        background: #fff;
+      }
+
+      .table-wrapper th {
+        position: sticky;
+        top: 0;
+        background: #f7f7f7;
+        z-index: 1;
+      }
+    </style>
+  </head>
+
+  
+  <body>
+    <div class="iphone-frame">
+      <div class="app-header">
+        <span class="back-arrow" onclick="window.history.back();"><</span>
+        <div class="header-title">
+          <h1>कखग साइट</h1>
+          <p>रिसोर्स</p>
+        </div>
+        <button class="filter-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="16"
+            width="14"
+            viewBox="0 0 448 512"
+            fill="white"
+          >
+            <path
+              d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0 17.7 14.3 32 32 32H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H32c-17.7 0-32 14.3-32 32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
+            />
+          </svg>
+          छान्नुहोस्
+        </button>
+      </div>
+
+      <div class="main-content">
+        <div class="recent-resources-header">
+          <h2>हालका रिसोर्सहरू</h2>
+        </div>
+
+        <!-- Scrollable table wrapper -->
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>मिति</th>
+                <th>वस्तुको नाम</th>
+                <th>पार्टी</th>
+                <th>परिणाम</th>
+                <th>रकम</th>
+                <th>टिप्पणी</th>
+              </tr>
+            </thead>
+            <tbody id="resource-body">
+              <tr>
+                <td colspan="6" style="text-align: center">लोड हुँदैछ...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <button class="add-resource-btn-bottom" id="add-resource-btn">
+          रिसोर्स थप्नुहोस्
+        </button>
+      </div>
+    </div>
+
+    <div id="resource-modal" class="modal">
+      <div class="modal-content">
+        <h3>नयाँ रिसोर्स थप्नुहोस्</h3>
+        <div class="form-group">
+          <label>बस्तुको नाम:</label>
+          <input type="text" id="item" />
+        </div>
+        <div class="form-group">
+          <label>पार्टी:</label>
+          <select id="party">
+            <option>लोड हुँदैछ...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>परिणाम (Unit):</label>
+          <input type="text" id="unit" />
+        </div>
+        <div class="form-group">
+          <label>रकम:</label>
+          <input type="number" id="amount" />
+        </div>
+        <div class="form-group">
+          <label>मिति:</label>
+          <input type="date" id="date" />
+        </div>
+        <div class="form-group">
+          <label>टिप्पणी:</label>
+          <textarea id="remarks"></textarea>
+        </div>
+        <div class="modal-buttons">
+          <button class="btn save" id="save-resource">थप्नुहोस्</button>
+          <button class="btn cancel" id="cancel-btn">रद्द गर्नुहोस्</button>
+        </div>
+      </div>
+    </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const API_BASE = "http://192.168.1.209:8000/api";
+    const TOKEN = localStorage.getItem("auth_token");
+
+    if (!TOKEN) {
+      alert("कृपया पहिले लगइन गर्नुहोस्।");
+      window.location.href = "/login.html";
+      return;
+    }
+
+    let SITE_ID =
+      new URLSearchParams(window.location.search).get("id") ||
+      localStorage.getItem("current_site_id");
+
+    if (!SITE_ID) {
+      alert("साइट चयन गरिएको छैन। कृपया पहिले साइट चयन गर्नुहोस्।");
+      window.location.href = "/c-list-info.html";
+      return;
+    } else {
+      localStorage.setItem("current_site_id", SITE_ID);
+    }
+
+    const modal = document.getElementById("resource-modal");
+    const addBtn = document.getElementById("add-resource-btn");
+    const cancelBtn = document.getElementById("cancel-btn");
+    const saveBtn = document.getElementById("save-resource");
+
+    addBtn.onclick = () => (modal.style.display = "flex");
+    cancelBtn.onclick = () => (modal.style.display = "none");
+    window.onclick = (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    };
+
+    // 🔹 Load parties for dropdown
+    async function loadParties() {
+      try {
+        const res = await fetch(`${API_BASE}/parties`, {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+            Accept: "application/json",
+          },
+        });
+
+        if (!res.ok) throw new Error("पार्टी लोड गर्न असफल भयो");
+
+        const parties = await res.json();
+        console.log("Loaded parties:", parties);
+
+        const partySelect = document.getElementById("party");
+        partySelect.innerHTML = `<option value="">छान्नुहोस्</option>`;
+
+        parties.data.forEach((p) => {
+          partySelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById(
+          "party"
+        ).innerHTML = `<option value="">पार्टी लोड गर्न असफल भयो</option>`;
+      }
+    }
+
+    // 🔹 Load resources for the current SITE_ID
+    async function loadResources() {
+      try {
+        const res = await fetch(
+          `${API_BASE}/site-resources?site_id=${SITE_ID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${TOKEN}`,
+              Accept: "application/json",
+            },
+          }
+        );
+        if (!res.ok) throw new Error("रिसोर्स लोड गर्न असफल भयो");
+
+        const resources = await res.json();
+        const tbody = document.getElementById("resource-body");
+        tbody.innerHTML = "";
+
+        if (!resources || resources.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="6" style="text-align:center;">कुनै रिसोर्स फेला परेन।</td></tr>';
+        } else {
+          resources.forEach((r) => {
+            tbody.innerHTML += `<tr>
+                  <td>${r.date}</td>
+                  <td>${r.item_name}</td>
+                  <td>${r.party_name || "-"}</td> <!-- backend must return joined party -->
+                  <td>${r.unit}</td>
+                  <td>${r.amount}</td>
+                  <td>${r.remarks}</td>
+              </tr>`;
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById(
+          "resource-body"
+        ).innerHTML = `<tr><td colspan="6" style="text-align:center; color:red;">${err.message}</td></tr>`;
+      }
+    }
+
+    // 🔹 Save resource (with party_id instead of party_name)
+    saveBtn.onclick = async () => {
+      const payload = {
+        site_id: SITE_ID,
+        item_name: document.getElementById("item").value.trim(),
+        party_id: document.getElementById("party").value, // ✅ send ID now
+        unit: document.getElementById("unit").value.trim(),
+        amount: parseFloat(document.getElementById("amount").value) || 0,
+        date: document.getElementById("date").value,
+        remarks: document.getElementById("remarks").value.trim(),
+      };
+
+      if (!payload.item_name || !payload.party_id || !payload.date) {
+        alert("कृपया वस्तुको नाम, पार्टी र मिति भर्नुहोस्।");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/site-resources`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+            Accept: "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok)
+          throw new Error(data.message || "रिसोर्स सेभ गर्न असफल भयो");
+
+        alert("✅ रिसोर्स थपियो!");
+        modal.style.display = "none";
+        loadResources();
+      } catch (err) {
+        alert("त्रुटि: " + err.message);
+      }
+    };
+
+    // Initial load
+    loadParties();
+    loadResources();
+  });
+</script>
+
+
+
+  </body>
+</html>

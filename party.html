@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>पार्टीहरु</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root {
+    --primary-green: #20907a;
+    --new-button-blue: #007bff;
+    --total-amount-bg: #ffe6e6;
+    --total-amount-border: #ffcccc;
+    --total-amount-text: #e74c3c;
+    --light-gray: #f7f7f7;
+    --text-dark: #333;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+body {
+    font-family: 'Arial', sans-serif;
+    margin:0;
+    padding:0;
+    background:#e0e0e0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    overflow:hidden;
+}
+.iphone-frame {
+    width:430px;
+    height:932px;
+    background:#fff;
+    border-radius:40px;
+    box-shadow:0 0 15px rgba(0,0,0,0.3);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    padding-top:50px;
+    padding-bottom:34px;
+}
+.app-header {
+    background: var(--primary-green);
+    color: #fff;
+    padding:0.8rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.header-title {
+    font-size:1.25rem;
+    font-weight:600;
+}
+.add-new-btn {
+    background: var(--new-button-blue);
+    color:#fff;
+    border:none;
+    padding:0.4rem 0.9rem;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:0.85rem;
+    font-weight:500;
+}
+.add-new-btn:hover { background:#0056b3; }
+.main-content {
+    flex-grow:1;
+    background: var(--light-gray);
+    margin:0.7rem 0.8rem;
+    border-radius:8px;
+    padding:1rem;
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+}
+.total-amount-card {
+    background: var(--total-amount-bg);
+    border:1px solid var(--total-amount-border);
+    border-radius:8px;
+    padding:0.8rem 1rem;
+    text-align:center;
+    margin-bottom:1rem;
+}
+.total-amount-card .label { margin:0; font-size:0.9rem; color:var(--text-dark); }
+.total-amount-card .amount { margin:0.3rem 0 0; font-size:1.5rem; font-weight:bold; color:var(--total-amount-text); }
+.party-list { display:flex; flex-direction:column; gap:0.7rem; }
+.party-card {
+    background:#fff;
+    border-radius:8px;
+    padding:0.8rem 1rem;
+    box-shadow: var(--card-shadow);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    cursor:pointer;
+}
+.party-info .party-name { margin:0; font-weight:500; }
+.party-info .party-phone { margin:0.3rem 0 0; font-size:0.85rem; color:#777; }
+.arrow-icon { font-size:1.4rem; color:#bbb; margin-left:1rem; }
+.bottom-nav {
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    padding:0.5rem 0;
+    box-shadow:0 -2px 4px rgba(0,0,0,0.1);
+    flex-shrink:0;
+}
+.nav-item { display:flex; flex-direction:column; align-items:center; color:#a4d3c9; font-size:0.75rem; text-decoration:none; flex:1; }
+.nav-item.active { color:#20907a; }
+.nav-item.active::after {
+    content:"";
+    display:block;
+    width:28px;
+    height:2px;
+    background:#20907a;
+    margin-top:5px;
+    border-radius:1px;
+}
+.nav-item .icon { font-size:1.6rem; margin-bottom:0.2rem; }
+</style>
+</head>
+
+<body>
+<div class="iphone-frame">
+    <div class="app-header">
+      <button class="back-btn" onclick="goBack()">←</button>
+
+        <div class="header-title">पार्टीहरु</div>
+        <button class="add-new-btn" onclick="window.location.href='addparty.html'">+ नयाँ</button>
+    </div>
+
+    <div class="main-content">
+        <div class="total-amount-card">
+            <p class="label">कुल रकम</p>
+            <p class="amount" id="total-amount">रु ०</p>
+        </div>
+
+        <div class="party-list" id="party-list">
+            <!-- Parties will be inserted dynamically -->
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home icon"></i><span>होम</span></a>
+        <a href="site.html" class="nav-item"><i class="fas fa-person-digging icon"></i><span>साइट</span></a>
+        <a href="transactions.html" class="nav-item"><i class="fas fa-chart-bar icon"></i><span>कारोबारहरु</span></a>
+        <a href="parties.html" class="nav-item active"><i class="fas fa-users icon"></i><span>पार्टीहरु</span></a>
+        <a href="more.html" class="nav-item"><i class="fas fa-grip icon"></i><span>अरु</span></a>
+    </div>
+</div>
+
+<script>
+const API_BASE = "http://192.168.1.209:8000/api"; 
+const RAW_TOKEN = localStorage.getItem("auth_token");
+
+// redirect if no token
+if (!RAW_TOKEN) { 
+    alert("कृपया लगइन गर्नुहोस्।"); 
+    window.location.href="login.html"; 
+}
+
+const TOKEN = RAW_TOKEN.includes('|') ? RAW_TOKEN.split('|')[1] : RAW_TOKEN;
+
+async function fetchParties() {
+    try {
+        const res = await fetch(`${API_BASE}/parties`, {
+            headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type":"application/json" }
+        });
+
+        if (!res.ok) {
+            throw new Error(`API error: ${res.status}`);
+        }
+
+        const result = await res.json();
+        renderParties(result.data || []);
+    } catch (err) {
+        console.error("Fetch error:", err);
+        // silently fail: do not show alert if no parties
+        renderParties([]);
+    }
+}
+
+function renderParties(parties) {
+    const container = document.getElementById("party-list");
+    container.innerHTML = "";
+    let totalAmount = 0;
+
+    parties.forEach(p => {
+        totalAmount += p.total_amount || 0;
+        const card = document.createElement("div");
+        card.className="party-card";
+        card.innerHTML = `<div class="party-info">
+            <p class="party-name">${p.name}</p>
+            <p class="party-phone">${p.phone_no||""}</p>
+        </div>
+        <span class="arrow-icon">></span>`;
+        card.onclick = ()=>window.location.href=`partyinfo.html?party_id=${p.id}`;
+        container.appendChild(card);
+    });
+
+    document.getElementById("total-amount").textContent=`रु ${totalAmount.toLocaleString('ne-NP')}`;
+}
+
+fetchParties();
+</script>
+
+<script>
+  function goBack() {
+    // Redirect to home page
+    window.location.href = "home.html"; 
+  }
+</script>
+
+</body>
+</html>

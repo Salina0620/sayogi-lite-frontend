@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Construction Sites</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="CSS/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="mobile-container">
+      <!-- Page Header -->
+      <header class="page-header">
+        <div class="header-content mb-3 pt-3">
+          <a href="home.html" class="back-arrow"
+            ><i class="fas fa-chevron-left"></i
+          ></a>
+          <h1>साइटहरू</h1>
+          <a href="new-site-list.html" class="btn btn-add-new">
+            <i class="fas fa-plus"></i> नयाँ
+          </a>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="content-area page-content">
+        <!-- Search Bar -->
+        <div class="search-bar-wrapper search-bar-right-icon mb-4">
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="साइट खोज्नुहोस्..."
+          />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+
+        <!-- Site List -->
+        <div class="site-list" id="siteList">
+          <!-- Dynamic content will be injected here -->
+        </div>
+      </main>
+
+      <!-- Bottom Navigation -->
+      <nav class="bottom-nav">
+        <a href="home.html" class="nav-item">
+          <i class="fas fa-home"></i> <span>गृह</span>
+        </a>
+        <a href="site-list.html" class="nav-item active">
+          <i class="fas fa-book"></i> <span>खाता</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-chart-bar"></i> <span>विश्लेषण</span>
+        </a>
+        <a href="owner-list.html" class="nav-item">
+          <i class="fas fa-users"></i> <span>पार्टीहरु</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="fas fa-grip"></i> <span>मेनु</span>
+        </a>
+      </nav>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const siteList = document.getElementById("siteList");
+      const searchInput = document.getElementById("searchInput");
+      let sites = [];
+
+      // Function to render sites to the DOM
+      function renderSites(filteredSites) {
+        if (filteredSites.length === 0) {
+          siteList.innerHTML =
+            '<p class="text-center text-muted">साइटहरू भेटिएनन्।</p>';
+          return;
+        }
+
+        siteList.innerHTML = filteredSites
+          .map((site) => {
+            const name = site.name || "नाम छैन";
+            const location = site.address || "ठेगाना उपलब्ध छैन";
+
+            let statusClass = "status-ongoing";
+            let statusText = "चलिरहेको";
+            if (site.status) {
+              if (site.status.toLowerCase() === "paused") {
+                statusClass = "status-paused";
+                statusText = "स्थगित";
+              } else if (site.status.toLowerCase() === "completed") {
+                statusClass = "status-completed";
+                statusText = "सम्पन्न";
+              }
+            }
+
+            const detailUrl = `c-list-info.html?id=${site.id}`;
+
+            return `
+        <a href="${detailUrl}" class="site-item">
+          <div class="site-info">
+            <div class="site-name">${name}</div>
+            <div class="site-location">${location}</div>
+            <span class="status-tag ${statusClass}">${statusText}</span>
+          </div>
+          <i class="fas fa-chevron-right site-arrow"></i>
+        </a>
+      `;
+          })
+          .join("");
+      }
+
+      // Fetch site data from API with token authorization
+      async function fetchSites() {
+        const token = localStorage.getItem("auth_token");
+        if (!token) {
+          siteList.innerHTML =
+            '<p class="text-center text-danger">⚠️ कृपया लगइन गर्नुहोस्।</p>';
+          return;
+        }
+
+        try {
+          const response = await fetch("http://192.168.1.209:8000/api/sites", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (!response.ok)
+            throw new Error(`HTTP error! status: ${response.status}`);
+
+          sites = await response.json();
+          renderSites(sites);
+        } catch (error) {
+          console.error("Failed to fetch sites:", error);
+          siteList.innerHTML =
+            '<p class="text-center text-danger">साइटहरू ल्याउन समस्या भयो। कृपया पछि प्रयास गर्नुहोस्।</p>';
+        }
+      }
+
+      // Filter sites on search input
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+          renderSites(sites);
+          return;
+        }
+        const filtered = sites.filter(
+          (site) =>
+            (site.name && site.name.toLowerCase().includes(query)) ||
+            (site.address && site.address.toLowerCase().includes(query))
+        );
+        renderSites(filtered);
+      });
+
+      // Initial fetch on page load
+      fetchSites();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Sayogi - Home</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="CSS/style.css">
+
+    <!-- Google Fonts for Nepali & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="mobile-container">
+        <header class="app-header">
+             
+            <div class="user-bar d-flex justify-content-between">
+                <div class="user-info">
+                    <div class="avatar">ह</div>
+                    <span class="user-name">हरि पौडेल</span>
+                </div>
+                <div class="header-icons">
+                    <a href="notelist.html" class="header-icon text-white"><i class="fa-solid fa-file-lines"></i></a>
+                    <a href="#" class="header-icon text-white"><i class="fa-regular fa-bell"></i></a>
+                </div>
+            </div>
+            <div class="greeting">
+                <h1>नमस्ते, फेरि स्वागत छ</h1>
+                <p>शुभ बिहानी</p>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <!-- Filter Pills -->
+            <section class="filter-pills d-flex justify-content-between mb-4">
+                <a href="#" class="btn btn-dark-blue">७ दिन</a>
+                <a href="#" class="btn btn-dark-blue">१५ दिन</a>
+                <a href="#" class="btn btn-dark-blue">१ महिना</a>
+                <a href="#" class="btn btn-app-green"><i class="fas fa-filter me-1"></i> छान्नुहोस्</a>
+            </section>
+            
+            <!-- Summary Cards -->
+            <section class="summary-cards mb-4">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card summary-card income">
+                            <div class="icon"><i class="fas fa-sack-dollar"></i></div>
+                            <div class="amount">रु. ५,०००</div>
+                            <div class="label">आम्दानी (वैशाख)</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card summary-card expense">
+                            <div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                            <div class="amount">रु. ३,०००</div>
+                            <div class="label">खर्च (वैशाख)</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Shortcuts -->
+            <section class="shortcuts-section mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="section-header">सर्टकटहरू</h2>
+                    <a href="#" class="text-decoration-none edit-menu-btn"><i class="fas fa-pencil-alt me-1"></i> एडिट मेनु</a>
+                </div>
+<div class="row">
+  <div class="col-4 shortcut-item">
+    <a href="ownerlist.html" class="shortcut-link">
+      <div class="shortcut-icon-wrapper"><i class="fas fa-user"></i></div>
+      <span>घरधनी</span>
+    </a>
+  </div>
+  
+  <div class="col-4 shortcut-item">
+    <a href="party.html" class="shortcut-link">
+      <div class="shortcut-icon-wrapper"><i class="fas fa-user-plus"></i></div>
+      <span>पार्टी थप्नुहोस्</span>
+    </a>
+  </div>
+
+  <div class="col-4 shortcut-item">
+    <a href="c-site-list.html" class="shortcut-link">
+      <div class="shortcut-icon-wrapper"><i class="fa-solid fa-person-digging"></i></div>
+      <span>साइट सिर्जना</span>
+    </a>
+  </div>
+
+  <div class="col-4 shortcut-item">
+    <a href="#" class="shortcut-link">
+      <div class="shortcut-icon-wrapper"><i class="fa-solid fa-money-bill-transfer"></i></div>
+      <span>आम्दानी</span>
+    </a>
+  </div>
+
+  <div class="col-4 shortcut-item">
+    <a href="#" class="shortcut-link">
+      <div class="shortcut-icon-wrapper"><i class="fa-solid fa-arrow-down-wide-short"></i></div>
+      <span>खर्च</span>
+    </a>
+  </div>
+</div>
+
+            </section>
+
+            <!-- Recent Activities -->
+            <section class="recent-activities mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="section-header">हालैका गतिविधिहरू</h2>
+                    <a href="#" class="text-decoration-none filter-btn"><i class="fas fa-filter me-1"></i> छान्नुहोस्</a>
+                </div>
+                <div class="transaction-list">
+                    <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">सामान किन्न</span><span class="transaction-date">आज</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ०</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु १,०००</div></div></div></div></div>
+                    <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">तलब</span><span class="transaction-date">जेठ २५</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ६०,०००</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु ०</div></div></div></div></div>
+                    <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">सामान किन्न</span><span class="transaction-date">जेठ ३०</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ०</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु १५,०००</div></div></div></div></div>
+                     <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">सामान किन्न</span><span class="transaction-date">असार ५</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु १,०००</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु ८००</div></div></div></div></div>
+                     <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">तलब आम्दानी</span><span class="transaction-date">जेठ ०५</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ६०,०००</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु ०</div></div></div></div></div>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-dark-blue btn-sm">सबै हेर्नुहोस् →</a>
+                </div>
+            </section>
+            
+            <!-- Chart Section -->
+            <section class="chart-section">
+                 <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="section-header">आम्दानी र खर्च</h2>
+                    <select class="form-select"> <option selected>मासिक</option> <option value="1">हप्ता</option> <option value="2">त्रैमासिक</option> <option value="3">वर्ष</option> </select>
+                </div>
+                <div class="chart-container">
+                    <div class="y-axis"> <span>रु. ६०,०००</span> <span>रु. ४०,०००</span> <span>रु. २०,०००</span> <span>रु. ०</span> </div>
+                    <div class="bars-area"> <div class="bar bar-income"></div> <div class="bar bar-expense"></div> </div>
+                </div>
+                <div class="x-axis"> <span>आम्दानी</span> <span>खर्च</span> </div>
+                <div class="chart-summary">
+                    <div> <span class="income-text">रु. ६०,०००</span> <span class="label">आय</span> </div>
+                    <div> <span class="expense-text">रु. ३०,०००</span> <span class="label">खर्च</span> </div>
+                    <div> <span class="profit-text">रु. ३०,०००</span> <span class="label">नाफा</span> </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active"> <i class="fas fa-home"></i> <span>गृह</span> </a>
+        <a href="#" class="nav-item"> <i class="fas fa-book"></i> <span>खाता</span> </a>
+        <a href="#" class="nav-item"> <i class="fas fa-chart-bar"></i> <span>विश्लेषण</span> </a>
+        <a href="#" class="nav-item"> <i class="fas fa-users"></i> <span>पार्टीहरु</span> </a>
+        <a href="#" class="nav-item"> <i class="fas fa-grip"></i> <span>मेनु</span> </a>
+    </nav

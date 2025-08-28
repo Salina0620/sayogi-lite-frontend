@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नोट विवरण / सम्पादन</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page-container">
+    <header class="header">
+        <a href="notelist.html" class="back-arrow">&#8592;</a>
+        <h1 class="page-title" id="note-title">नोट</h1>
+        <button id="delete-note" class="delete-button">
+            <span class="delete-icon">🗑️</span> मेटाउनु
+        </button>
+    </header>
+    <main class="content">
+        <div class="input-group">
+            <input type="text" id="note-title-input" class="note-input" placeholder="शीर्षक लेख्नुहोस्...">
+        </div>
+
+        <div class="note-card green-border">
+            <textarea id="note-description" class="note-content-textarea" placeholder="नोटको विवरण लेख्नुहोस्..."></textarea>
+        </div>
+
+        <p id="note-date" class="note-date"></p>
+
+        <div class="priority-checkbox-group">
+            <input type="checkbox" id="highPriority" class="custom-checkbox">
+            <label for="highPriority" class="checkbox-label">उच्च प्राथमिकता</label>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="action-buttons">
+            <button id="save-note" class="save-button">सेभ गर्नुहोस्</button>
+            <button id="cancel" class="cancel-button">रद्द गर्नुहोस्</button>
+        </div>
+    </footer>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="modal">
+  <div class="modal-content">
+    <p>नोट मेटाउन चाहनुहुन्छ?</p>
+    <div class="modal-actions">
+      <button id="confirm-delete" class="delete-button-modal">मेटाउनुहोस्</button>
+      <button id="cancel-delete" class="cancel-button-modal">रद्द गर्नुहोस्</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const API_BASE = "http://192.168.1.209:8000/api";
+const NOTE_ID = new URLSearchParams(window.location.search).get("id");
+const token = localStorage.getItem("auth_token");
+
+if (!token) {
+    alert("You are not logged in!");
+    window.location.href = "login.html";
+}
+
+// Load note data
+async function loadNote() {
+    if (!NOTE_ID) return; // new note
+    try {
+        const res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, {
+            headers: { "Authorization": `Bearer ${token}`, "Accept": "application/json" }
+        });
+        if (!res.ok) throw new Error("नोट लोड गर्न असफल");
+
+        const note = await res.json();
+
+        document.getElementById("note-title").textContent = note.title || "शीर्षक छैन";
+        document.getElementById("note-title-input").value = note.title || "";
+        document.getElementById("note-description").value = note.description || "";
+        document.getElementById("highPriority").checked = note.high_priority ?? false;
+
+        document.getElementById("note-date").textContent = note.created_at
+            ? `मिति: ${new Date(note.created_at).toLocaleDateString('ne-NP')}`
+            : "";
+    } catch (err) {
+        alert(err.message);
+    }
+}
+// Save note
+document.getElementById("save-note").addEventListener("click", async () => {
+    const title = document.getElementById("note-title-input").value.trim();
+    const description = document.getElementById("note-description").value.trim();
+    const highPriority = document.getElementById("highPriority").checked;
+
+    if (!title) {
+        alert("शीर्षक आवश्यक छ!");
+        return;
+    }
+
+    try {
+        const res = await fetch(
+            NOTE_ID ? `${API_BASE}/notes/${NOTE_ID}` : `${API_BASE}/notes`,
+            {
+                method: NOTE_ID ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ title, description, high_priority: highPriority })
+            }
+        );
+
+        if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.message || "नोट बचाउन असफल");
+        }
+
+        alert(NOTE_ID ? "नोट अपडेट गरियो!" : "नोट बन्यो!");
+        // Redirect to notelist.html after save
+        window.location.href = "notelist.html";
+
+    } catch (err) {
+        alert(err.message);
+    }
+});
+
+
+// Cancel → back to list
+document.getElementById("cancel").addEventListener("click", () => {
+    window.location.href = "notelist.html";
+});
+
+// Delete note
+// Show modal when clicking delete
+const deleteBtn = document.getElementById("delete-note");
+const deleteModal = document.getElementById("delete-modal");
+const confirmDelete = document.getElementById("confirm-delete");
+const cancelDelete = document.getElementById("cancel-delete");
+
+deleteBtn.addEventListener("click", () => {
+    deleteModal.style.display = "block";
+});
+
+// Cancel delete
+cancelDelete.addEventListener("click", () => {
+    deleteModal.style.display = "none";
+});
+
+// Confirm delete
+confirmDelete.addEventListener("click", async () => {
+    if (!NOTE_ID) return;
+
+    const res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (res.ok) {
+        alert("नोट मेटाइयो!");
+        window.location.href = "notelist.html";
+    } else {
+        alert("नोट मेटाउन असफल");
+    }
+});
+
+// Close modal if clicking outside modal content
+window.addEventListener("click", (e) => {
+    if (e.target === deleteModal) {
+        deleteModal.style.display = "none";
+    }
+});
+
+
+loadNote();
+</script>
+</body>
+</html>
