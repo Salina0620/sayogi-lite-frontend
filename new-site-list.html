@@ -1,321 +1,1209 @@
 <!DOCTYPE html>
 <html lang="ne">
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Create Site</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>नयाँ साइट निर्माण</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="CSS/style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-</head>
-<body>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
-<div class="mobile-container">
-    <!-- Page Header -->
-    <header class="page-header">
-        <div class="header-content mb-3 pt-3 d-flex align-items-center">
-            <a href="c-site-list.html" class="back-arrow me-3"><i class="fas fa-chevron-left"></i></a>
-            <h1 class="mb-0">नयाँ साइट निर्माण</h1>
-            <div class="header-placeholder flex-grow-1"></div>
+    <style>
+      :root {
+        --brand-green: #13a87d;
+        --cta-blue: #186b97;
+        --alert-red: #e74c3c;
+
+        --bg: #fafafa;
+        --surface: #fff;
+        --text-900: #0f172a;
+        --text-700: #344054;
+        --text-600: #667085;
+        --muted: #98a2b3;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: env(safe-area-inset-top);
+        background: var(--brand-green);
+        pointer-events: none;
+        z-index: 1000;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text-900);
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+        overscroll-behavior: none;
+      }
+
+      #create-site-page.mobile-container {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        min-height: 100svh;
+        min-height: -webkit-fill-available;
+        background: var(--surface);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #create-site-page .page-header {
+        background: var(--brand-green);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+      }
+      #create-site-page .header-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: calc(16px + env(safe-area-inset-top)) 16px 12px;
+      }
+      #create-site-page .back-arrow {
+        color: #fff;
+        font-size: 20px;
+        text-decoration: none;
+      }
+      #create-site-page h1 {
+        margin: 0 auto;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+      }
+
+      #create-site-page .page-content {
+        flex: 1 1 auto;
+        overflow: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        background: #fafafa;
+        padding: 16px 16px calc(18px + env(safe-area-inset-bottom));
+        scrollbar-width: none;
+      }
+      #create-site-page .page-content::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+
+      .field-label {
+        display: block;
+        margin: 10px 2px 6px;
+        color: #555;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .form-control {
+        height: 48px;
+        padding: 10px 12px;
+        font-size: 15px;
+        background: #f8fafc;
+        color: var(--text-900);
+        border: 1.5px solid #d0d5dd;
+        border-radius: 0 !important;
+      }
+      .form-control::placeholder {
+        color: #a3aab6;
+      }
+      .form-control:focus {
+        border-color: var(--brand-green);
+        box-shadow: 0 0 0 2px rgba(19, 168, 125, 0.18);
+      }
+      textarea.form-control {
+        min-height: 96px;
+        height: auto;
+      }
+
+      .owner-group {
+        position: relative;
+      }
+      .owner-group .input-group-text {
+        background: #f8fafc;
+        color: #9ca3af;
+        border: 1.5px solid #d0d5dd;
+        border-right: 0;
+        border-radius: 0;
+        height: 48px;
+        padding: 0 12px;
+      }
+      .owner-group input {
+        border-top: 1.5px solid #d0d5dd;
+        border-bottom: 1.5px solid #d0d5dd;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0;
+        background: #f8fafc;
+        height: 48px;
+      }
+      .btn-add-owner {
+        background: var(--cta-blue);
+        color: #fff;
+        border: 1.5px solid var(--cta-blue);
+        border-radius: 0;
+        width: 54px;
+        height: 48px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #ownerDropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 54px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 6px 18px rgba(16, 24, 40, 0.08);
+        max-height: 150px;
+        overflow-y: auto;
+        display: none;
+        z-index: 1000;
+      }
+      #ownerDropdown .list-group-item {
+        border: 0;
+        padding: 10px 12px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      #ownerDropdown .list-group-item:hover {
+        background: #f3f5f7;
+      }
+
+      .document-section h5 {
+        font-size: 15px;
+        font-weight: 400;
+        margin: 14px 2px 8px;
+      }
+      .image-upload-box {
+        width: 100%;
+        border: 1.5px dashed #d0d5dd;
+        border-radius: 8px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: #475467;
+        background: #fff;
+        cursor: pointer;
+      }
+      #imagePreview img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .btn-primary-action,
+      .btn-secondary-action {
+        border: none;
+        height: 48px;
+        border-radius: 12px;
+        font-weight: 700;
+      }
+      .btn-primary-action {
+        background: var(--cta-blue);
+        color: #fff;
+      }
+      .btn-secondary-action {
+        background: var(--alert-red);
+        color: #fff;
+      }
+      .btn-primary-action,
+      .btn-primary-action:hover,
+      .btn-primary-action:active,
+      .btn-primary-action:focus {
+        background: var(--cta-blue) !important;
+        border-color: var(--cta-blue) !important;
+        color: #fff !important;
+        box-shadow: none !important;
+      }
+      .btn-secondary-action,
+      .btn-secondary-action:hover,
+      .btn-secondary-action:active,
+      .btn-secondary-action:focus {
+        background: var(--alert-red) !important;
+        border-color: var(--alert-red) !important;
+        color: #fff !important;
+        box-shadow: none !important;
+      }
+
+      @media (max-width: 340px) {
+        .form-control {
+          height: 46px;
+        }
+        .owner-group .input-group-text,
+        .btn-add-owner {
+          height: 46px;
+        }
+      }
+
+      .owner-modal {
+        border-radius: 12px;
+      }
+      .owner-modal .modal-title {
+        font-weight: 700;
+        font-size: 22px;
+      }
+      .owner-modal .form-control {
+        border-radius: 0 !important;
+      }
+
+      /* tighter gaps */
+      #create-site-page .page-content .mb-2,
+      #create-site-page .page-content .input-group.mb-2,
+      #create-site-page .page-content .owner-group.mb-2 {
+        margin-bottom: 12px !important;
+      }
+      #create-site-page .page-content .mt-3 {
+        margin-top: 14px !important;
+      }
+
+      .owner-group .form-select {
+        height: 48px;
+        padding: 10px 36px 10px 12px;
+        font-size: 15px;
+        background: #f8fafc;
+        color: var(--muted);
+        border-top: 1.5px solid #d0d5dd;
+        border-bottom: 1.5px solid #d0d5dd;
+        border-left: 0;
+        border-right: 0;
+        border-radius: 0 !important;
+        box-shadow: none;
+      }
+      .owner-group .form-select.has-value {
+        color: var(--text-900);
+      }
+      .owner-group .form-select:focus {
+        border-color: var(--brand-green);
+        box-shadow: 0 0 0 2px rgba(19, 168, 125, 0.18);
+      }
+
+      /* inline errors */
+      .err {
+        color: var(--alert-red);
+        font-size: 12px;
+        margin: 4px 2px 0;
+      }
+      .is-invalid {
+        border-color: var(--alert-red) !important;
+        box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15) !important;
+      }
+
+      /* Toast */
+      #toast {
+        position: fixed;
+        top: calc(12px + env(safe-area-inset-top));
+        right: calc(12px + env(safe-area-inset-right));
+        background: #ffffff;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px 10px 10px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        display: grid;
+        grid-template-columns: 32px 1fr 24px;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        max-width: 92vw;
+
+        transform: translateY(-8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+        z-index: 10000;
+      }
+
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .toast-badge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #74c69d;
+      }
+
+      .toast-badge svg {
+        width: 18px;
+        height: 18px;
+        stroke: #fff;
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .toast-msg {
+        font-family: "Noto Sans Devanagरी", system-ui, -apple-system, "Poppins",
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #111827;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0;
+        text-decoration: none;
+      }
+
+      .toast-x {
+        color: #4b5563;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .toast-badge.error {
+        background: #ef4444;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="create-site-page" class="mobile-container">
+      <header class="page-header">
+        <div class="header-content">
+          <a href="c-site-list.html" class="back-arrow"
+            ><i class="fas fa-chevron-left"></i
+          ></a>
+          <h1>नयाँ साइट निर्माण</h1>
+          <span style="width: 20px"></span>
         </div>
-    </header>
+      </header>
 
-    <!-- Main Content -->
-    <main class="content-area page-content">
-        <form id="siteForm" enctype="multipart/form-data" autocomplete="off">
-            <div class="mb-3">
-                <input type="text" class="form-control" placeholder="साइटको नाम" name="name" required />
+      <main class="content-area page-content">
+        <form
+          id="siteForm"
+          enctype="multipart/form-data"
+          autocomplete="off"
+          novalidate
+        >
+          <label class="field-label">साइटको नाम</label>
+          <div class="mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              placeholder="रानीपोवा १०, रामको घर"
+              required
+            />
+            <small class="err" id="err-name"></small>
+          </div>
+
+          <label class="field-label">ठेगाना</label>
+          <div class="mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="address"
+              placeholder="रानीपोवा १०,"
+            />
+            <small class="err" id="err-address"></small>
+          </div>
+
+          <label class="field-label">घरधनी</label>
+          <div class="input-group owner-group mb-2">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <select
+              class="form-select"
+              id="ownerSelect"
+              aria-label="घरधनी छान्नुहोस्"
+              required
+            >
+              <option value="" selected disabled>घरधनी छान्नुहोस्…</option>
+            </select>
+            <button
+              class="btn btn-add-owner"
+              type="button"
+              id="addOwnerBtn"
+              title="घरधनी थप्नुहोस्"
+            >
+              <i class="fas fa-plus"></i>
+            </button>
+            <ul
+              id="ownerDropdown"
+              class="list-group"
+              role="listbox"
+              style="display: none"
+            ></ul>
+          </div>
+          <small class="err" id="err-owner_id"></small>
+          <input type="hidden" name="owner_id" id="ownerId" value="" />
+
+          <label class="field-label">सुरु मिति</label>
+          <div class="mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="start_date"
+              placeholder="असार ४,२०८२"
+              onfocus="(this.type='date')"
+              required
+            />
+            <small class="err" id="err-start_date"></small>
+          </div>
+
+          <label class="field-label">समाप्ति मिति</label>
+          <div class="mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="end_date"
+              placeholder="असार ४,२०८२"
+              onfocus="(this.type='date')"
+            />
+            <small class="err" id="err-end_date"></small>
+          </div>
+
+          <label class="field-label">अनुमानित बजेट</label>
+          <div class="mb-2">
+            <input
+              type="text"
+              class="form-control"
+              name="estimated_budget"
+              id="estimated_budget"
+              inputmode="numeric"
+              placeholder="८० लाख रुपैयाँ"
+            />
+            <small class="err" id="err-estimated_budget"></small>
+          </div>
+
+          <label class="field-label">विवरण</label>
+          <div class="mb-2">
+            <textarea
+              class="form-control"
+              name="description"
+              placeholder="विवरण लेख्नुहोस्..."
+              rows="3"
+            ></textarea>
+            <small class="err" id="err-description"></small>
+          </div>
+
+          <div class="document-section">
+            <h5>साइट कागजातहरू</h5>
+            <label for="imageUpload" class="image-upload-box">
+              <i class="fas fa-image"></i><span>फोटो हाल्नुहोस्</span>
+            </label>
+            <input
+              type="file"
+              id="imageUpload"
+              name="images[]"
+              class="d-none"
+              multiple
+              accept="image/*"
+            />
+            <div id="imagePreview" class="d-flex flex-wrap mt-2 gap-2"></div>
+            <small class="err" id="err-images"></small>
+
+            <label class="field-label">स्थिति</label>
+            <div class="mb-2">
+              <select class="form-control" name="status" required>
+                <option value="ongoing" selected>प्रगतिमा</option>
+                <option value="completed">सम्पन्न</option>
+              </select>
+              <small class="err" id="err-status"></small>
             </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" placeholder="ठेगाना" name="address" />
-            </div>
-            <div class="input-group mb-3 position-relative">
-                <span class="input-group-text"><i class="fas fa-search"></i></span>
-                <input
-                    type="text"
-                    class="form-control"
-                    placeholder="घरधनी खोज्नुहोस्"
-                    id="ownerNameInput"
-                    required
-                    aria-autocomplete="list"
-                />
-                <button class="btn btn-add-owner" type="button" title="घरधनी थप्नुहोस्" id="addOwnerBtn">
-                    <i class="fas fa-plus"></i>
-                </button>
+          </div>
 
-                <!-- Dropdown container -->
-                <ul
-                    id="ownerDropdown"
-                    class="list-group position-absolute"
-                    style="top: 100%; left: 0; right: 50px; z-index: 1000; max-height: 150px; overflow-y: auto; display:none;"
-                    role="listbox"
-                ></ul>
-            </div>
-
-            <!-- Hidden owner_id input -->
-            <input type="hidden" name="owner_id" id="ownerId" value="" />
-
-            <div class="mb-3">
-                <input type="text" class="form-control" placeholder="सुरु मिति" name="start_date" onfocus="(this.type='date')" required />
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" placeholder="समाप्ति मिति" name="end_date" onfocus="(this.type='date')" />
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" placeholder="अनुमानित बजेट" name="estimated_budget" />
-            </div>
-            <div class="mb-3">
-                <textarea class="form-control" rows="3" placeholder="विवरण" name="description"></textarea>
-            </div>
-
-            <hr />
-
-            <!-- Documents Section -->
-            <div class="document-section">
-    <h5>साइट कागजातहरू</h5>
-    <label for="imageUpload" class="image-upload-box" style="cursor:pointer;">
-        <i class="fas fa-image"></i>
-        <span>फोटो हाल्नुहोस्</span>
-    </label>
-    <input type="file" id="imageUpload" name="images[]" class="d-none" multiple accept="image/*" />
-
-    <!-- Thumbnails preview -->
-    <div id="imagePreview" class="d-flex flex-wrap mt-2 gap-2"></div>
-
-   <div class="mt-3">
-    <select class="form-control" name="status" required>
-        <option value="ongoing" selected>Ongoing</option>
-        <option value="completed">Completed</option>
-    </select>
-</div>
-
-
-</div>
-
-            <div class="action-buttons mt-4">
-                <button type="submit" class="btn btn-primary-action w-100">साइट निर्माण गर्नुहोस्</button>
-                <button type="button" class="btn btn-secondary-action w-100 mt-2" onclick="window.location.href='c-site-list.html'">रद्द गर्नुहोस्</button>
-            </div>
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary-action w-100">
+              साइट निर्माण गर्नुहोस्
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary-action w-100 mt-2"
+              onclick="window.location.href='c-site-list.html'"
+            >
+              रद्द गर्नुहोस्
+            </button>
+          </div>
         </form>
-    </main>
-</div>
+      </main>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Owner (+) Modal -->
+    <div class="modal fade" id="ownerModal" tabindex="-1" aria-hidden="true">
+      <div
+        class="modal-dialog modal-dialog-centered"
+        style="max-width: 420px; width: calc(100vw - 32px)"
+      >
+        <div class="modal-content owner-modal">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">नयाँ घरधनी थप्नुहोस्</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
 
-<script>
-const ownerNameInput = document.getElementById('ownerNameInput');
-const ownerDropdown = document.getElementById('ownerDropdown');
-const ownerIdInput = document.getElementById('ownerId');
-const addOwnerBtn = document.getElementById('addOwnerBtn');
+          <form id="ownerForm" class="modal-body pt-0" novalidate>
+            <div class="mb-3">
+              <input
+                id="om_name"
+                type="text"
+                class="form-control"
+                placeholder="घरधनीको नाम"
+                required
+              />
+              <small class="err" id="err-om_name"></small>
+            </div>
+            <div class="mb-3">
+              <input
+                id="om_address"
+                type="text"
+                class="form-control"
+                placeholder="ठेगाना"
+                required
+              />
+              <small class="err" id="err-om_address"></small>
+            </div>
+            <div class="mb-3">
+              <input
+                id="om_phone"
+                type="tel"
+                inputmode="numeric"
+                class="form-control"
+                placeholder="फोन नम्बर (१० अंक)"
+                maxlength="10"
+                required
+              />
+              <small class="err" id="err-om_phone"></small>
+            </div>
 
-let owners = [];
+            <div class="d-flex gap-2 pt-2">
+              <button
+                id="ownerSaveBtn"
+                class="btn btn-success flex-fill"
+                type="submit"
+              >
+                थप्नुहोस्
+              </button>
+              <button
+                class="btn btn-light flex-fill"
+                type="button"
+                data-bs-dismiss="modal"
+              >
+                रद्द गर्नुहोस्
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-// Fetch owners on page load
-async function fetchOwners() {
-    const token = localStorage.getItem('auth_token');
-    if (!token) return;
+    <!-- Toast host -->
+    <div id="toast" role="status" aria-live="polite"></div>
 
-    try {
-        const res = await fetch('http://192.168.1.209:8000/api/owners', {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        if (res.ok) {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      /* ---------- Toast ---------- */
+      function toast(msg, kind = "success") {
+        const t = document.getElementById("toast");
+        const icon =
+          kind === "error"
+            ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>`
+            : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>`;
+
+        t.innerHTML = `
+    <span class="toast-badge ${kind === "error" ? "error" : ""}">${icon}</span>
+    <span class="toast-msg">${msg || ""}</span>
+    <span class="toast-x" aria-label="Close">×</span>
+  `;
+
+        t.classList.add("show");
+        t.querySelector(".toast-x").onclick = () => t.classList.remove("show");
+
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => t.classList.remove("show"), 2000);
+      }
+
+      // Nepali/English digit helpers + filter for the field
+      const NP = "०१२३४५६७८९",
+        EN = "0123456789";
+      const toEn = (s) =>
+        String(s || "").replace(/[०-९]/g, (d) => EN[NP.indexOf(d)]);
+      const onlyDigits = (s) => String(s || "").replace(/[^\d]/g, "");
+
+      // === Budget input: allow Nepali text to remain visible ===
+      const amtEl = document.getElementById("estimated_budget");
+      amtEl.addEventListener("input", (e) => {
+        // Keep Nepali letters, spaces, punctuation, and digits (EN/NP)
+        // This way "८० लाख रुपैयाँ" stays as typed.
+        e.target.value = e.target.value.replace(
+          /[^\d०-९\u0900-\u097F\s,.\-]/g,
+          ""
+        );
+        // Clear inline error while typing
+        clearFieldError("estimated_budget");
+      });
+
+      /* --- OWNER: dropdown-only + (+) button --- */
+      const ownerSelect = document.getElementById("ownerSelect");
+      const ownerIdInput = document.getElementById("ownerId");
+      const addOwnerBtn = document.getElementById("addOwnerBtn");
+
+      let owners = [];
+
+      async function fetchOwners() {
+        const raw = localStorage.getItem("auth_token");
+        if (!raw) return;
+        const token = raw.includes("|") ? raw.split("|")[1] : raw;
+        try {
+          const res = await fetch("http://192.168.1.209:8000/api/owners", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          if (res.ok) {
             owners = await res.json();
-            console.log('Owners loaded:', owners);
-        } else {
-            console.error('Failed to fetch owners', res.status);
+            renderOwnerOptions(owners);
+            updateOwnerSelectStyle();
+          }
+        } catch (e) {
+          console.error("Error fetching owners", e);
         }
-    } catch (e) {
-        console.error('Error fetching owners', e);
-    }
-}
+      }
+      fetchOwners();
 
-fetchOwners();
+      function renderOwnerOptions(list) {
+        ownerSelect.innerHTML =
+          '<option value="" selected disabled>घरधनी छान्नुहोस्…</option>' +
+          (list || [])
+            .map(
+              (o) => `<option value="${o.id}">${o.name || "(No name)"}</option>`
+            )
+            .join("");
+        if (ownerIdInput.value) ownerSelect.value = ownerIdInput.value;
+        updateOwnerSelectStyle();
+      }
 
-// Owner dropdown logic (unchanged)
-ownerNameInput.addEventListener('input', () => {
-    const query = ownerNameInput.value.trim().toLowerCase();
-    ownerIdInput.value = '';
+      function updateOwnerSelectStyle() {
+        const hasVal = !!(ownerSelect.value && ownerSelect.value !== "");
+        ownerSelect.classList.toggle("has-value", hasVal);
+      }
 
-    if (!query) {
-        ownerDropdown.style.display = 'none';
-        return;
-    }
+      ownerSelect.addEventListener("change", () => {
+        ownerIdInput.value = ownerSelect.value || "";
+        updateOwnerSelectStyle();
+        clearFieldError("owner_id");
+      });
 
-    const filtered = owners.filter(o => o.name.toLowerCase().includes(query));
-    if (filtered.length === 0) {
-        ownerDropdown.style.display = 'none';
-        return;
-    }
+      /* ------- Owner (+) modal wiring ------- */
+      const ownerModalEl = document.getElementById("ownerModal");
+      const ownerModal = new bootstrap.Modal(ownerModalEl);
+      const ownerForm = document.getElementById("ownerForm");
+      const ownerSaveBtn = document.getElementById("ownerSaveBtn");
 
-    ownerDropdown.innerHTML = filtered
-        .map(o => `<li class="list-group-item list-group-item-action" data-id="${o.id}" role="option">${o.name}</li>`)
-        .join('');
+      addOwnerBtn.addEventListener("click", () => {
+        ownerForm.reset();
+        clearOwnerAll();
+        ownerModal.show();
+        setTimeout(() => document.getElementById("om_name").focus(), 150);
+      });
+      ownerModalEl.addEventListener("hidden.bs.modal", clearOwnerAll);
 
-    ownerDropdown.style.display = 'block';
-});
-ownerNameInput.addEventListener('focus', () => {
-    const query = ownerNameInput.value.trim().toLowerCase();
-    if (!query) {
-        if (owners.length === 0) {
-            ownerDropdown.style.display = 'none';
-            return;
+      function getToken() {
+        const raw = localStorage.getItem("auth_token");
+        return raw && raw.includes("|") ? raw.split("|")[1] : raw;
+      }
+
+      function pickOwnerFromResponse(data) {
+        if (!data) return null;
+        if (data.id) return { id: String(data.id), name: data.name || "" };
+        if (data.owner?.id)
+          return { id: String(data.owner.id), name: data.owner.name || "" };
+        if (data.data?.id)
+          return { id: String(data.data.id), name: data.data.name || "" };
+        if (data.data?.owner?.id)
+          return {
+            id: String(data.data.owner.id),
+            name: data.data.owner.name || "",
+          };
+        if (Array.isArray(data) && data[0]?.id)
+          return { id: String(data[0].id), name: data[0].name || "" };
+        return null;
+      }
+
+      function upsertOwnerLocally(o) {
+        if (!o || !o.id) return;
+        const idx = owners.findIndex((x) => String(x.id) === String(o.id));
+        if (idx >= 0) owners[idx] = o;
+        else owners.push(o);
+        renderOwnerOptions(owners);
+      }
+
+      /* ---- owner input helpers + validation ---- */
+      const phoneInput = document.getElementById("om_phone");
+      if (phoneInput) {
+        phoneInput.addEventListener("input", () => {
+          phoneInput.value = phoneInput.value.replace(/\D/g, "").slice(0, 10);
+          clearOwnerErr("om_phone");
+        });
+      }
+
+      // Nepali message helpers for server errors
+      function npFieldLabel(field) {
+        switch (field) {
+          case "name":
+          case "om_name":
+            return "घरधनीको नाम";
+          case "address":
+          case "om_address":
+            return "ठेगाना";
+          case "phone_no":
+          case "om_phone":
+            return "फोन नम्बर";
+          default:
+            return "यो फिल्ड";
+        }
+      }
+      function toNepaliOwnerError(field, rawMsg) {
+        const label = npFieldLabel(field);
+        const m = String(rawMsg || "").toLowerCase();
+        if (m.includes("required")) return `${label} आवश्यक छ।`;
+        if (m.includes("digits") || m.includes("size"))
+          return "फोन नम्बर १० अंकको हुनुपर्छ।";
+        if (m.includes("numeric"))
+          return "फोन नम्बरमा अंक मात्र प्रयोग गर्नुहोस्।";
+        if (m.includes("unique")) return `${label} पहिल्यै दर्ता भइसकेको छ।`;
+        if (m.includes("max") || m.includes("too long"))
+          return `${label} धेरै लामो छ।`;
+        return rawMsg || `${label} अमान्य छ।`;
+      }
+
+      ownerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearOwnerAll();
+
+        const name = document.getElementById("om_name").value.trim();
+        const address = document.getElementById("om_address").value.trim();
+        const phone = document.getElementById("om_phone").value.trim();
+
+        // Client-side requireds (all three)
+        let ok = true;
+        if (!name) {
+          setOwnerErr("om_name", "घरধनीको नाम आवश्यक छ।");
+          ok = false;
+        }
+        if (!address) {
+          setOwnerErr("om_address", "ठेगाना आवश्यक छ।");
+          ok = false;
         }
 
-        ownerDropdown.innerHTML = owners
-            .map(o => `<li class="list-group-item list-group-item-action" data-id="${o.id}" role="option">${o.name}</li>`)
-            .join('');
-        ownerDropdown.style.display = 'block';
-        ownerIdInput.value = '';
-        return;
-    }
+        if (!phone) {
+          setOwnerErr("om_phone", "फोन नम्बर आवश्यक छ।");
+          ok = false;
+        } else if (!/^\d{10}$/.test(phone)) {
+          setOwnerErr("om_phone", "फोन नम्बर १० अंकको हुनुपर्छ।");
+          ok = false;
+        }
+        if (!ok) return;
 
-    const filtered = owners.filter(o => o.name.toLowerCase().includes(query));
-    if (filtered.length === 0) {
-        ownerDropdown.style.display = 'none';
-        return;
-    }
-    ownerDropdown.innerHTML = filtered
-        .map(o => `<li class="list-group-item list-group-item-action" data-id="${o.id}" role="option">${o.name}</li>`)
-        .join('');
-    ownerDropdown.style.display = 'block';
-});
-
-ownerDropdown.addEventListener('click', (e) => {
-    if (e.target.tagName === 'LI') {
-        ownerNameInput.value = e.target.textContent;
-        ownerIdInput.value = e.target.dataset.id;
-        ownerDropdown.style.display = 'none';
-    }
-});
-
-document.addEventListener('click', (e) => {
-    if (!ownerNameInput.contains(e.target) && !ownerDropdown.contains(e.target)) {
-        ownerDropdown.style.display = 'none';
-    }
-});
-
-addOwnerBtn.addEventListener('click', () => {
-    window.location.href = 'addowner.html';
-});
-
-// ----- IMAGE UPLOAD PREVIEW & VALIDATION -----
-const MAX_FILES = 5;
-const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-const imageInput = document.getElementById('imageUpload');
-
-// Create preview container dynamically
-let imagePreview = document.getElementById('imagePreview');
-if (!imagePreview) {
-    imagePreview = document.createElement('div');
-    imagePreview.id = 'imagePreview';
-    imagePreview.classList.add('mt-2', 'd-flex', 'gap-2', 'flex-wrap');
-    imageInput.parentNode.appendChild(imagePreview);
-}
-
-let selectedFiles = [];
-
-imageInput.addEventListener('change', () => {
-    const files = Array.from(imageInput.files);
-
-    for (const file of files) {
-        if (selectedFiles.length >= MAX_FILES) {
-            alert(`❌ अधिकतम ${MAX_FILES} तस्वीर मात्र चयन गर्न सकिन्छ।`);
-            break;
+        const TOKEN = getToken();
+        if (!TOKEN) {
+          setOwnerErr("om_name", "कृपया लगइन गर्नुहोस्।");
+          return;
         }
 
-        if (file.size > MAX_SIZE) {
-            alert(`❌ "${file.name}" को साइज धेरै ठूलो छ। अधिकतम 2MB मात्र।`);
-            continue;
-        }
+        ownerSaveBtn.disabled = true;
+        ownerSaveBtn.textContent = "थपिँदै...";
 
-        selectedFiles.push(file);
-
-        const reader = new FileReader();
-        reader.onload = e => {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.style.width = '70px';
-            img.style.height = '70px';
-            img.style.objectFit = 'cover';
-            img.classList.add('border', 'rounded');
-            imagePreview.appendChild(img);
-        }
-        reader.readAsDataURL(file);
-    }
-
-    // Reset the input so same file can be selected again if needed
-    imageInput.value = '';
-});
-
-// Form submission with validation
-document.getElementById('siteForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const selectedOwnerId = ownerIdInput.value.trim();
-    const ownerName = ownerNameInput.value.trim();
-
-    const matchedOwner = owners.find(o => o.id == selectedOwnerId && o.name === ownerName);
-
-    if (!matchedOwner) {
-        alert('कृपया सूचीबाट घरधनी छान्नुहोस् वा नयाँ घरधनी थप्नुहोस्।');
-        return;
-    }
-
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
-        alert("⚠️ कृपया लगइन गर्नुहोस्।");
-        return;
-    }
-
-    const form = new FormData();
-    form.append('name', this.name.value);
-    form.append('address', this.address.value);
-    form.append('owner_id', selectedOwnerId);
-    form.append('start_date', this.start_date.value);
-    form.append('end_date', this.end_date.value);
-    form.append('estimated_budget', this.estimated_budget.value);
-    form.append('description', this.description.value);
-form.append('status', this.status.value);
-
-    // Append selected files
-    for (let i = 0; i < selectedFiles.length; i++) {
-        form.append('images[]', selectedFiles[i]);
-    }
-
-    form.set('owner_id', selectedOwnerId);
-
-    try {
-        const response = await fetch('http://192.168.1.209:8000/api/sites', {
-            method: 'POST',
+        try {
+          const res = await fetch("http://192.168.1.209:8000/api/owners", {
+            method: "POST",
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json' 
+              Authorization: `Bearer ${TOKEN}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
             },
-            body: form
+            body: JSON.stringify({
+              name,
+              address,
+              phone_no: phone,
+            }),
+          });
+
+          const raw = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            if (res.status === 422 && raw?.errors) {
+              if (raw.errors.name)
+                setOwnerErr(
+                  "om_name",
+                  toNepaliOwnerError(
+                    "name",
+                    Array.isArray(raw.errors.name)
+                      ? raw.errors.name[0]
+                      : raw.errors.name
+                  )
+                );
+              if (raw.errors.address)
+                setOwnerErr(
+                  "om_address",
+                  toNepaliOwnerError(
+                    "address",
+                    Array.isArray(raw.errors.address)
+                      ? raw.errors.address[0]
+                      : raw.errors.address
+                  )
+                );
+              if (raw.errors.phone_no)
+                setOwnerErr(
+                  "om_phone",
+                  toNepaliOwnerError(
+                    "phone_no",
+                    Array.isArray(raw.errors.phone_no)
+                      ? raw.errors.phone_no[0]
+                      : raw.errors.phone_no
+                  )
+                );
+              return;
+            }
+            throw new Error(raw?.message || `HTTP ${res.status}`);
+          }
+
+          const created = pickOwnerFromResponse(raw) || { id: raw.id, name };
+          upsertOwnerLocally(created);
+
+          ownerSelect.value = created.id;
+          ownerIdInput.value = created.id;
+          updateOwnerSelectStyle();
+          clearFieldError("owner_id");
+
+          ownerModal.hide();
+          toast("घरधनी थपियो", "success");
+        } catch (err) {
+          setOwnerErr(
+            "om_name",
+            "घरधनी थप्न समस्या: " + (err.message || "अज्ञात त्रुटि")
+          );
+        } finally {
+          ownerSaveBtn.disabled = false;
+          ownerSaveBtn.textContent = "थप्नुहोस्";
+        }
+      });
+
+      /* --- images --- */
+      const MAX_FILES = 5,
+        MAX_SIZE = 2 * 1024 * 1024;
+      const imageInput = document.getElementById("imageUpload");
+      const imagePreview = document.getElementById("imagePreview");
+      let selectedFiles = [];
+
+      imageInput.addEventListener("change", () => {
+        const files = Array.from(imageInput.files);
+        for (const f of files) {
+          if (selectedFiles.length >= MAX_FILES) {
+            setFieldError(
+              "images",
+              `अधिकतम ${MAX_FILES} तस्वीर मात्र चयन गर्न सकिन्छ।`
+            );
+            break;
+          }
+          if (f.size > MAX_SIZE) {
+            setFieldError(
+              "images",
+              `"${f.name}" को साइज धेरै ठूलो छ (२MB max).`
+            );
+            continue;
+          }
+          selectedFiles.push(f);
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.style.width = "70px";
+            img.style.height = "70px";
+            img.style.objectFit = "cover";
+            img.classList.add("border", "rounded");
+            imagePreview.appendChild(img);
+          };
+          reader.readAsDataURL(f);
+        }
+        imageInput.value = "";
+      });
+
+      /* ---------- Site form inline errors ---------- */
+      const formEl = document.getElementById("siteForm");
+      const fieldMap = {
+        name: () => formEl.name,
+        address: () => formEl.address,
+        owner_id: () => ownerSelect,
+        start_date: () => formEl.start_date,
+        end_date: () => formEl.end_date,
+        estimated_budget: () => formEl.estimated_budget,
+        description: () => formEl.description,
+        images: () => imageInput,
+        status: () => formEl.status,
+      };
+
+      function setFieldError(field, msg) {
+        const errEl = document.getElementById(`err-${field}`);
+        if (errEl) {
+          errEl.textContent = msg || "";
+        }
+        const input = fieldMap[field]?.();
+        if (input) {
+          input.classList.add("is-invalid");
+        }
+      }
+      function clearFieldError(field) {
+        const errEl = document.getElementById(`err-${field}`);
+        if (errEl) {
+          errEl.textContent = "";
+        }
+        const input = fieldMap[field]?.();
+        if (input) {
+          input.classList.remove("is-invalid");
+        }
+      }
+      function clearAllErrors() {
+        Object.keys(fieldMap).forEach(clearFieldError);
+      }
+
+      [
+        "name",
+        "address",
+        "start_date",
+        "end_date",
+        "estimated_budget",
+        "description",
+      ].forEach((n) => {
+        const el = formEl[n];
+        el && el.addEventListener("input", () => clearFieldError(n));
+      });
+      formEl.status &&
+        formEl.status.addEventListener("change", () =>
+          clearFieldError("status")
+        );
+
+      // ===== Date validation (format + sensible year range) =====
+      const MIN_YEAR = 1900;
+      const MAX_YEAR = 2100;
+
+      function validDateYMD(str) {
+        if (!str) return false;
+        // accept Nepali digits too: normalize to EN
+        const s = toEn(str);
+        const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return false;
+        const y = parseInt(m[1], 10);
+        const mo = parseInt(m[2], 10);
+        const d = parseInt(m[3], 10);
+        if (y < MIN_YEAR || y > MAX_YEAR) return "year";
+        if (mo < 1 || mo > 12) return false;
+        const dt = new Date(y, mo - 1, d);
+        const ok =
+          dt.getFullYear() === y &&
+          dt.getMonth() === mo - 1 &&
+          dt.getDate() === d;
+        return ok ? true : false;
+      }
+
+      function validateDateField(nameKey) {
+        const el = formEl[nameKey];
+        if (!el || !el.value) {
+          // handled by required check elsewhere
+          return true;
+        }
+        const res = validDateYMD(el.value);
+        if (res === true) {
+          clearFieldError(nameKey);
+          return true;
+        }
+        if (res === "year") {
+          setFieldError(
+            nameKey,
+            `वर्ष ${MIN_YEAR}–${MAX_YEAR} बीच हुनुपर्छ।`
+          );
+          return false;
+        }
+        setFieldError(nameKey, "मिति अमान्य छ (YYYY-MM-DD ढाँचा प्रयोग गर्नुहोस्)।");
+        return false;
+      }
+
+      // Validate on blur as well
+      formEl.start_date.addEventListener("blur", () =>
+        validateDateField("start_date")
+      );
+      formEl.end_date.addEventListener("blur", () =>
+        validateDateField("end_date")
+      );
+
+      document
+        .getElementById("siteForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          clearAllErrors();
+
+          let ok = true;
+          if (!this.name.value.trim()) {
+            setFieldError("name", "साइटको नाम आवश्यक छ।");
+            ok = false;
+          }
+          if (!ownerIdInput.value.trim()) {
+            setFieldError("owner_id", "घरधनी छान्नुहोस्।");
+            ok = false;
+          }
+          if (!this.start_date.value) {
+            setFieldError("start_date", "सुरु मिति आवश्यक छ।");
+            ok = false;
+          } else if (!validateDateField("start_date")) {
+            ok = false;
+          }
+
+          if (this.end_date.value && !validateDateField("end_date")) {
+            ok = false;
+          }
+
+          /* NEW: end_date must not be before start_date */
+          if (
+            ok &&
+            this.end_date.value &&
+            this.start_date.value &&
+            validDateYMD(this.start_date.value) === true &&
+            validDateYMD(this.end_date.value) === true
+          ) {
+            const s = new Date(toEn(this.start_date.value));
+            const eDate = new Date(toEn(this.end_date.value));
+            if (eDate < s) {
+              setFieldError(
+                "end_date",
+                "समाप्ति मिति सुरु मितिभन्दा पछाडि हुनुपर्छ।"
+              );
+              clearFieldError("start_date");
+              ok = false;
+            }
+          }
+
+          if (!ok) {
+            const firstErr = document.querySelector(".is-invalid");
+            firstErr &&
+              firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+          }
+
+          const raw = localStorage.getItem("auth_token");
+          if (!raw) {
+            setFieldError("name", "⚠️ कृपया लगइन गर्नुहोस्।");
+            return;
+          }
+          const token = raw.includes("|") ? raw.split("|")[1] : raw;
+
+          const form = new FormData();
+          form.append("name", this.name.value);
+          form.append("address", this.address.value);
+          form.append("owner_id", ownerIdInput.value.trim());
+          form.append("start_date", this.start_date.value);
+          form.append("end_date", this.end_date.value);
+          // Send numeric-only to API but keep Nepali text in UI
+          form.append(
+            "estimated_budget",
+            onlyDigits(toEn(this.estimated_budget.value))
+          );
+          form.append("description", this.description.value);
+          form.append("status", this.status.value);
+          for (let i = 0; i < selectedFiles.length; i++) {
+            form.append("images[]", selectedFiles[i]);
+          }
+
+          try {
+            const response = await fetch(
+              "http://192.168.1.209:8000/api/sites",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  Accept: "application/json",
+                },
+                body: form,
+              }
+            );
+            const data = await response.json().catch(() => ({}));
+            if (response.ok) {
+              sessionStorage.setItem("toast_msg", "साइट सफलतापूर्वक थपियो");
+              sessionStorage.setItem("toast_kind", "success");
+              window.location.href = "c-site-list.html";
+              return;
+            } else {
+              if (response.status === 422 && data?.errors) {
+                Object.entries(data.errors).forEach(([field, msgs]) => {
+                  setFieldError(
+                    field,
+                    Array.isArray(msgs) ? msgs[0] : String(msgs)
+                  );
+                });
+                const firstErr = document.querySelector(".is-invalid");
+                firstErr &&
+                  firstErr.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
+              } else {
+                setFieldError("name", data?.message || "❌ साइट थप्न सकेन");
+                console.error(data);
+              }
+            }
+          } catch (err) {
+            console.error(err);
+            setFieldError("name", "📡 सर्भरमा समस्या भयो");
+          }
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-            alert("✅ साइट सफलतापूर्वक थपियो");
-            window.location.href = "c-site-list.html";
-        } else {
-            alert(data.message || "❌ साइट थप्न सकेन");
-            console.error(data);
-        }
-    } catch (error) {
-        console.error(error);
-        alert("📡 सर्भरमा समस्या भयो");
-    }
-});
-</script>
-
-
-
-</body>
+      /* ---- owner error helpers ---- */
+      function setOwnerErr(id, msg) {
+        const input = document.getElementById(id);
+        const row = document.getElementById("err-" + id);
+        if (input) input.classList.add("is-invalid");
+        if (row) row.textContent = msg || "";
+      }
+      function clearOwnerErr(id) {
+        const input = document.getElementById(id);
+        const row = document.getElementById("err-" + id);
+        if (input) input.classList.remove("is-invalid");
+        if (row) row.textContent = "";
+      }
+      function clearOwnerAll() {
+        ["om_name", "om_address", "om_phone"].forEach(clearOwnerErr);
+      }
+      ["om_name", "om_address", "om_phone"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("input", () => clearOwnerErr(id));
+      });
+    </script>
+  </body>
 </html>

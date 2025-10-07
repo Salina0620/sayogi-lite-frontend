@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>रिपोर्टहरू हेर्नुहोस्</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+
+    <style>
+      :root{
+        --green:#13a87d;       /* header */
+        --surface:#ffffff;     /* cards */
+        --bg:#f6f7f8;          /* page bg */
+        --text:#0f172a;        /* main text */
+        --muted:#667085;       /* gray text */
+        --ring:#dfe3ea;        /* card border */
+        --chev:#101828;        /* chevron */
+        --safe-t:env(safe-area-inset-top,0px);
+        --safe-b:env(safe-area-inset-bottom,0px);
+        --safe-l:env(safe-area-inset-left,0px);
+        --safe-r:env(safe-area-inset-right,0px);
+      }
+
+      *{ box-sizing:border-box; }
+      html,body{ height:100%; margin:0; }
+
+      body{
+        font-family:"Noto Sans Devanagari", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color:var(--text);
+        background:var(--bg);
+        -webkit-font-smoothing:antialiased;
+        overflow:hidden; /* page container will scroll */
+      }
+
+      /* Page frame */
+      .page{
+        position:fixed; inset:0;
+        display:flex; flex-direction:column;
+        width:100vw; height:100dvh; /* modern mobile viewport */
+        min-height:100svh;          /* iOS Safari fallback */
+        background:var(--bg);
+      }
+
+      /* Header */
+      .header{
+        background:var(--green);
+        color:#fff;
+        padding:calc(12px + var(--safe-t)) calc(12px + var(--safe-l)) 12px calc(12px + var(--safe-l));
+      }
+      .header-row{
+        display:flex; align-items:center; gap:10px;
+      }
+      .back{
+        color:#fff; text-decoration:none;
+        font-size:18px; line-height:1;
+        display:inline-grid; place-items:center;
+        width:36px; height:36px; border-radius:10px;
+      }
+      .title{
+        margin:0; flex:1; text-align:center;
+        font-weight:700; font-size:18px; letter-spacing:.2px;
+        transform:translateX(-18px); /* center visually with back arrow */
+      }
+
+      /* Content area (scrolls) */
+      .content{
+        flex:1 1 auto; min-height:0;
+        overflow:auto; -webkit-overflow-scrolling:touch;
+        padding:16px calc(16px + var(--safe-r)) calc(16px + var(--safe-b)) calc(16px + var(--safe-l));
+      }
+      .content::-webkit-scrollbar{ width:0; height:0; }
+
+      /* Section headings */
+      .section-title{
+        margin:6px 2px 10px;
+        font-size:14px; font-weight:600; color:#1f2937;
+      }
+
+      /* Card group */
+      .card{
+        background:var(--surface);
+        border:1px solid var(--ring);
+        border-radius:12px;
+        padding:6px;
+      }
+
+      /* List rows */
+      .rowlink{
+        display:grid; grid-template-columns:auto 1fr auto;
+        align-items:center;
+        gap:12px;
+        padding:12px 10px;
+        border-radius:10px;
+        text-decoration:none;
+        color:var(--text);
+      }
+      .rowlink + .rowlink{ margin-top:4px; }
+
+      /* left icon circle */
+      .ico{
+        width:28px; height:28px; border-radius:50%;
+        display:grid; place-items:center;
+        background:#eef4ff; color:#2153d6;
+        font-size:14px;
+      }
+
+      /* labels */
+      .label{
+        font-size:15px; font-weight:600;
+      }
+
+      /* right chevron */
+      .chev{
+        color:var(--chev); font-size:16px;
+      }
+
+      /* subtle pressed state */
+      .rowlink:active{ background:#f2f4f7; }
+
+      /* Two blocks spacing */
+      .block + .block{ margin-top:18px; }
+
+      /* Edge-to-edge tweak for very small screens */
+      @media (max-width:360px){
+        .title{ font-size:17px; transform:translateX(-14px); }
+        .label{ font-size:14.5px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="reports-page">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-row">
+          <a class="back" href="javascript:history.back()" aria-label="पछाडि">
+            <i class="fa-solid fa-chevron-left"></i>
+          </a>
+          <h1 class="title">रिपोर्टहरू हेर्नुहोस्</h1>
+          <span style="width:36px;height:36px;"></span>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="content">
+        <!-- Frequent -->
+        <section class="block">
+          <h2 class="section-title">प्रायः हेरीएका रिपोर्टहरू</h2>
+          <div class="card">
+            <a class="rowlink" href="#">
+              <span class="ico"><i class="fa-solid fa-user-group"></i></span>
+              <span class="label">पार्टीहरूको रिपोर्ट</span>
+              <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+            </a>
+
+            <a class="rowlink" href="#">
+              <span class="ico"><i class="fa-solid fa-grip"></i></span>
+              <span class="label">क्याटेगोरीज म्यानेज गर्नुहोस्</span>
+              <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+            </a>
+
+            <a class="rowlink" href="#">
+              <span class="ico"><i class="fa-solid fa-gem"></i></span>
+              <span class="label">रिसोर्स रिपोर्ट</span>
+              <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+            </a>
+
+            <a class="rowlink" href="#">
+              <span class="ico"><i class="fa-solid fa-id-card"></i></span>
+              <span class="label">द सेटिङ</span>
+              <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+            </a>
+          </div>
+        </section>
+
+        <!-- All -->
+        <section class="block">
+          <h2 class="section-title">सबै रिपोर्टहरू</h2>
+          <div class="card">
+            <a class="rowlink" href="#">
+              <span class="ico"><i class="fa-solid fa-person-digging"></i></span>
+              <span class="label">साइटहरू रिपोर्ट</span>
+              <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+            </a>
+
+            <a class="rowlink" href="#">
+              <span class="ico"><i class="fa-solid fa-chart-line"></i></span>
+              <span class="label">आम्दानी खर्च रिपोर्ट</span>
+              <span class="chev"><i class="fa-solid fa-chevron-right"></i></span>
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Optional: if you pass a `return` URL param, back arrow goes there.
+      (function(){
+        const params = new URLSearchParams(location.search);
+        const back = document.querySelector('.back');
+        const ret = params.get('return');
+        if(ret){
+          back.href = ret;
+        }
+      })();
+    </script>
+  </body>
+</html>

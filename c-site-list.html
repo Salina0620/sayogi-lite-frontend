@@ -2,170 +2,291 @@
 <html lang="ne">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Construction Sites</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="CSS/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>साइटहरू</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+      :root {
+        --brand-green:#1ab189;
+        --cta-blue:#186b97;
+        --bg:#f3f5f7;
+        --surface:#fff;
+        --text-900:#0f172a;
+        --text-700:#344054;
+        --muted:#98a2b3;
+        --nav-inactive:#6b7280;
+      }
+
+      html, body{
+        margin:0; height:100%;
+        background:var(--bg); color:var(--text-700);
+        font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+        overflow:hidden;
+      }
+
+      .mobile-container{
+        width:100%; height:100dvh; height:100vh;
+        min-height:100svh; min-height:-webkit-fill-available;
+        background:var(--surface); display:flex; flex-direction:column;
+        overflow:hidden; position:relative;
+        padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
+      }
+      .mobile-container *{ min-width:0; }
+
+      .page-header{ background:var(--brand-green); color:#fff; position:sticky; top:0; z-index:20; }
+      .header-content{
+        position:relative; display:flex; align-items:center; justify-content:center;
+        padding:16px 16px 28px;
+      }
+      .back-arrow{ position:absolute; left:16px; top:16px; color:#fff; font-size:20px; text-decoration:none; }
+      .page-header h1{ margin:0; font-size:20px; font-weight:700; }
+
+      .btn-add-new{
+        position:absolute; right:16px; bottom:-16px;
+        height:34px; padding:0 12px; border-radius:16px;
+        background:var(--cta-blue); color:#fff; border:0;
+        display:inline-flex; align-items:center; gap:6px;
+        font-size:13px; font-weight:600; text-decoration:none;
+        box-shadow:0 2px 6px rgba(11,93,184,.25);
+      }
+
+      .content-area{
+        flex:1 1 auto; padding:26px 14px calc(76px + env(safe-area-inset-bottom));
+        background:linear-gradient(#fff,#fff) padding-box, var(--bg);
+        overflow:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch;
+        scrollbar-width:none; overscroll-behavior-y:contain;
+      }
+      .content-area::-webkit-scrollbar{ width:0; height:0; }
+
+      .search-wrap{ position:relative; }
+      .search-input{
+        width:100%; height:48px; border-radius:28px; border:2px solid #7ed5c3;
+        padding:10px 52px 10px 16px; font-size:15px; background:#fff; color:var(--text-900);
+      }
+      .search-btn{
+        position:absolute; right:6px; top:6px; width:36px; height:36px; border-radius:999px;
+        display:grid; place-items:center; background:var(--brand-green); color:#fff; border:0;
+        pointer-events:none; font-size:14px;
+      }
+
+      .site-list{ display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+      .site-item{
+        display:flex; align-items:center; justify-content:space-between;
+        background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:12px 14px;
+        text-decoration:none; color:inherit;
+      }
+      .site-name{ font-weight:700; font-size:15px; color:var(--text-900); }
+      .site-location{ font-size:12px; color:var(--muted); margin-top:2px; }
+      .site-arrow{ color:#9ca3af; font-size:18px; margin-left:12px; }
+
+      .status-tag{ display:inline-block; margin-top:8px; padding:4px 12px; border-radius:999px; font-size:13px; line-height:1; }
+      .status-ongoing{ background:#e6f4ea; color:#0e8d6a; border:1px solid #cfece0; }
+      .status-paused{ background:#fff3cd; color:#f6a612; border:1px solid #ffe6c7; }
+      .status-completed{ background:#e6f4ea; color:#0e8d6a; border:1px solid #cfece0; }
+
+      .bottom-nav{
+        position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid #e5e7eb;
+        display:flex; justify-content:space-around; align-items:center; z-index:1030;
+        min-height:60px; padding-bottom:calc(6px + env(safe-area-inset-bottom)); transform:translateZ(0);
+      }
+      .bottom-nav .nav-item{
+        padding:6px 0; text-decoration:none; color:var(--nav-inactive);
+        display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; height:100%; justify-content:center;
+      }
+      .bottom-nav .nav-item.active{ color:var(--brand-green); font-weight:700; }
+      .nav-icon{
+        width:clamp(20px,5.2vw,24px); height:clamp(20px,5.2vw,24px); background-color:var(--nav-inactive);
+        -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center;
+        -webkit-mask-size:contain; mask-size:contain; display:block;
+      }
+      .ico-home{ -webkit-mask-image:url("./home.png"); mask-image:url("./home.png"); }
+      .ico-site{ -webkit-mask-image:url("./site.png"); mask-image:url("./site.png"); }
+      .ico-ledger{ -webkit-mask-image:url("./income.png"); mask-image:url("./income.png"); }
+      .ico-party{ -webkit-mask-image:url("./party.png"); mask-image:url("./party.png"); }
+      .ico-more{ -webkit-mask-image:url("./more.png"); mask-image:url("./more.png"); }
+      .bottom-nav .nav-item.active .nav-icon{ background-color:var(--brand-green); }
+
+      @media (max-width:340px){
+        .btn-add-new{ height:32px; font-size:12px; }
+        .search-input{ height:46px; }
+      }
+
+      /* Empty state */
+      .empty-state{
+        text-align:center; color:#475467; padding:28px 8px;
+        display:grid; justify-items:center;
+      }
+      .empty-state img{
+        width:clamp(110px, 28vw, 140px);
+        height:auto; display:block; margin:6px auto 12px;
+      }
+      .empty-state h3{
+        margin:8px 0 6px;
+        font-family:"Noto Sans Devanagari","Poppins",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+        font-size:22px; font-weight:700; color:#0f172a;
+      }
+      .empty-state p{
+        margin:0 0 14px;
+        font-family:"Noto Sans Devanagari","Poppins",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+        font-size:13.5px; line-height:1.5; color:#667085;
+        max-width:22ch;
+      }
+      .empty-state .empty-cta{
+        display:inline-block; padding:10px 16px; border-radius:999px;
+        background:var(--brand-green); color:#fff; text-decoration:none; font-weight:700;
+        box-shadow:0 2px 6px rgba(0,0,0,.12);
+      }
+
+      /* Toast (kept as-is) */
+      #toast{
+        position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); right:calc(12px + env(safe-area-inset-right,0px));
+        background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.18);
+        padding:8px 12px 8px 10px; display:grid; grid-template-columns:28px 1fr 18px; align-items:center; gap:10px;
+        width:max-content; max-width:92vw; color:#111827; opacity:0; transform:translateY(-8px); pointer-events:none;
+        transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2;
+        font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+      #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+      .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; }
+      .toast-badge.success{ background:#74c69d; }
+      .toast-badge.error{ background:#ef4444; }
+      .toast-msg{ font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:"Noto Sans Devanagari", system-ui, -apple-system, "Poppins", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color:#111827; }
+      .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
+      .toast-badge svg{ width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    </style>
   </head>
+
   <body>
     <div class="mobile-container">
-      <!-- Page Header -->
       <header class="page-header">
-        <div class="header-content mb-3 pt-3">
-          <a href="home.html" class="back-arrow"
-            ><i class="fas fa-chevron-left"></i
-          ></a>
+        <div class="header-content">
+          <a href="home.html" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
           <h1>साइटहरू</h1>
-          <a href="new-site-list.html" class="btn btn-add-new">
-            <i class="fas fa-plus"></i> नयाँ
-          </a>
+          <a href="new-site-list.html" class="btn-add-new"><span>+ नयाँ</span></a>
         </div>
       </header>
 
-      <!-- Main Content -->
-      <main class="content-area page-content">
-        <!-- Search Bar -->
-        <div class="search-bar-wrapper search-bar-right-icon mb-4">
-          <input
-            type="text"
-            id="searchInput"
-            class="form-control"
-            placeholder="साइट खोज्नुहोस्..."
-          />
-          <i class="fas fa-search search-icon"></i>
+      <main class="content-area">
+        <div class="search-wrap">
+          <input id="searchInput" class="search-input" type="text" placeholder="साइट खोज्नुहोस्..." />
+          <div class="search-btn"><i class="fas fa-search"></i></div>
         </div>
 
-        <!-- Site List -->
-        <div class="site-list" id="siteList">
-          <!-- Dynamic content will be injected here -->
-        </div>
+        <div class="site-list" id="siteList"></div>
       </main>
 
-      <!-- Bottom Navigation -->
       <nav class="bottom-nav">
-        <a href="home.html" class="nav-item">
-          <i class="fas fa-home"></i> <span>गृह</span>
-        </a>
-        <a href="site-list.html" class="nav-item active">
-          <i class="fas fa-book"></i> <span>खाता</span>
-        </a>
-        <a href="#" class="nav-item">
-          <i class="fas fa-chart-bar"></i> <span>विश्लेषण</span>
-        </a>
-        <a href="owner-list.html" class="nav-item">
-          <i class="fas fa-users"></i> <span>पार्टीहरु</span>
-        </a>
-        <a href="#" class="nav-item">
-          <i class="fas fa-grip"></i> <span>मेनु</span>
-        </a>
+        <a href="home.html" class="nav-item"><span class="nav-icon ico-home"></span><span>होम</span></a>
+        <a href="c-site-list.html" class="nav-item active"><span class="nav-icon ico-site"></span><span>साइट</span></a>
+        <a href="karobar.html" class="nav-item"><span class="nav-icon ico-ledger"></span><span>कारोबारहरू</span></a>
+        <a href="party.html" class="nav-item"><span class="nav-icon ico-party"></span><span>पार्टीहरू</span></a>
+        <a href="more.html" class="nav-item"><span class="nav-icon ico-more"></span><span>अरू</span></a>
       </nav>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Toast host -->
+    <div id="toast" role="status" aria-live="polite"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       const siteList = document.getElementById("siteList");
       const searchInput = document.getElementById("searchInput");
       let sites = [];
 
-      // Function to render sites to the DOM
-      function renderSites(filteredSites) {
-        if (filteredSites.length === 0) {
-          siteList.innerHTML =
-            '<p class="text-center text-muted">साइटहरू भेटिएनन्।</p>';
-          return;
-        }
-
-        siteList.innerHTML = filteredSites
-          .map((site) => {
-            const name = site.name || "नाम छैन";
-            const location = site.address || "ठेगाना उपलब्ध छैन";
-
-            let statusClass = "status-ongoing";
-            let statusText = "चलिरहेको";
-            if (site.status) {
-              if (site.status.toLowerCase() === "paused") {
-                statusClass = "status-paused";
-                statusText = "स्थगित";
-              } else if (site.status.toLowerCase() === "completed") {
-                statusClass = "status-completed";
-                statusText = "सम्पन्न";
-              }
-            }
-
-            const detailUrl = `c-list-info.html?id=${site.id}`;
-
-            return `
-        <a href="${detailUrl}" class="site-item">
-          <div class="site-info">
-            <div class="site-name">${name}</div>
-            <div class="site-location">${location}</div>
-            <span class="status-tag ${statusClass}">${statusText}</span>
-          </div>
-          <i class="fas fa-chevron-right site-arrow"></i>
-        </a>
-      `;
-          })
-          .join("");
+      // Toast
+      function showToast(msg, kind = "success"){
+        const t = document.getElementById("toast");
+        const icon = kind === "error"
+          ? `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>`
+          : `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>`;
+        t.innerHTML = `
+          <span class="toast-badge ${kind === "error" ? "error" : "success"}">${icon}</span>
+          <span class="toast-msg">${msg || ""}</span>
+          <span class="toast-x" aria-label="Close">×</span>`;
+        t.classList.add("show");
+        t.querySelector(".toast-x").onclick = () => t.classList.remove("show");
+        clearTimeout(showToast._t); showToast._t = setTimeout(() => t.classList.remove("show"), 2000);
       }
 
-      // Fetch site data from API with token authorization
-      async function fetchSites() {
-        const token = localStorage.getItem("auth_token");
-        if (!token) {
-          siteList.innerHTML =
-            '<p class="text-center text-danger">⚠️ कृपया लगइन गर्नुहोस्।</p>';
+      // Show toast if redirected
+      (function(){
+        const msg = sessionStorage.getItem("toast_msg");
+        const kind = sessionStorage.getItem("toast_kind") || "success";
+        if (msg){ showToast(msg, kind); sessionStorage.removeItem("toast_msg"); sessionStorage.removeItem("toast_kind"); }
+      })();
+
+      const rawToken = localStorage.getItem("auth_token");
+      const TOKEN = rawToken && rawToken.includes("|") ? rawToken.split("|")[1] : rawToken;
+
+      function statusChip(status){
+        const s = (status ?? "").toString().trim().toLowerCase();
+        if (["completed","complete","done","finished","true","1"].includes(s)) return { cls:"status-completed", text:"सम्पन्न" };
+        if (["ongoing","active","running","progress","in_progress","in-progress"].includes(s)) return { cls:"status-paused", text:"प्रगतिमा" };
+        return { cls:"status-ongoing", text:"सक्रिय" };
+      }
+
+      function renderSites(list){
+        if (!list || list.length === 0){
+          siteList.innerHTML = `
+            <div class="empty-state">
+              <img src="illustration.png" alt="Empty illustration"/>
+              <h3>यो खाली छ,</h3>
+              <p>तपाईंको कुनै पनि साइटहरू छैन जस्तो देखिन्छ।</p>
+              <a class="empty-cta" href="new-site-list.html">सुरु गर्नुहोस्</a>
+            </div>`;
           return;
         }
+        siteList.innerHTML = list.map(site => {
+          const name = site.name || "नाम छैन";
+          const location = site.address || "ठेगाना उपलब्ध छैन";
+          const chip = statusChip(site.status);
+          const detailUrl = `c-list-info.html?id=${encodeURIComponent(site.id)}`;
+          return `
+            <a href="${detailUrl}" class="site-item">
+              <div>
+                <div class="site-name">${name}</div>
+                <div class="site-location">${location}</div>
+                <span class="status-tag ${chip.cls}">${chip.text}</span>
+              </div>
+              <i class="fas fa-chevron-right site-arrow"></i>
+            </a>`;
+        }).join("");
+      }
 
-        try {
-          const response = await fetch("http://192.168.1.209:8000/api/sites", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+      async function fetchSites(){
+        if (!TOKEN){
+          siteList.innerHTML = '<p class="text-center text-danger mt-3">⚠️ कृपया लगइन गर्नुहोस्।</p>';
+          return;
+        }
+        try{
+          const res = await fetch("http://192.168.1.209:8000/api/sites", {
+            headers:{ Authorization:`Bearer ${TOKEN}`, Accept:"application/json" }
           });
-
-          if (!response.ok)
-            throw new Error(`HTTP error! status: ${response.status}`);
-
-          sites = await response.json();
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          sites = await res.json();
           renderSites(sites);
-        } catch (error) {
-          console.error("Failed to fetch sites:", error);
-          siteList.innerHTML =
-            '<p class="text-center text-danger">साइटहरू ल्याउन समस्या भयो। कृपया पछि प्रयास गर्नुहोस्।</p>';
+        }catch(err){
+          console.error(err);
+          siteList.innerHTML = '<p class="text-center text-danger mt-3">साइटहरू ल्याउन समस्या भयो।</p>';
         }
       }
 
-      // Filter sites on search input
       searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim().toLowerCase();
-        if (!query) {
-          renderSites(sites);
-          return;
-        }
-        const filtered = sites.filter(
-          (site) =>
-            (site.name && site.name.toLowerCase().includes(query)) ||
-            (site.address && site.address.toLowerCase().includes(query))
-        );
-        renderSites(filtered);
+        const q = searchInput.value.trim().toLowerCase();
+        if (!q){ renderSites(sites); return; }
+        renderSites(sites.filter(s =>
+          (s.name && s.name.toLowerCase().includes(q)) ||
+          (s.address && s.address.toLowerCase().includes(q))
+        ));
       });
 
-      // Initial fetch on page load
       fetchSites();
     </script>
   </body>

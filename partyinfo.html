@@ -2,71 +2,779 @@
 <html lang="ne">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>सुजुकी इलेक्ट्रानिक सप्लायर्स</title>
-    <link rel="stylesheet" href="styles.css" />
-    <!-- For real icons, you would link a library like Font Awesome here: -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      :root {
+        --brand-green: #13a87d;
+        --cta-blue: #186b97;
+        --alert-red: #dc3545;
+        /* Make heights responsive */
+        --header-h: clamp(84px, 14vh, 110px);
+        --nav-h: clamp(48px, 7vh, 52px);
+        --bg: #f3f5f7;
+        --surface: #fff;
+        --text-900: #0f172a;
+        --text-700: #344054;
+        --text-600: #667085;
+        --shadow-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+        --fab-gap: 88px;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100dvh; /* prefer dynamic viewport in webviews */
+        background: var(--bg);
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        overflow: hidden; /* scroll is handled by .page-content */
+      }
+      * {
+        box-sizing: border-box;
+      }
+      /* Prevent horizontal scroll anywhere */
+      html,
+      body,
+      #party-page {
+        width: 100%;
+        overflow-x: hidden;
+      }
+      img,
+      video,
+      canvas,
+      svg {
+        max-width: 100%;
+        height: auto;
+      }
+
+      body {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Arial, sans-serif;
+      }
+
+      #party-page.mobile-container {
+        width: 100%;
+        height: 100%;
+        background: var(--surface);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        /* guard against accidental bleed */
+        overflow: clip;
+      }
+
+      .page-header {
+        background: var(--brand-green);
+        color: #fff;
+        flex: 0 0 auto;
+        padding-top: env(safe-area-inset-top, 0px);
+        display: flex;
+        flex-direction: column;
+      }
+      .header-row {
+        height: var(--header-h);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px clamp(10px, 4vw, 16px);
+        gap: 8px;
+      }
+      .back-btn {
+        background: none;
+        border: 0;
+        color: #fff;
+        font-size: clamp(18px, 4.5vw, 20px);
+        cursor: pointer;
+        flex: 0 0 auto;
+      }
+      .title-wrap {
+        flex: 1 1 auto;
+        text-align: center;
+        /* avoid clipping on very narrow screens */
+        max-width: 100%;
+        transform: none;
+        padding: 0 4px;
+        overflow: hidden;
+      }
+      .title-wrap h1 {
+        margin: 2px 0 2px;
+        font-size: clamp(18px, 4.8vw, 20px);
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .title-wrap p {
+        margin: 0;
+        font-size: clamp(11px, 3.4vw, 12px);
+        opacity: 0.95;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .page-content {
+        height: calc(
+          100dvh - var(--header-h) - var(--nav-h) -
+            env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+        );
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        background: #f8fafb;
+        padding: clamp(10px, 3.5vw, 14px);
+        padding-bottom: calc(
+          var(--nav-h) + var(--fab-gap) + env(safe-area-inset-bottom, 0px)
+        );
+      }
+
+      .section-heading {
+        margin: 16px 0 12px !important;
+        font-size: clamp(14px, 4.2vw, 15px);
+        font-weight: 600;
+        color: var(--text-700);
+      }
+
+      .total-amount-card {
+        background: #fce4e4;
+        border: 1px solid #f5c2c7;
+        border-radius: 12px;
+        padding: clamp(10px, 3.2vw, 14px);
+        text-align: center;
+        box-shadow: var(--shadow-card);
+        margin-bottom: 12px;
+      }
+      .total-amount-card .label {
+        margin: 0;
+        color: var(--text-600);
+        font-size: clamp(12px, 3.6vw, 13px);
+        font-weight: 500;
+      }
+      .total-amount-card .amount {
+        margin: 4px 0 0;
+        color: var(--alert-red);
+        font-weight: 600;
+        font-size: clamp(18px, 5.2vw, 20px);
+        word-break: break-word;
+      }
+
+      /* Empty state */
+      .empty-state {
+        display: none;
+        text-align: center;
+        color: #475467;
+        padding: 12px 8px;
+      }
+      .empty-state.show {
+        display: block;
+      }
+      .empty-state img {
+        width: clamp(90px, 22vw, 140px);
+        height: auto;
+        display: block;
+        margin: 8px auto 6px;
+      }
+      .empty-state h3 {
+        margin: 0 0 4px;
+        font-size: clamp(15px, 4.4vw, 16px);
+        color: #0f172a;
+      }
+      .empty-state p {
+        margin: 0;
+        font-size: clamp(13px, 3.8vw, 14px);
+      }
+
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .activity-item {
+        background: #fff;
+        border-radius: 12px;
+        padding: clamp(10px, 3.4vw, 12px) clamp(12px, 3.8vw, 14px);
+        box-shadow: var(--shadow-card);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        cursor: pointer;
+        gap: 10px;
+      }
+      .activity-item.deleted {
+        opacity: 0.55;
+        filter: grayscale(0.2);
+      }
+      .item-details {
+        min-width: 0; /* allow ellipsis */
+        padding-right: 4px;
+      }
+      .activity-title {
+        margin: 0 0 4px;
+        font-weight: 600;
+        font-size: clamp(13px, 4vw, 14px);
+        color: var(--text-700);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .activity-description {
+        margin: 0;
+        font-size: clamp(11px, 3.6vw, 12px);
+        color: #6b7280;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+      }
+      .activity-amount-date {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-end;
+        flex: 0 0 auto; /* prevent squish */
+      }
+      .activity-amount {
+        margin: 0;
+        color: #e24a3a;
+        font-weight: 500;
+        font-size: clamp(13px, 4vw, 14px);
+        word-break: break-word;
+      }
+      .activity-date-bubble {
+        display: inline-block;
+        padding: 4px 10px;
+        font-size: clamp(10px, 3.4vw, 12px);
+        color: #475467;
+        background: #f5f6f8;
+        border: 1px solid #d0d5dd;
+        border-radius: 999px;
+        line-height: 1;
+        white-space: nowrap;
+      }
+
+      /* Bottom action button (single) */
+      .floating-actions {
+        position: absolute;
+        left: clamp(10px, 3.5vw, 14px);
+        right: clamp(10px, 3.5vw, 14px);
+        bottom: calc(var(--nav-h) + 12px + env(safe-area-inset-bottom, 0px));
+        display: flex;
+        gap: 10px;
+        z-index: 5;
+      }
+      .action-btn {
+        flex: 1;
+        height: clamp(44px, 7vh, 48px);
+        border: 0;
+        border-radius: 12px;
+        background: #e5e7eb;
+        color: #0f172a;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 600;
+        font-size: clamp(13px, 4vw, 15px);
+        box-shadow: none;
+      }
+      .action-btn.primary {
+        background: #e24a3a;
+        color: #fff;
+      }
+      .action-btn .button-icon {
+        font-size: clamp(16px, 4.4vw, 18px);
+      }
+
+      .bottom-nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--nav-h);
+        background: #fff;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .bottom-nav .nav-item {
+        text-decoration: none;
+        color: #98a2b3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-size: clamp(9px, 2.8vw, 11px);
+        min-width: 0;
+      }
+      .bottom-nav .nav-item i {
+        font-size: clamp(16px, 4.2vw, 18px);
+      }
+      .bottom-nav .nav-item.active {
+        color: var(--brand-green);
+        font-weight: 600;
+      }
+
+      /* Modal (Add/Edit) */
+      .modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(12px, 4vw, 16px);
+        z-index: 10;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-content {
+        width: 100%;
+        max-width: min(520px, 100%);
+        background: #fff;
+        border-radius: 14px;
+        padding: clamp(14px, 4vw, 16px);
+        box-shadow: var(--shadow-card);
+      }
+      .modal-title {
+        margin: 0 0 12px;
+        font-weight: 600;
+        font-size: clamp(15px, 4.6vw, 16px);
+      }
+      .form-group {
+        margin-bottom: 10px;
+      }
+      .form-group label {
+        display: block;
+        font-size: clamp(11px, 3.4vw, 12px);
+        color: #475467;
+        margin-bottom: 6px;
+      }
+      .label-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .btn-mini {
+        border: 1px solid #e7ecf1;
+        background: #f8fafb;
+        color: #0f172a;
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: clamp(11px, 3.4vw, 12px);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .modal-input,
+      .modal-textarea {
+        width: 100%;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: clamp(13px, 3.8vw, 14px);
+        background: #fff;
+      }
+      .modal-input[readonly] {
+        background: #f8fafb;
+        color: #475467;
+      }
+      .modal-textarea {
+        min-height: 84px;
+        resize: vertical;
+      }
+      .field-error {
+        color: #dc2626;
+        font-size: clamp(11px, 3.4vw, 12px);
+        margin-top: 4px;
+        min-height: 14px;
+      }
+
+      .modal-action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        height: clamp(40px, 6.5vh, 42px);
+        border: 0;
+        border-radius: 10px;
+        padding: 0 14px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: clamp(13px, 3.8vw, 15px);
+      }
+      .btn-primary {
+        background: var(--brand-green);
+        color: #fff;
+      }
+      .btn-danger {
+        background: #e24a3a;
+        color: #fff;
+      }
+      .btn-outline {
+        background: #eef2f6;
+        color: #475467;
+      }
+      .btn-blue {
+        background: #0b5db8;
+        color: #fff;
+      }
+      .btn-restore {
+        background: #0ea5e9;
+        color: #fff;
+      }
+
+      /* Delete confirm uses this card style */
+      .delete-card {
+        width: 100%;
+        max-width: min(420px, 100%);
+        background: #fff;
+        border-radius: 14px;
+        padding: clamp(16px, 4vw, 18px);
+        box-shadow: var(--shadow-card);
+      }
+      .delete-card h3 {
+        margin: 0 0 8px;
+        font-size: clamp(16px, 4.8vw, 18px);
+        font-weight: 700;
+      }
+      .delete-card p {
+        margin: 0 0 14px;
+        color: #475467;
+        font-size: clamp(13px, 3.8vw, 14px);
+      }
+      .delete-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .delete-actions .btn {
+        height: clamp(42px, 6.8vh, 44px);
+        font-size: clamp(13px, 3.8vw, 15px);
+        flex: 1;
+      }
+
+      /* Top-right toast */
+      #toast {
+        position: fixed;
+        top: calc(12px + env(safe-area-inset-top, 0px));
+        right: calc(12px + env(safe-area-inset-right, 0px));
+        background: #fff;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px 10px 10px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        display: grid;
+        grid-template-columns: 32px 1fr 20px;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        max-width: 92vw;
+        color: #111827;
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.22s, transform 0.22s;
+        z-index: 10000;
+        line-height: 1.2;
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .toast-badge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #74c69d;
+      }
+      .toast-badge.error {
+        background: #ef4444;
+      }
+      .toast-badge svg {
+        width: 18px;
+        height: 18px;
+        stroke: #fff;
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .toast-msg {
+        font-size: clamp(14px, 4vw, 16px);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #111827;
+        text-decoration: none;
+      }
+      .toast-x {
+        color: #6b7280;
+        cursor: pointer;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1;
+      }
+
+      /* ==== FORCE EDGE-TO-EDGE ON ALL SCREENS (drop-in overrides) ==== */
+
+      /* No desktop/tablet frame */
+      @media (min-width: 0) {
+        #party-page.mobile-container {
+          max-width: 100% !important;
+          margin: 0 !important;
+          border-radius: 0 !important;
+          box-shadow: none !important;
+        }
+        body {
+          background: var(--surface) !important;
+        } /* remove outer gray frame */
+      }
+
+      /* Flush header and content with screen edges */
+      .header-row {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+      .page-content {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      /* Full-bleed blocks & list */
+      .total-amount-card,
+      .activity-item {
+        border-radius: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-shadow: none !important;
+      }
+      .activity-list {
+        gap: 0 !important;
+      }
+
+      /* Headings & empty state also flush */
+      .section-heading,
+      .empty-state {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+
+      /* Floating action stretches to edges (respects safe areas) */
+      .floating-actions {
+        left: max(0px, env(safe-area-inset-left, 0)) !important;
+        right: max(0px, env(safe-area-inset-right, 0)) !important;
+      }
+
+      /* Modals use full width in webviews */
+      .modal-overlay {
+        padding: 0 !important;
+      }
+      .modal-content,
+      .delete-card {
+        max-width: 100% !important;
+        border-radius: 0 !important;
+      }
+
+      /* Never allow horizontal scroll */
+      html,
+      body,
+      #party-page {
+        overflow-x: hidden !important;
+      }
+
+      /* Ultra-small devices (≤320px logical width) */
+      @media (max-width: 360px) {
+        .activity-item {
+          gap: 8px;
+        }
+        .activity-date-bubble {
+          padding: 3px 8px;
+        }
+      }
+
+      #party-phone {
+        font-family: "Noto Sans Devanagari", "Poppins", system-ui, -apple-system,
+          "Segoe UI", Roboto, Arial, sans-serif;
+      }
+
+      /* ===== EDGE-TO-EDGE OVERRIDES (no HTML/JS changes) ===== */
+      .page-content {
+        padding-left: env(safe-area-inset-left, 0) !important;
+        padding-right: env(safe-area-inset-right, 0) !important;
+        padding-top: clamp(8px, 2.4vw, 12px) !important;
+      }
+      .total-amount-card {
+        border-radius: 0 !important;
+        margin: 0 0 10px 0 !important;
+        box-shadow: none !important;
+        padding-left: clamp(10px, 3vw, 14px) !important;
+        padding-right: clamp(10px, 3vw, 14px) !important;
+      }
+      .section-heading {
+        margin: 0 0 10px 0 !important;
+        padding-left: clamp(10px, 3vw, 14px) !important;
+        padding-right: clamp(10px, 3vw, 14px) !important;
+      }
+      .empty-state {
+        padding-left: clamp(10px, 3vw, 14px) !important;
+        padding-right: clamp(10px, 3vw, 14px) !important;
+      }
+      .activity-list {
+        gap: 0 !important;
+      }
+      .activity-item {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        padding-left: clamp(10px, 3vw, 14px) !important;
+        padding-right: clamp(10px, 3vw, 14px) !important;
+      }
+      .floating-actions {
+        left: max(6px, env(safe-area-inset-left, 0)) !important;
+        right: max(6px, env(safe-area-inset-right, 0)) !important;
+      }
+      .header-row {
+        padding-left: max(8px, env(safe-area-inset-left, 0)) !important;
+        padding-right: max(8px, env(safe-area-inset-right, 0)) !important;
+      }
+      .modal-overlay {
+        padding: max(8px, env(safe-area-inset-left, 0)) !important;
+      }
+      .modal-content,
+      .delete-card {
+        max-width: 100% !important;
+        border-radius: 12px !important;
+      }
+      html,
+      body,
+      #party-page {
+        overflow-x: hidden !important;
+      }
+    </style>
   </head>
+
   <body>
-    <div class="page-container">
-      <header class="header">
-        <a href="party.html" class="back-arrow">&#8592;</a>
-        <!-- Assuming 'parties.html' is the list page -->
-        <div class="header-text-group">
-          <h1 class="page-title" id="party-name">पार्टी नाम</h1>
-          <p class="page-subtitle" id="party-phone">फोन नम्बर</p>
+    <div id="party-page" class="mobile-container">
+      <header class="page-header">
+        <div class="header-row">
+          <button
+            class="back-btn"
+            onclick="history.back()"
+            aria-label="पछि फर्कनुहोस्"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div class="title-wrap">
+            <h1 id="party-name">पार्टी नाम</h1>
+            <p id="party-phone">फोन नम्बर</p>
+          </div>
+          <span style="width: 24px"></span>
         </div>
-        <!-- No right-side button in this header -->
       </header>
 
-      <main class="content with-bottom-nav">
+      <main class="page-content">
         <div class="total-amount-card">
-          <p class="total-amount-label">कुल रकम</p>
-          <p class="total-amount-value" id="total-amount">रू ०</p>
+          <p class="label">कुल रकम</p>
+          <p class="amount" id="total-amount">रू ०</p>
         </div>
 
-        <h2 class="section-heading">हल्का गतिविधिहरु</h2>
-        <div class="activity-list" id="activity-list">
-          <!-- Activities will be dynamically loaded here by JavaScript -->
-        </div>
+        <h2 class="section-heading">हालैका गतिविधिहरू</h2>
+
+        <!-- Empty state -->
+        <section id="empty-state" class="empty-state">
+          <img src="illustration.png" alt="Empty" />
+          <h3>अहिलेसम्म कुनै गतिविधि छैन</h3>
+          <p>सुरु गर्न “खर्च थप्नुहोस्” ट्याप गर्नुहोस्।</p>
+        </section>
+
+        <div class="activity-list" id="activity-list"></div>
       </main>
 
-      <!-- Floating Action Button to open the modal -->
-      <button class="floating-action-button" id="add-expense-btn">
-        <span class="button-icon">💰</span> खर्च थप्नुहोस्
-      </button>
+      <!-- Bottom action: SINGLE red button with combined label -->
+      <div class="floating-actions">
+        <button class="action-btn primary" id="add-expense-btn" type="button">
+          <i class="fa-solid fa-plus button-icon" aria-hidden="true"></i>
+          <span>दिनको लागि</span>
+        </button>
+      </div>
 
-      <!-- Bottom Navigation -->
-      <nav class="bottom-navigation">
-        <a href="#" class="nav-item">
-          <span class="nav-icon">🏠</span>
-          <span class="nav-label">होम</span>
-        </a>
-        <a href="#" class="nav-item">
-          <span class="nav-icon">🏗️</span>
-          <span class="nav-label">साइट</span>
-        </a>
-        <a href="#" class="nav-item">
-          <span class="nav-icon">📈</span>
-          <span class="nav-label">कारोबारहरु</span>
-        </a>
-        <a href="#" class="nav-item active">
-          <span class="nav-icon">👥</span>
-          <span class="nav-label">पार्टीहरु</span>
-        </a>
-        <a href="#" class="nav-item">
-          <span class="nav-icon">💬</span>
-          <span class="nav-label">अक</span>
-        </a>
+      <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"
+          ><i class="fa-solid fa-house"></i><span>होम</span></a
+        >
+        <a href="c-site-list.html" class="nav-item"
+          ><i class="fa-solid fa-trowel-bricks"></i><span>साइट</span></a
+        >
+        <a href="karobar.html" class="nav-item"
+          ><i class="fa-solid fa-chart-line"></i><span>कारोबारहरू</span></a
+        >
+        <a href="party.html" class="nav-item active"
+          ><i class="fa-solid fa-user-group"></i><span>पार्टीहरू</span></a
+        >
+        <a href="more.html" class="nav-item"
+          ><i class="fa-solid fa-grip"></i><span>अरू</span></a
+        >
       </nav>
 
-      <!-- MODAL HTML STARTS HERE -->
+      <!-- Top-right toast host -->
+      <div id="toast" role="status" aria-live="polite"></div>
+
+      <!-- Add/Edit Modal -->
       <div class="modal-overlay" id="expense-modal">
-        <!-- No 'active' class here by default -->
         <div class="modal-content">
-          <h3 class="modal-title">खर्च थप्नुहोस्</h3>
-          <!-- Added a title for the modal -->
+          <h3 class="modal-title" id="modalTitle">খर्च विवरण</h3>
+
+          <div class="form-group" id="grpSite" style="display: none">
+            <label for="modalSite">साइट</label>
+            <input
+              id="modalSite"
+              class="modal-input"
+              type="text"
+              readonly
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+            />
+          </div>
+
           <div class="form-group">
             <label for="itemName">वस्तुको नाम</label>
             <input
@@ -74,8 +782,14 @@
               id="itemName"
               class="modal-input"
               placeholder="वस्तुको नाम..."
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
             />
+            <div class="field-error" id="err-itemName"></div>
           </div>
+
           <div class="form-group">
             <label for="amount">रकम</label>
             <input
@@ -83,233 +797,655 @@
               id="amount"
               class="modal-input"
               placeholder="रू १,०००"
+              inputmode="decimal"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
             />
+            <div class="field-error" id="err-amount"></div>
           </div>
+
           <div class="form-group">
-            <label for="date">मिति</label>
-            <input type="date" id="date" class="modal-input" />
+            <div class="label-row">
+              <label for="date" style="margin: 0">मिति</label>
+              <button type="button" class="btn-mini" id="btnToday">
+                <i class="fa-solid fa-calendar-day"></i> आज
+              </button>
+            </div>
+            <input
+              type="date"
+              id="date"
+              class="modal-input"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+            />
+            <div class="field-error" id="err-date"></div>
           </div>
+
           <div class="form-group">
             <label for="description">कैफियत</label>
             <textarea
               id="description"
               class="modal-textarea"
               placeholder="केहि लेख्नुहोस्"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
             ></textarea>
+            <div class="field-error" id="err-description"></div>
           </div>
 
-          <div class="modal-action-buttons">
-            <button class="modal-save-button" id="save-expense-btn">
-              बचत गर्नुहोस्
-            </button>
-            <button class="modal-cancel-button" id="cancel-expense-btn">
-              रद्द गर्नुहोस्
-            </button>
+          <div class="modal-action-buttons" id="modalButtons"></div>
+        </div>
+      </div>
+
+      <!-- Delete confirm Modal -->
+      <div class="modal-overlay" id="delete-modal" aria-hidden="true">
+        <div class="delete-card">
+          <h3>मेटाउने हो?</h3>
+          <p>के तपाईं यो रेकर्ड मेट्न पक्का हुनुहुन्छ?</p>
+          <div class="delete-actions">
+            <button class="btn btn-outline" id="del-cancel">रद्द</button>
+            <button class="btn btn-danger" id="del-confirm">मेटाउनुहोस्</button>
           </div>
         </div>
       </div>
-      <!-- MODAL HTML ENDS HERE -->
     </div>
+
     <script>
       const API_BASE = "http://192.168.1.209:8000/api";
       const RAW_TOKEN = localStorage.getItem("auth_token");
-
-      // Redirect if no token
       if (!RAW_TOKEN) {
         alert("कृपया लगइन गर्नुहोस्।");
-        window.location.href = "login.html";
+        location.href = "login.html";
       }
-
       const TOKEN = RAW_TOKEN.includes("|")
         ? RAW_TOKEN.split("|")[1]
         : RAW_TOKEN;
-      const PARTY_ID = new URLSearchParams(window.location.search).get(
-        "party_id"
-      );
-
-      // Redirect if no party ID
+      const PARTY_ID = new URLSearchParams(location.search).get("party_id");
       if (!PARTY_ID) {
         alert("पार्टी पहिचान छैन!");
-        window.location.href = "parties.html";
+        location.href = "parties.html";
+      }
+      const AUTH = {
+        Authorization: `Bearer ${TOKEN}`,
+        Accept: "application/json",
+      };
+
+      const NP_DIGITS = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+      const NP_TO_EN = {
+        "०": "0",
+        "१": "1",
+        "२": "2",
+        "३": "3",
+        "४": "4",
+        "५": "5",
+        "६": "6",
+        "७": "7",
+        "८": "8",
+        "९": "9",
+      };
+      const toNP = (s) => String(s).replace(/\d/g, (d) => NP_DIGITS[d]);
+      const toEN = (s) =>
+        String(s)
+          .replace(/[०-९]/g, (d) => NP_TO_EN[d])
+          .replace(/[^\d.]/g, "");
+      const parseNepaliNumber = (s) => {
+        const x = toEN(s);
+        const n = Number(x);
+        return isNaN(n) ? 0 : n;
+      };
+
+      const npMoney = (n) =>
+        `रू ${toNP(Math.abs(Number(n) || 0).toLocaleString("en-IN"))}`;
+      const fmtDateNP = (iso) => {
+        const d = new Date(iso);
+        try {
+          return d.toLocaleDateString("ne-NP");
+        } catch {
+          return toNP(d.toLocaleDateString());
+        }
+      };
+      const localYMD = (d = new Date()) => {
+        const x = d instanceof Date ? d : new Date(d);
+        const y = x.getFullYear(),
+          m = String(x.getMonth() + 1).padStart(2, "0"),
+          dd = String(x.getDate()).padStart(2, "0");
+        return `${y}-${m}-${dd}`;
+      };
+
+      /* Toast */
+      function toast(msg, kind = "success") {
+        const t = document.getElementById("toast");
+        const icon =
+          kind === "error"
+            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+        t.innerHTML = `
+          <span class="toast-badge ${
+            kind === "error" ? "error" : ""
+          }">${icon}</span>
+          <span class="toast-msg">${msg || ""}</span>
+          <span class="toast-x" aria-label="Close">×</span>`;
+        t.classList.add("show");
+        t.querySelector(".toast-x").onclick = () => t.classList.remove("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => t.classList.remove("show"), 2000);
       }
 
-      // Load party details
+      let activitiesAll = [];
+      let current = null;
+      let mode = "view";
 
+      function clearErrors() {
+        ["itemName", "amount", "date", "description"].forEach((k) => {
+          const el = document.getElementById("err-" + k);
+          if (el) el.textContent = "";
+        });
+      }
+      function setErr(id, msg) {
+        const el = document.getElementById("err-" + id);
+        if (el) el.textContent = msg || "";
+      }
+
+      /* Header */
       async function loadParty() {
         try {
           const res = await fetch(`${API_BASE}/parties/${PARTY_ID}`, {
-            headers: { Authorization: `Bearer ${TOKEN}` },
+            headers: AUTH,
           });
-          if (!res.ok)
-            throw new Error(`Error fetching party: ${res.statusText}`);
+          if (!res.ok) throw new Error(await res.text());
           const party = await res.json();
-          document.getElementById("party-name").textContent = party.name;
-          document.getElementById("party-phone").textContent =
-            party.phone_no || "";
-        } catch (err) {
-          console.error("Failed to load party data:", err);
+          document.getElementById("party-name").textContent = party.name || "—";
+          document.getElementById("party-phone").textContent = String(
+            party.phone_no ?? ""
+          );
+        } catch (e) {
+          console.error(e);
           alert("पार्टी डेटा लोड गर्न असफल भयो।");
         }
       }
 
-      // Load expenses and site resources
+      /* Render list */
+      function renderActivityList() {
+        const list = document.getElementById("activity-list");
+        const empty = document.getElementById("empty-state");
+        list.innerHTML = "";
+        const rows = activitiesAll || [];
+
+        if (!rows.length) {
+          empty.classList.add("show");
+          document.getElementById("total-amount").textContent = npMoney(0);
+          return;
+        }
+        empty.classList.remove("show");
+
+        let total = 0;
+        for (const act of rows) {
+          if (!act.del) total += act.amount;
+          const card = document.createElement("div");
+          card.className = "activity-item" + (act.del ? " deleted" : "");
+          card.innerHTML = `
+            <div class="item-details">
+              <p class="activity-title">${act.title}${
+            act.del
+              ? ' <span style="color:#b42318;font-weight:600;">(मेटिएको)</span>'
+              : ""
+          }</p>
+              <p class="activity-description">${act.remarks || ""}</p>
+            </div>
+            <div class="activity-amount-date">
+              <p class="activity-amount">- ${npMoney(Math.abs(act.amount))}</p>
+              <span class="activity-date-bubble">${fmtDateNP(act.date)}</span>
+            </div>`;
+          card.addEventListener("click", () => openModalFor(act));
+          list.appendChild(card);
+        }
+        document.getElementById("total-amount").textContent = npMoney(total);
+      }
+
+      /* Fetch activities */
       async function loadExpenses() {
+        const list = document.getElementById("activity-list");
+        const empty = document.getElementById("empty-state");
+        list.innerHTML = "";
+        document.getElementById("total-amount").textContent = npMoney(0);
+
         try {
-          const container = document.getElementById("activity-list");
-          container.innerHTML = "";
-          let total = 0;
+          const q = (u) =>
+            `${u}${u.includes("?") ? "&" : "?"}party_id=${encodeURIComponent(
+              PARTY_ID
+            )}&include_deleted=1&with_trashed=1`;
+          const [r1, r2] = await Promise.all([
+            fetch(q(`${API_BASE}/party-expenses`), { headers: AUTH }),
+            fetch(q(`${API_BASE}/site-resources`), { headers: AUTH }),
+          ]);
+          const j1 = await r1.json();
+          if (!r1.ok) throw new Error(j1.message || r1.statusText);
+          const j2 = await r2.json();
+          if (!r2.ok) throw new Error(j2.message || r2.statusText);
 
-          // Fetch party expenses
-          // Fetch party expenses
-          const res1 = await fetch(
-            `${API_BASE}/party-expenses?party_id=${PARTY_ID}`,
-            {
-              headers: { Authorization: `Bearer ${TOKEN}` },
-            }
+          const toNum = (x) => (x == null ? 0 : Number(x));
+          const partyExpenses = (j1.data || []).map((e) => ({
+            kind: "party",
+            id: e.id,
+            party_id: e.party_id || PARTY_ID,
+            site_id: null,
+            site_name: null,
+            title: e.title || "",
+            remarks: e.remarks || "",
+            amount: -Math.abs(toNum(e.amount)),
+            date: e.date,
+            del: !!(
+              e.deleted_at ||
+              e.trashed ||
+              e.is_deleted === true ||
+              e.status === 0
+            ),
+            _raw: e,
+          }));
+          const siteResources = (Array.isArray(j2) ? j2 : j2.data || []).map(
+            (r) => ({
+              kind: "resource",
+              id: r.id,
+              party_id: r.party_id || PARTY_ID,
+              site_id: r.site_id || (r.site && r.site.id) || null,
+              site_name: r.site_name || (r.site && r.site.name) || "",
+              title: r.item_name || "",
+              remarks: r.remarks || "",
+              amount: -Math.abs(toNum(r.amount)),
+              date: r.date,
+              del: !!(
+                r.deleted_at ||
+                r.trashed ||
+                r.is_deleted === true ||
+                r.status === 0
+              ),
+              _raw: r,
+            })
           );
-          const partyExpensesJson = await res1.json();
-          if (!res1.ok)
-            throw new Error(partyExpensesJson.message || res1.statusText);
 
-          const partyExpenses = partyExpensesJson.data || [];
-          console.log("Party Expenses:", partyExpenses);
-
-          // Fetch site resources
-        //   const res2 = await fetch(
-        //     `${API_BASE}/site-resources?party_id=${PARTY_ID}`,
-        //     {
-        //       headers: { Authorization: `Bearer ${TOKEN}` },
-        //     }
-        //   );
-        //   const siteResourcesJson = await res2.json();
-        //   if (!res2.ok)
-        //     throw new Error(siteResourcesJson.message || res2.statusText);
-        //   const siteResources = Array.isArray(siteResourcesJson)
-        //     ? siteResourcesJson
-        //     : siteResourcesJson.data || [];
-
-        //   console.log("Site Resources:", siteResources);
-
-          // Combine and sort activities by date
-          const activities = [
-            ...partyExpenses.map((exp) => ({
-              item_name: exp.title,
-              remarks: exp.remarks || "",
-              amount: exp.amount,
-              date: exp.date,
-            //   party_name: exp.party_name || "Unknown Party",
-            })),
-            // ...siteResources.map((res) => ({
-            //   item_name: res.item_name,
-            //   remarks: res.remarks || "",
-            //   amount: res.amount,
-            //   date: res.date,
-            //   party_name: res.party_name || "Unknown Party",
-            // })),
-          ];
-
-          activities.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-          if (activities.length === 0) {
-            container.innerHTML =
-              '<p style="text-align:center;">कुनै गतिविधि फेला परेन।</p>';
-            document.getElementById("total-amount").textContent = "रू ०";
-            return;
-          }
-
-          activities.forEach((act) => {
-            total += parseFloat(act.amount) || 0;
-            const div = document.createElement("div");
-            div.className = "activity-item";
-            div.innerHTML = `
-        <div class="item-details">
-            <p class="activity-title">${act.item_name}</p>
-            <p class="activity-description">${act.remarks}</p>
-        </div>
-        <div class="activity-amount-date">
-            <p class="activity-amount" style="color: red;">- रू ${Math.abs(
-              act.amount
-            ).toLocaleString("ne-NP")}</p>
-            <span class="activity-date-bubble">${new Date(
-              act.date
-            ).toLocaleDateString("ne-NP")}</span>
-        </div>
-      `;
-            container.appendChild(div);
-          });
-
-          document.getElementById(
-            "total-amount"
-          ).textContent = `रू ${total.toLocaleString("ne-NP")}`;
-        } catch (err) {
-          console.error("Failed to load activities:", err);
+          activitiesAll = [...partyExpenses, ...siteResources].sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
+          renderActivityList();
+        } catch (e) {
+          console.error(e);
           alert("गतिविधि डेटा लोड गर्न असफल भयो।");
         }
       }
 
-      // Modal logic
-      const modal = document.getElementById("expense-modal");
-      const openBtn = document.getElementById("add-expense-btn");
-      const cancelBtn = document.getElementById("cancel-expense-btn");
-      const saveBtn = document.getElementById("save-expense-btn");
+      /* Modal wiring */
+      const mOverlay = document.getElementById("expense-modal");
+      const mTitle = document.getElementById("modalTitle");
+      const grpSite = document.getElementById("grpSite");
+      const inpSite = document.getElementById("modalSite");
+      const inpName = document.getElementById("itemName");
+      const inpAmt = document.getElementById("amount");
+      const inpDate = document.getElementById("date");
+      const inpDesc = document.getElementById("description");
+      const btnWrap = document.getElementById("modalButtons");
+      const btnToday = document.getElementById("btnToday");
 
-      openBtn.addEventListener("click", () => modal.classList.add("active"));
-      cancelBtn.addEventListener("click", () => {
-        modal.classList.remove("active");
-        document.getElementById("itemName").value = "";
-        document.getElementById("amount").value = "";
-        document.getElementById("date").value = "";
-        document.getElementById("description").value = "";
+      function setReadOnly(ro, keepSiteRO = true) {
+        [inpName, inpAmt, inpDate, inpDesc].forEach((el) => (el.readOnly = ro));
+        if (keepSiteRO) inpSite.readOnly = true;
+      }
+      function makeBtn(cls, txt, onClick) {
+        const b = document.createElement("button");
+        b.className = cls;
+        b.type = "button";
+        b.textContent = txt;
+        b.onclick = onClick;
+        return b;
+      }
+      function showButtons() {
+        btnWrap.innerHTML = "";
+        if (mode === "create") {
+          btnWrap.append(
+            makeBtn("btn btn-primary", "थप्नुहोस्", saveCreate),
+            makeBtn("btn btn-outline", "रद्द गर्नुहोस्", closeModal)
+          );
+        } else if (mode === "view") {
+          if (current.del) {
+            btnWrap.append(
+              makeBtn("btn btn-restore", "पूर्ववत् (Restore)", restoreCurrent),
+              makeBtn("btn btn-outline", "बन्द", closeModal)
+            );
+          } else {
+            btnWrap.append(
+              makeBtn("btn btn-blue", "एडिट", () => {
+                mode = "edit";
+                setReadOnly(false, true);
+                showButtons();
+              }),
+              makeBtn("btn btn-danger", "मेटाउनु", openDeleteModal),
+              makeBtn("btn btn-outline", "बन्द", closeModal)
+            );
+          }
+        } else if (mode === "edit") {
+          btnWrap.append(
+            makeBtn("btn btn-primary", "अपडेट", saveUpdate),
+            makeBtn("btn btn-outline", "रद्द", () => {
+              mode = "view";
+              fillModal(current);
+              setReadOnly(true, true);
+              showButtons();
+            })
+          );
+        }
+      }
+      function fillModal(act) {
+        mTitle.textContent = act.id ? "खर्च विवरण" : "खर्च थप्नुहोस्";
+        grpSite.style.display = act.site_name ? "block" : "none";
+        inpSite.value = act.site_name || "";
+        inpName.value = act.title || "";
+        inpAmt.value = Math.abs(Number(act.amount) || 0);
+        const d = new Date(act.date);
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        inpDate.value = `${y}-${m}-${day}`;
+        inpDesc.value = act.remarks || "";
+        clearErrors();
+      }
+      function openModalFor(act) {
+        current = { ...act };
+        mode = "view";
+        fillModal(current);
+        setReadOnly(true, true);
+        showButtons();
+        mOverlay.classList.add("active");
+      }
+      function closeModal() {
+        mOverlay.classList.remove("active");
+        clearErrors();
+      }
+      mOverlay.addEventListener("click", (e) => {
+        if (e.target === mOverlay) closeModal();
       });
 
-      // Save expense
-      saveBtn.addEventListener("click", async () => {
-        const title = document.getElementById("itemName").value.trim();
-        const amount = parseFloat(document.getElementById("amount").value);
-        const date = document.getElementById("date").value;
-        const remarks = document.getElementById("description").value.trim();
+      // SINGLE red button: open create modal for TODAY (user can change date inside)
+      document
+        .getElementById("add-expense-btn")
+        .addEventListener("click", () => {
+          openCreateModalForDate(localYMD(new Date()));
+        });
 
-        if (!title || isNaN(amount) || !date) {
-          alert("कृपया सबै आवश्यक विवरण भर्नुहोस्!");
-          return;
+      // quick "आज" in main modal
+      btnToday.addEventListener("click", () => {
+        inpDate.value = localYMD(new Date());
+      });
+
+      function openCreateModalForDate(ymd) {
+        current = {
+          kind: "party",
+          id: null,
+          party_id: PARTY_ID,
+          site_id: null,
+          site_name: null,
+          title: "",
+          amount: 0,
+          date: ymd || localYMD(),
+          remarks: "",
+          del: false,
+        };
+        mode = "create";
+        grpSite.style.display = "none";
+        inpSite.value = "";
+        inpName.value = "";
+        inpAmt.value = "";
+        inpDate.value = current.date;
+        inpDesc.value = "";
+        setReadOnly(false, true);
+        clearErrors();
+        showButtons();
+        mTitle.textContent = "खर्च थप्नुहोस्";
+        mOverlay.classList.add("active");
+      }
+
+      /* Nepali digits accepted in रकम */
+      const inpAmtEl = document.getElementById("amount");
+      inpAmtEl.addEventListener("keydown", (e) => {
+        const m = NP_TO_EN[e.key];
+        if (m !== undefined) {
+          e.preventDefault();
+          const el = e.target;
+          const s = el.selectionStart,
+            t = el.selectionEnd;
+          el.value =
+            (el.value || "").slice(0, s) + m + (el.value || "").slice(t);
+          el.setSelectionRange(s + 1, s + 1);
+          el.dispatchEvent(new Event("input", { bubbles: true }));
         }
+      });
+      inpAmtEl.addEventListener("input", (e) => {
+        e.target.value = toEN(e.target.value);
+      });
 
+      /* Validation + save */
+      function validateInputs() {
+        clearErrors();
+        let ok = true;
+        if (!inpName.value.trim()) {
+          setErr("itemName", "शीर्षक आवश्यक छ");
+          ok = false;
+        }
+        const amtVal = parseNepaliNumber(inpAmt.value);
+        if (!(amtVal > 0)) {
+          setErr("amount", "रकम आवश्यक छ");
+          ok = false;
+        }
+        if (!inpDate.value) {
+          setErr("date", "मिति आवश्यक छ");
+          ok = false;
+        }
+        return ok;
+      }
+
+      async function saveCreate() {
+        if (!validateInputs()) return;
+        const body = {
+          party_id: PARTY_ID,
+          title: inpName.value.trim(),
+          amount: parseNepaliNumber(inpAmt.value),
+          date: inpDate.value,
+          remarks: inpDesc.value.trim(),
+        };
         try {
           const res = await fetch(`${API_BASE}/party-expenses`, {
             method: "POST",
-            headers: {
-              Authorization: `Bearer ${TOKEN}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              party_id: PARTY_ID,
-              title,
-              amount,
-              date,
-              remarks,
-            }),
+            headers: { ...AUTH, "Content-Type": "application/json" },
+            body: JSON.stringify(body),
           });
-
-          const json = await res.json();
-          if (!res.ok) throw new Error(json.message || res.statusText);
-
-          alert("खर्च सफलतापूर्वक थपियो!");
-          modal.classList.remove("active");
-          document.getElementById("itemName").value = "";
-          document.getElementById("amount").value = "";
-          document.getElementById("date").value = "";
-          document.getElementById("description").value = "";
-
-          loadExpenses(); // reload activities
-        } catch (err) {
-          console.error("Failed to save expense:", err);
-          alert(`खर्च बचत गर्न असफल भयो: ${err.message}`);
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            if (res.status === 422 && j.errors) {
+              if (j.errors.title) setErr("itemName", j.errors.title[0]);
+              if (j.errors.amount) setErr("amount", j.errors.amount[0]);
+              if (j.errors.date) setErr("date", j.errors.date[0]);
+              return;
+            }
+            throw new Error(j.message || res.statusText);
+          }
+          closeModal();
+          toast("खर्च थपियो", "success");
+          loadExpenses();
+        } catch (e) {
+          console.error(e);
+          toast("सेभ असफल भयो", "error");
         }
+      }
+
+      async function saveUpdate() {
+        if (!current || !current.id) {
+          toast("ID हरायो", "error");
+          return;
+        }
+        if (!validateInputs()) return;
+
+        const isResource = current.kind === "resource";
+        const payload = isResource
+          ? {
+              party_id: current.party_id || PARTY_ID,
+              site_id: current.site_id || null,
+              item_name: inpName.value.trim(),
+              amount: parseNepaliNumber(inpAmt.value),
+              date: inpDate.value,
+              remarks: inpDesc.value.trim(),
+            }
+          : {
+              party_id: current.party_id || PARTY_ID,
+              title: inpName.value.trim(),
+              amount: parseNepaliNumber(inpAmt.value),
+              date: inpDate.value,
+              remarks: inpDesc.value.trim(),
+            };
+
+        const base = isResource ? "site-resources" : "party-expenses";
+        try {
+          const res = await fetch(`${API_BASE}/${base}/${current.id}`, {
+            method: "PATCH",
+            headers: { ...AUTH, "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const j = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            if (res.status === 422 && j.errors) {
+              if (j.errors.title || j.errors.item_name)
+                setErr("itemName", (j.errors.title || j.errors.item_name)[0]);
+              if (j.errors.amount) setErr("amount", j.errors.amount[0]);
+              if (j.errors.date) setErr("date", j.errors.date[0]);
+              return;
+            }
+            throw new Error(j.message || res.statusText);
+          }
+          closeModal();
+          toast("अपडेट भयो", "success");
+          loadExpenses();
+        } catch (e) {
+          console.error(e);
+          toast("अपडेट असफल", "error");
+        }
+      }
+
+      /* Soft delete + restore with confirm modal */
+      const delOverlay = document.getElementById("delete-modal");
+      const delCancel = document.getElementById("del-cancel");
+      const delConfirm = document.getElementById("del-confirm");
+      function openDeleteModal() {
+        delOverlay.classList.add("active");
+      }
+      function closeDeleteModal() {
+        delOverlay.classList.remove("active");
+      }
+      delCancel.addEventListener("click", closeDeleteModal);
+      delOverlay.addEventListener("click", (e) => {
+        if (e.target === delOverlay) closeDeleteModal();
+      });
+      delConfirm.addEventListener("click", async () => {
+        await delCurrent(true);
       });
 
-      // Initial load
+      async function delCurrent(fromConfirm = false) {
+        if (!current) return;
+        if (!fromConfirm) {
+          openDeleteModal();
+          return;
+        }
+        const base =
+          current.kind === "resource" ? "site-resources" : "party-expenses";
+        try {
+          let res = await fetch(`${API_BASE}/${base}/${current.id}`, {
+            method: "DELETE",
+            headers: AUTH,
+          });
+          if (!res.ok) {
+            res = await fetch(`${API_BASE}/${base}/${current.id}`, {
+              method: "POST",
+              headers: { ...AUTH, "Content-Type": "application/json" },
+              body: JSON.stringify({ _method: "DELETE" }),
+            });
+          }
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          closeDeleteModal();
+          closeModal();
+          toast("मेटाइयो", "success");
+          loadExpenses();
+        } catch (e) {
+          console.error(e);
+          toast("मेटाउन असफल", "error");
+        }
+      }
+
+      async function tryRestore(base, id) {
+        const attempts = [
+          {
+            method: "POST",
+            url: `${API_BASE}/${base}/${id}/restore`,
+            body: null,
+          },
+          {
+            method: "PATCH",
+            url: `${API_BASE}/${base}/${id}/restore`,
+            body: null,
+          },
+          {
+            method: "POST",
+            url: `${API_BASE}/${base}/restore/${id}`,
+            body: null,
+          },
+          {
+            method: "POST",
+            url: `${API_BASE}/${base}/${id}/restore`,
+            body: { _method: "PATCH" },
+          },
+        ];
+        for (const a of attempts) {
+          try {
+            const res = await fetch(a.url, {
+              method: a.method,
+              headers: {
+                ...AUTH,
+                ...(a.body ? { "Content-Type": "application/json" } : {}),
+              },
+              body: a.body ? JSON.stringify(a.body) : null,
+            });
+            if (res.ok) return true;
+          } catch {}
+        }
+        return false;
+      }
+
+      async function restoreCurrent() {
+        if (!current || !current.id) return;
+        const base =
+          current.kind === "resource" ? "site-resources" : "party-expenses";
+        try {
+          const ok = await tryRestore(base, current.id);
+          if (!ok) throw new Error("Restore endpoint unavailable");
+          closeModal();
+          toast("पूर्ववत् भयो", "success");
+          loadExpenses();
+        } catch (e) {
+          console.error(e);
+          toast("Restore असफल", "error");
+        }
+      }
+
+      /* Init */
       loadParty();
       loadExpenses();
+
+      /* Clear inline errors on input */
+      ["itemName", "amount", "date", "description"].forEach((id) => {
+        const el = document.getElementById(id);
+        el && el.addEventListener("input", () => setErr(id, ""));
+      });
     </script>
   </body>
 </html>

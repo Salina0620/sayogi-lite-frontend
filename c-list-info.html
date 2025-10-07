@@ -2,761 +2,674 @@
 <html lang="ne">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Construction Site Management</title>
 
-    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
     <style>
-      /* Basic Styles */
-      body {
-        font-family: "Noto Sans Devanagari", sans-serif;
-        background-color: #f0f2f5;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        min-height: 100vh;
-        margin: 0;
-        padding: 20px 0;
+      :root{
+        --green:#1ab189; --blue:#0b5db8; --red:#dc3545; --bg:#f0f2f5;
+        --safe-top:env(safe-area-inset-top,0px); --safe-right:env(safe-area-inset-right,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+        --green-soft:#e7faf3; --green-border:#b7ead7; --red-soft:#fdebea; --red-border:#f7c6c3;
       }
+      *{ box-sizing:border-box; }
+      html,body{ margin:0; height:100%; min-height:100vh; overflow-x:hidden; background:var(--bg); color:#344054;
+        font-family:"Noto Sans Devanagari","Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
 
-      .mobile-container {
-        width: 375px;
-        min-height: 812px;
-        background-color: #ffffff;
-        border-radius: 30px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-      }
+      .mobile-container{ width:100%; height:100dvh; min-height:100svh; min-height:-webkit-fill-available; background:#fff; display:flex; flex-direction:column; overflow:hidden; }
 
-      /* Header Styles */
-      .page-header {
-        background-color: #16a085;
-        color: white;
-        padding: 55px 20px 20px 20px;
-        position: relative;
-      }
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .header-title-section {
-        text-align: center;
-        flex-grow: 1;
-      }
-      .header-title-section h1 {
-        font-size: 22px;
-        font-weight: 700;
-        margin: 0;
-      }
-      .header-title-section p {
-        font-size: 14px;
-        margin: 0;
-        opacity: 0.9;
-      }
-      .header-content a {
-        color: white;
-        font-size: 20px;
-      }
-      .header-actions {
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-      }
-      .header-btn {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-      }
-      .btn-rate {
-        background-color: #2980b9;
-        color: white;
-      }
-      .btn-resource {
-        background-color: #e74c3c;
-        color: white;
-      }
+      /* HEADER */
+      .page-header{ background:var(--green); color:#fff; padding:calc(56px + var(--safe-top)) 16px 16px; }
+      .header-content{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+      .header-content a{ color:#fff; font-size:20px; text-decoration:none; min-width:28px; text-align:center; }
+      .header-title-section{ text-align:center; flex:1; min-width:0; }
+      .header-title-section h1{ margin:0; font-size:clamp(18px,5vw,22px); font-weight:700; line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .header-title-section p{ margin:0; font-size:14px; opacity:.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-      /* Main Content Styles */
-      .content-area {
-        flex-grow: 1;
-        padding: 20px;
-        background-color: #f8f9fa;
-        display: flex;
-        flex-direction: column;
-      }
+      /* ACTION BUTTONS */
+      .header-actions{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:16px; width:100%; }
+      .header-btn{ min-height:48px; padding:10px 12px; border:0; border-radius:12px; font-size:14px; font-weight:700; line-height:1;
+        display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; box-shadow:0 2px 6px rgba(0,0,0,.08);
+        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; touch-action:manipulation; }
+      .btn-rate{ background:var(--blue); color:#fff; }
+      .btn-resource{ background:var(--red); color:#fff; }
+      @media (max-width:360px){ .header-actions{ grid-template-columns:1fr; } }
 
-      /* Summary Cards */
-      .summary-cards {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 25px;
-      }
-      .summary-card {
-        flex: 1;
-        padding: 15px;
-        border-radius: 12px;
-        text-align: center;
-      }
-      .card-income {
-        background-color: #e8f5e9;
-        border: 1px solid #c8e6c9;
-      }
-      .card-expense {
-        background-color: #ffebee;
-        border: 1px solid #ffcdd2;
-      }
-      .summary-card .icon {
-        font-size: 24px;
-        margin-bottom: 8px;
-      }
-      .icon-income {
-        color: #4caf50;
-      }
-      .icon-expense {
-        color: #f44336;
-      }
-      .summary-card .amount {
-        font-size: 20px;
-        font-weight: 700;
-        color: #333;
-      }
-      .summary-card .label {
-        font-size: 14px;
-        color: #555;
-      }
+      /* CONTENT */
+      .content-area{ flex:1 1 auto; min-height:0; overflow:auto; -webkit-overflow-scrolling:touch; background:#f8f9fa; padding:16px; padding-bottom:calc(120px + var(--safe-bottom)); }
 
-      /* Recent Activities */
-      .activities-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-      }
-      .activities-header h2 {
-        font-size: 18px;
-        font-weight: 700;
-        margin: 0;
-      }
-      .btn-filter {
-        background-color: #16a085;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 14px;
-      }
-      .btn-filter i {
-        margin-right: 5px;
-      }
+      /* SUMMARY CARDS */
+      .summary-cards{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+      .summary-card{ padding:14px 12px; border-radius:14px; text-align:center; background:#fff; border:1px solid #eef0f2; }
+      .summary-card.income{ background:var(--green-soft); border-color:var(--green-border); }
+      .summary-card.expense{ background:var(--red-soft); border-color:var(--red-border); }
+      .icon{ margin-bottom:6px; display:grid; place-items:center; }
+      .icon img{ width:28px; height:28px; display:block; }
+      .amount{ font-size:20px; font-weight:700; color:#0f172a; }
+      .label{ font-size:13px; color:#475467; }
 
-      /* Activity List */
-      .activity-list {
-        background-color: white;
-        border-radius: 12px;
-        padding: 10px;
-        flex-grow: 1;
-        overflow-y: auto;
-      }
-      .activity-list table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      .activity-list th,
-      .activity-list td {
-        text-align: left;
-        padding: 8px;
-        border-bottom: 1px solid #f0f0f0;
-        font-size: 14px;
-      }
-      .activity-list th {
-        background-color: #f8f9fa;
-      }
-      .activity-list tr:last-child td {
-        border-bottom: none;
-      }
+      /* EMPTY */
+      .empty-full{ display:none; text-align:center; color:#475467; padding:22px 8px; }
+      .empty-full.show{ display:block; }
+      .empty-full img{ width:clamp(80px,28vw,120px); height:auto; display:block; margin:8px auto 10px; }
+      .empty-full h3{ margin:0 0 6px; font-size:16px; color:#0f172a; }
+      .empty-full p{ margin:0; font-size:14px; }
 
-      /* Action Buttons at bottom of content */
-      .content-actions {
-        display: flex;
-        gap: 15px;
-        margin-top: 20px;
-      }
-      .content-btn {
-        flex: 1;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        color: white;
-      }
-      .btn-add-income {
-        background-color: #2980b9;
-      }
-      .btn-add-expense {
-        background-color: #e74c3c;
-      }
+      /* LIST / TABLE */
+      .activity-list{ margin-top:16px; background:#fff; border-radius:12px; padding:10px; flex:1 1 auto; overflow:auto; min-height:160px; position:relative; }
+      .table-modern{ width:100%; border-collapse:separate; border-spacing:0; font-size:14px; }
+      .table-modern thead th{ position:sticky; top:0; z-index:1; background:#f7faf9; color:#0f172a; font-weight:700; padding:10px 12px; border-bottom:1px solid #e9eef3; text-align:left; }
+      .table-modern tbody td{ padding:12px; border-bottom:1px solid #f0f2f5; color:#344054; }
+      .table-modern tbody tr:last-child td{ border-bottom:0; }
+      .pill{ display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700; }
+      .pill-income{ background:#e6f4ea; color:#0e8d6a; }
+      .pill-expense{ background:#fde7e9; color:#c23a2b; }
+      .text-end{ text-align:right; }
+      .actions{ display:flex; gap:6px; justify-content:flex-end; }
+      .btn-icon{ width:32px; height:32px; border-radius:10px; display:inline-flex; align-items:center; justify-content:center; border:1px solid transparent; background:#eff6ff; color:#0b5db8; }
+      .btn-icon.delete{ background:#ffe9e7; color:#dc3545; }
+      .btn-icon i{ font-size:14px; line-height:1; }
 
-      /* Bottom Navigation Bar */
-      .bottom-nav {
-        display: flex;
-        justify-content: space-around;
-        padding: 10px 0;
-        background-color: white;
-        border-top: 1px solid #e0e0e0;
-      }
-      .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #757575;
-        font-size: 12px;
-        text-decoration: none;
-        flex: 1;
-      }
-      .nav-item i {
-        font-size: 22px;
-        margin-bottom: 4px;
-      }
-      .nav-item.active {
-        color: #16a085;
-      }
-      .nav-item.active .icon-wrapper {
-        border-bottom: 2px solid #16a085;
-        padding-bottom: 2px;
-      }
+      /* SHEET */
+      .sheet-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:9999; padding:16px; }
+      .sheet{ width:min(92vw,360px); background:#fff; border-radius:14px; box-shadow:0 10px 40px rgba(0,0,0,.25); overflow:hidden; }
+      .sheet-row{ display:flex; align-items:center; gap:12px; padding:14px 16px; font-weight:700; font-size:18px; color:#334155; cursor:pointer; }
+      .sheet-row + .sheet-row{ border-top:1px solid #eef2f6; }
+      .sheet-row.danger{ color:#b42318; }
+      .sheet-row.danger i{ color:#dc3545; }
+      .options-menu{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; }
+      .sheet-overlay.show{ display:flex; }
 
-      /* Modal Styles */
-      .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
+      /* BOTTOM BAR */
+      .bottom-bar{ position:fixed; left:0; right:0; bottom:0; z-index:5; background:#f8f9fa; border-top:1px solid #e9eef3; padding:10px 16px calc(8px + var(--safe-bottom)); }
+      .bottom-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+      .bottom-bar .header-btn{ width:100%; }
+      .bottom-bar .header-btn img{ width:18px; height:18px; display:block; filter:brightness(0) invert(1); }
 
-      .modal-content {
-        background: white;
-        padding: 25px 30px;
-        border-radius: 12px;
-        width: 320px;
-        box-sizing: border-box;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        max-height: 90vh;
-        overflow-y: auto;
+      /* TOAST */
+      #toast{
+        position:fixed; top:calc(12px + var(--safe-top)); right:calc(12px + var(--safe-right)); transform:translateY(-8px);
+        background:#fff; border:1px solid #e5e7eb; color:#111827; border-radius:12px; padding:8px 12px 8px 10px;
+        box-shadow:0 10px 24px rgba(0,0,0,.18);
+        display:grid; grid-template-columns:28px 1fr 18px; align-items:center; gap:10px;
+        width:max-content; max-width:92vw; opacity:0; pointer-events:none; transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2;
       }
-
-      .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-      }
-
-      .modal-header h2 {
-        margin: 0;
-        font-size: 20px;
-      }
-
-      .modal-close-btn {
-        background: none;
-        border: none;
-        font-size: 28px;
-        line-height: 1;
-        cursor: pointer;
-        color: #555;
-      }
-
-      .modal-content label {
-        display: block;
-        margin-top: 12px;
-        margin-bottom: 6px;
-        font-weight: 600;
-        color: #333;
-      }
-
-      .modal-content input,
-      .modal-content textarea,
-      .modal-content select {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 16px;
-        box-sizing: border-box;
-      }
-
-      .modal-content textarea {
-        resize: vertical;
-        min-height: 60px;
-      }
-
-      .btn-save {
-        margin-top: 20px;
-        width: 100%;
-        background-color: #2980b9;
-        color: white;
-        border: none;
-        padding: 14px;
-        border-radius: 8px;
-        font-weight: 700;
-        cursor: pointer;
-        font-size: 16px;
-      }
+      #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+      .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:600; }
+      .toast-badge.success{ background:#74c69d; }
+      .toast-badge.error{ background:#ef4444; }
+      .toast-msg{ font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
     </style>
   </head>
 
   <body>
     <div class="mobile-container">
-      <!-- Page Header -->
-    <!-- Page Header -->
-<header class="page-header">
-  <div class="header-content">
-    <a href="c-site-list.html" class="back-arrow" onclick="history.back(); return false;">
-      <i class="fas fa-chevron-left"></i>
-    </a>
-    <div class="header-title-section">
-      <h1 id="site-name">लोड गर्दै...</h1>
-      <p id="site-address"></p>
-    </div>
-    <a href="#" class="options-menu"><i class="fas fa-ellipsis-v"></i></a>
-  </div>
-  <div class="header-actions">
-    <button class="header-btn btn-rate">
-      <i class="fas fa-tag"></i> दर निर्धारण
-    </button>
-    <a id="resource-btn" class="header-btn btn-resource" href="#">
-      <i class="fas fa-cogs"></i> रिसोर्स
-    </a>
-  </div>
-</header>
+      <header class="page-header">
+        <div class="header-content">
+          <a href="c-site-list.html" class="back-arrow" onclick="history.back(); return false;"><i class="fas fa-chevron-left"></i></a>
+          <div class="header-title-section">
+            <h1 id="site-name">लोड हुँदै...</h1>
+            <p id="site-address"></p>
+          </div>
+          <a href="#" class="options-menu" id="open-actions" aria-label="अधिक विकल्प"><i class="fas fa-ellipsis-v"></i></a>
+        </div>
+        <div class="header-actions">
+          <a id="rate-btn" class="header-btn btn-rate" href="#">दर सेटिङ</a>
+          <a id="resource-btn" class="header-btn btn-resource" href="#"><i class="fas fa-cogs"></i> रिसोर्स</a>
+        </div>
+      </header>
 
-
-      <!-- Main Content -->
       <main class="content-area">
         <div class="summary-cards">
-          <div class="summary-card card-income">
-            <div class="icon icon-income">
-              <i class="fas fa-dollar-sign"></i>
-            </div>
+          <div class="summary-card income">
+            <div class="icon"><img src="healthicons_low-income-level.svg" alt="आम्दानी" /></div>
             <div class="amount" id="total-income">रु ०</div>
             <div class="label">आम्दानी</div>
           </div>
-          <div class="summary-card card-expense">
-            <div class="icon icon-expense">
-              <i class="fas fa-dollar-sign"></i>
-            </div>
+          <div class="summary-card expense">
+            <div class="icon"><img src="Group 442.svg" alt="खर्च" /></div>
             <div class="amount" id="total-expense">रु ०</div>
             <div class="label">खर्च</div>
           </div>
         </div>
 
-        <div class="content-actions">
-          <button id="open-income-modal" class="content-btn btn-add-income">
-            <i class="fas fa-plus"></i> आम्दानी थप्नुहोस्
-          </button>
-          <button id="open-expense-modal" class="content-btn btn-add-expense">
-            <i class="fas fa-minus"></i> खर्च थप्नुहोस्
-          </button>
-        </div>
+        <section id="empty-full" class="empty-full">
+          <img src="illustration.png" alt="Empty illustration" />
+          <h3>अहिलेसम्म कुनै गतिविधि छैन</h3>
+          <p>थप्न सुरु गर्न तलका बटन प्रयोग गर्नुहोस्।</p>
+        </section>
 
         <div class="activity-list" id="activity-list">
           <p id="loading-activities">गतिविधिहरु लोड गर्दै...</p>
-          <p id="no-activities" style="display: none">
-            कुनै गतिविधिहरु फेला परेनन्।
-          </p>
-          <p id="activity-error" style="display: none; color: red">
-            गतिविधिहरु लोड गर्न असफल भयो।
-          </p>
-          <p
-            id="auth-error-message"
-            style="display: none; color: orange; font-weight: 700"
-          >
-            ⚠️ कृपया लगइन गर्नुहोस्।
-          </p>
+          <p id="auth-error-message" style="display:none;color:orange;font-weight:700">⚠️ कृपया लगइन गर्नुहोस्।</p>
+          <p id="activity-error" style="display:none;color:red">गतिविधिहरु लोड गर्न असफल भयो।</p>
 
-          <table id="activities-table" style="display: none; width: 100%">
+          <table id="activities-table" class="table-modern" style="display:none">
             <thead>
               <tr>
-                <th>मिति</th>
-                <th>शिर्षक</th>
-                <th>प्रकार</th>
-                <th>रकम</th>
-                <th>टिप्पणी</th>
-                <th>कार्य</th>
+                <th style="width:110px">मिति</th>
+                <th>शीर्षक</th>
+                <th style="width:110px">प्रकार</th>
+                <th style="width:110px" class="text-end">रकम</th>
+                <th>कैफियत</th>
+                <th style="width:84px" class="text-end">कार्य</th>
               </tr>
             </thead>
             <tbody id="activities-tbody"></tbody>
           </table>
         </div>
       </main>
+
+      <div class="bottom-bar">
+        <div class="bottom-grid">
+          <button id="open-income-modal" class="header-btn" style="background:var(--blue);color:#fff">
+            <img src="healthicons_low-income-level.svg" alt="" /><span>आम्दानी थप्नुहोस्</span>
+          </button>
+          <button id="open-expense-modal" class="header-btn" style="background:var(--red);color:#fff">
+            <img src="Group 442.svg" alt="" /><span>खर्च थप्नुहोस्</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kebab action sheet -->
+    <div id="site-actions" class="sheet-overlay" aria-hidden="true">
+      <div class="sheet" role="menu" aria-label="Site actions">
+        <div id="action-edit" class="sheet-row"><i class="fa-solid fa-pen"></i><span>साइट एडिट गर्नुहोस्</span></div>
+        <div id="action-delete" class="sheet-row danger"><i class="fa-solid fa-trash-can"></i><span>साइट डिलिट गर्नुहोस्</span></div>
+      </div>
     </div>
 
     <!-- Income Modal -->
-    <div id="income-modal" class="modal-overlay">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>आम्दानी थप्नुहोस्</h2>
-          <button
-            id="close-income-modal"
-            class="modal-close-btn"
-            aria-label="Close"
-          >
-            &times;
-          </button>
+    <div id="income-modal" class="sheet-overlay">
+      <div class="sheet" style="width:min(92vw,380px);padding:22px 24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h2 style="margin:0;font-size:18px">आम्दानी थप्नुहोस्</h2>
+          <button id="close-income-modal" class="modal-close-btn" style="background:none;border:0;font-size:26px;cursor:pointer;color:#555">&times;</button>
         </div>
-        <form id="income-form">
-          <label for="income-title">शीर्षक</label>
-          <input type="text" id="income-title" name="title" required />
+        <form id="income-form" novalidate>
+          <label>शीर्षक</label>
+          <input id="income-title" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+          <div class="field-error" id="income-title-err"></div>
 
-          <label for="income-amount">रकम</label>
-          <input
-            type="number"
-            id="income-amount"
-            name="amount"
-            min="0"
-            step="0.01"
-            required
-          />
+          <label style="display:block;margin:10px 0 6px">रकम</label>
+          <input type="number" id="income-amount" min="0" step="0.01" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+          <div class="field-error" id="income-amount-err"></div>
 
-          <label for="income-date">मिति</label>
-          <input type="date" id="income-date" name="date" required />
+          <label style="display:block;margin:10px 0 6px">मिति</label>
+          <input type="date" id="income-date" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+          <div class="field-error" id="income-date-err"></div>
 
-          <label for="income-notes">टिप्पणी</label>
-          <textarea id="income-notes" name="remark" rows="3"></textarea>
+          <label style="display:block;margin:10px 0 6px">टिप्पणी</label>
+          <textarea id="income-notes" rows="3" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px"></textarea>
+          <div class="field-error" id="income-notes-err"></div>
 
-          <button type="submit" class="btn-save">सेभ गर्नुहोस्</button>
+          <button type="submit" class="header-btn" style="margin-top:16px;width:100%;background:var(--blue);color:#fff">सेभ गर्नुहोस्</button>
         </form>
       </div>
     </div>
-
-    <!-- Add this inside your <body> right after the income modal -->
 
     <!-- Expense Modal -->
-    <div id="expense-modal" class="modal-overlay">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>खर्च थप्नुहोस्</h2>
-          <button
-            id="close-expense-modal"
-            class="modal-close-btn"
-            aria-label="Close"
-          >
-            &times;
-          </button>
+    <div id="expense-modal" class="sheet-overlay">
+      <div class="sheet" style="width:min(92vw,380px);padding:22px 24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h2 style="margin:0;font-size:18px">खर्च थप्नुहोस्</h2>
+          <button id="close-expense-modal" class="modal-close-btn" style="background:none;border:0;font-size:26px;cursor:pointer;color:#555">&times;</button>
         </div>
-        <form id="expense-form">
-          <label for="expense-title">शीर्षक</label>
-          <input type="text" id="expense-title" name="title" required />
+        <form id="expense-form" novalidate>
+          <label>शीर्षक</label>
+          <input id="expense-title" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+          <div class="field-error" id="expense-title-err"></div>
 
-          <label for="expense-amount">रकम</label>
-          <input
-            type="number"
-            id="expense-amount"
-            name="amount"
-            min="0"
-            step="0.01"
-            required
-          />
+          <label style="display:block;margin:10px 0 6px">रकम</label>
+          <input type="number" id="expense-amount" min="0" step="0.01" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+          <div class="field-error" id="expense-amount-err"></div>
 
-          <label for="expense-date">मिति</label>
-          <input type="date" id="expense-date" name="date" required />
+          <label style="display:block;margin:10px 0 6px">मिति</label>
+          <input type="date" id="expense-date" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+          <div class="field-error" id="expense-date-err"></div>
 
-          <label for="expense-notes">टिप्पणी</label>
-          <textarea id="expense-notes" name="remark" rows="3"></textarea>
+          <label style="display:block;margin:10px 0 6px">टिप्पणी</label>
+          <textarea id="expense-notes" rows="3" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px"></textarea>
+          <div class="field-error" id="expense-notes-err"></div>
 
-          <button type="submit" class="btn-save">सेभ गर्नुहोस्</button>
+          <button type="submit" class="header-btn" style="margin-top:16px;width:100%;background:var(--red);color:#fff">सेभ गर्नुहोस्</button>
         </form>
       </div>
     </div>
 
-  <script>
-const API_BASE = "http://192.168.1.209:8000/api";
-const token = localStorage.getItem("auth_token");
+    <!-- Finance Edit Modal -->
+    <div id="finance-edit-modal" class="sheet-overlay">
+      <div class="sheet" style="width:min(92vw,380px);padding:22px 24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h2 style="margin:0;font-size:18px">रेकर्ड सम्पादन</h2>
+          <button id="close-finance-edit" class="modal-close-btn" style="background:none;border:0;font-size:26px;cursor:pointer;color:#555">&times;</button>
+        </div>
+        <form id="finance-edit-form" novalidate>
+          <input type="hidden" id="fe-id" />
+          <input type="hidden" id="fe-kind" />
+          <input type="hidden" id="fe-ie-id" />
+          <div style="margin:8px 0">
+            <label>शीर्षक</label>
+            <input id="fe-title" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+            <div class="field-error" id="fe-title-err"></div>
+          </div>
+          <div style="margin:8px 0">
+            <label>रकम</label>
+            <input type="number" id="fe-amount" min="0" step="0.01" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+            <div class="field-error" id="fe-amount-err"></div>
+          </div>
+          <div style="margin:8px 0">
+            <label>मिति</label>
+            <input type="date" id="fe-date" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px" />
+            <div class="field-error" id="fe-date-err"></div>
+          </div>
+          <div style="margin:8px 0">
+            <label>टिप्पणी</label>
+            <textarea id="fe-remark" rows="3" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" style="width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:16px"></textarea>
+          </div>
+          <button type="submit" class="header-btn" style="margin-top:16px;width:100%;background:var(--blue);color:#fff">सेभ गर्नुहोस्</button>
+        </form>
+      </div>
+    </div>
 
-const incomeModal = document.getElementById("income-modal");
-const openIncomeBtn = document.getElementById("open-income-modal");
-const closeIncomeBtn = document.getElementById("close-income-modal");
-const incomeForm = document.getElementById("income-form");
+    <!-- Finance Delete Modal (dynamic labels) -->
+    <div id="finance-delete-modal" class="sheet-overlay">
+      <div class="sheet" style="width:min(92vw,360px);padding:22px 24px">
+        <h2 id="fd-title" style="margin:0 0 8px;font-size:18px">मेटाउने हो?</h2>
+        <p id="fd-desc" style="margin:0 0 16px;color:#475467;font-size:14px">के तपाईं यो रेकर्ड मेट्न पक्का हुनुहुन्छ?</p>
+        <div style="display:flex;gap:10px">
+          <button id="fd-cancel" class="header-btn" style="flex:1;background:#eef2f6;color:#475467">रद्द</button>
+          <button id="fd-confirm" class="header-btn" style="flex:1;background:var(--red);color:#fff">मेटाउनुहोस्</button>
+        </div>
+      </div>
+    </div>
 
-const expenseModal = document.getElementById("expense-modal");
-const openExpenseBtn = document.getElementById("open-expense-modal");
-const closeExpenseBtn = document.getElementById("close-expense-modal");
-const expenseForm = document.getElementById("expense-form");
+    <!-- Toast host (moved BEFORE script so toast() is always safe) -->
+    <div id="toast" role="status" aria-live="polite"></div>
 
-const activityTable = document.getElementById("activities-table");
-const tbody = document.getElementById("activities-tbody");
+    <script>
+      /* ---------- CONFIG & HELPERS ---------- */
+      var API = "http://192.168.1.209:8000/api";
+      var raw = localStorage.getItem("auth_token") || "";
+      var TOKEN = raw.indexOf("|") !== -1 ? raw.split("|")[1] : raw;
+      var qs = new URLSearchParams(location.search);
+      var SITE_ID = qs.get("id") || localStorage.getItem("current_site_id");
+      if (!SITE_ID) { alert("साइट चयन गरिएको छैन।"); location.href = "c-site-list.html"; }
+      var authHeader = TOKEN ? { Authorization: "Bearer " + TOKEN, Accept: "application/json" } : { Accept: "application/json" };
 
-let totalIncome = 0;
-let totalExpense = 0;
-const SITE_ID = new URLSearchParams(window.location.search).get("id") || 1;
+      // Toast (creates host if missing)
+      function toast(msg, kind) {
+        if (kind !== "error") kind = "success";
+        var t = document.getElementById("toast");
+        if (!t) { t = document.createElement("div"); t.id = "toast"; document.body.appendChild(t); }
+        t.innerHTML =
+          '<span class="toast-badge ' + (kind === "error" ? "error" : "success") + '">' + (kind === "error" ? "✖" : "✓") + '</span>' +
+          '<span class="toast-msg">' + (msg || "") + '</span>' +
+          '<span class="toast-x" aria-label="Close">×</span>';
+        t.classList.add("show");
+        t.querySelector(".toast-x").onclick = function(){ t.classList.remove("show"); };
+        clearTimeout(toast._t);
+        toast._t = setTimeout(function(){ t.classList.remove("show"); }, 2000);
+      }
 
+      function formatCurrency(a){
+        return "रु " + ((Number(a) || 0).toLocaleString("ne-NP", { maximumFractionDigits: 0 }));
+      }
 
-// Dynamically set Resource button link
-const resourceBtn = document.getElementById("resource-btn");
-if (resourceBtn) {
-    resourceBtn.href = `site-resources.html?id=${SITE_ID}`;
-}
+      var recordsById = {};
+      var totalIncome = 0, totalExpense = 0;
 
+      /* ---------- HEADER ---------- */
+      async function loadSiteInfo(){
+        try{
+          var res = await fetch(API + "/sites/" + SITE_ID, { headers: authHeader });
+          var site = await res.json();
+          document.getElementById("site-name").textContent = (site && site.name) ? site.name : "साइट";
+          var phone = (site && site.owner && site.owner.phone_no) ? site.owner.phone_no : (site && site.phone_no ? site.phone_no : "");
+          var address = (site && site.address) ? site.address : "";
+          document.getElementById("site-address").textContent = [address, phone].filter(Boolean).join(" | ");
+        }catch(e){}
+        document.getElementById("rate-btn").href = "ratesetting.html?site_id=" + SITE_ID;
+        document.getElementById("resource-btn").href = "site-resources.html?site_id=" + SITE_ID;
+        localStorage.setItem("current_site_id", SITE_ID);
+      }
 
+      /* ---------- TABLE / LIST ---------- */
+      function num(v){ v = (v==null ? "" : String(v)).replace(/[,\s]/g,""); var n = Number(v); return isNaN(n) ? 0 : n; }
+      function pickKindAndAmount(r){
+        var c = num(r && (r.credit != null ? r.credit : r.credit_amount));
+        var d = num(r && (r.debit  != null ? r.debit  : r.debit_amount));
+        var a = num(r && (r.amount != null ? r.amount : r.value));
+        if (r && typeof r.is_income === "boolean") return { kind: r.is_income ? "income" : "expense", amount: a || (r.is_income ? c : d) || Math.max(c,d) };
+        if (c > 0 && d === 0) return { kind:"income", amount:c };
+        if (d > 0 && c === 0) return { kind:"expense", amount:d };
+        var t = String((r && r.type) || (r && r.income_expense && r.income_expense.type) || "").toLowerCase();
+        if (t.indexOf("exp") !== -1 || t.indexOf("खर्च") !== -1) return { kind:"expense", amount:a || d || c };
+        if (t.indexOf("inc") !== -1 || t.indexOf("आम") !== -1)  return { kind:"income", amount:a || c || d };
+        return { kind: d >= c ? "expense" : "income", amount: Math.max(d,c) };
+      }
 
-// ---------- Formatting ----------
-function formatCurrency(amount) {
-  return "रु " + (amount || 0).toLocaleString("ne-NP", { maximumFractionDigits: 0 });
-}
+      function addRowToTable(data){
+        var tbody = document.getElementById("activities-tbody");
+        var ka = pickKindAndAmount(data);
+        var kind = ka.kind, amount = ka.amount;
 
-function formatDateDisplay(dateStr) {
-  const date = new Date(dateStr);
-  if (isNaN(date)) return "-";
-  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-}
+        var ieId = (data && data.income_expense_id != null) ? data.income_expense_id : ((data && data.income_expense) ? data.income_expense.id : null);
+        recordsById[data.id] = Object.assign({}, data, { _kind: kind, _amt: amount, income_expense_id: ieId });
 
-// ---------- Totals ----------
-function updateTotalsDisplay() {
-  document.getElementById("total-income").textContent = formatCurrency(totalIncome);
-  document.getElementById("total-expense").textContent = formatCurrency(totalExpense);
-}
+        if (kind === "income") totalIncome += amount; else totalExpense += amount;
 
-// ---------- Table Row ----------
-function addRowToTable(data) {
-  const tr = document.createElement("tr");
-  const title = data.title || data.income_expense?.title || "-";
-  const credit = Number(data.credit) || 0;
-  const debit = Number(data.debit) || 0;
+        var title = (data && data.title) ? data.title : ((data && data.income_expense && data.income_expense.title) ? data.income_expense.title : "—");
+        var badge = (kind === "income") ? '<span class="pill pill-income">आम्दानी</span>' : '<span class="pill pill-expense">खर्च</span>';
+        var dt = new Date(data && data.date);
+        var dateText = isNaN(dt) ? "–" : dt.toLocaleDateString("ne-NP");
 
-  const isIncome = credit > 0;
-  const amount = isIncome ? credit : debit;
-  const type = isIncome ? "आम्दानी" : "खर्च";
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          "<td>" + dateText + "</td>" +
+          "<td>" + title + "</td>" +
+          "<td>" + badge + "</td>" +
+          '<td class="text-end">' + formatCurrency(amount) + "</td>" +
+          "<td>" + ((data && (data.remark || data.remarks)) || "") + "</td>" +
+          '<td class="text-end"><div class="actions">' +
+          '<button class="btn-icon edit" data-id="' + data.id + '" title="सम्पादन"><i class="fas fa-pen"></i></button>' +
+          '<button class="btn-icon delete" data-id="' + data.id + '" title="हटाउनुहोस्"><i class="fas fa-trash"></i></button>' +
+          "</div></td>";
+        tbody.appendChild(tr);
+      }
 
-  // Update totals
-  if (isIncome) totalIncome += amount;
-  else totalExpense += amount;
+      function updateTotals(){
+        document.getElementById("total-income").textContent = formatCurrency(totalIncome);
+        document.getElementById("total-expense").textContent = formatCurrency(totalExpense);
+      }
 
-  tr.innerHTML = `
-    <td>${formatDateDisplay(data.date)}</td>
-    <td>${title}</td>
-    <td>${type}</td>
-    <td>${formatCurrency(amount)}</td>
-    <td>${data.remark || ""}</td>
-    <td><button disabled>...</button></td>
-  `;
+      async function loadFinanceRecords(){
+        var loading = document.getElementById("loading-activities");
+        var emptyFull = document.getElementById("empty-full");
+        var auth = document.getElementById("auth-error-message");
+        var err = document.getElementById("activity-error");
+        var table = document.getElementById("activities-table");
+        var tbody = document.getElementById("activities-tbody");
+        var card = document.getElementById("activity-list");
 
-  tbody.appendChild(tr);
-}
+        emptyFull.classList.remove("show");
+        card.style.display = "block";
+        loading.style.display = "block";
+        auth.style.display = "none";
+        err.style.display = "none";
+        table.style.display = "none";
+        tbody.innerHTML = "";
+        totalIncome = 0; totalExpense = 0;
 
+        if (!TOKEN){
+          loading.style.display = "none";
+          auth.style.display = "block";
+          return;
+        }
 
-// ---------- Load Site ----------
-async function loadSiteInfo() {
-  try {
-    const res = await fetch(`${API_BASE}/sites/${SITE_ID}`, {
-      headers: token ? { Authorization: `Bearer ${token}`, Accept: "application/json" } : { Accept: "application/json" }
-    });
-    const site = await res.json();
-    document.getElementById("site-name").textContent = site.name || "नाम उपलब्ध छैन";
-    document.getElementById("site-address").textContent = `${site.address || "ठेगाना उपलब्ध छैन"} | ${site.owner?.phone_no || "फोन नम्बर उपलब्ध छैन"}`;
-  } catch (err) {
-    console.error(err);
-    document.getElementById("site-name").textContent = "साइट डाटा लोड गर्न सकेन";
-    document.getElementById("site-address").textContent = "";
-  }
-}
+        try{
+          var res = await fetch(API + "/finance/site/" + SITE_ID + "/details?include_party=false", { headers: authHeader });
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          var data = await res.json();
+          var items = (data && (data.finance_records || data.records || data.data)) || [];
+          loading.style.display = "none";
 
+          if (!items.length){
+            card.style.display = "none";
+            emptyFull.classList.add("show");
+            updateTotals();
+            return;
+          }
+          items.forEach(addRowToTable);
+          table.style.display = "table";
+          updateTotals();
+        }catch(e){
+          loading.style.display = "none";
+          err.style.display = "block";
+        }
+      }
 
+      /* ---------- KEBAB ---------- */
+      var sheet = document.getElementById("site-actions");
+      document.getElementById("open-actions").addEventListener("click", function(e){
+        e.preventDefault();
+        sheet.classList.add("show");
+        sheet.setAttribute("aria-hidden","false");
+      });
+      sheet.addEventListener("click", function(e){
+        if (e.target === sheet){
+          sheet.classList.remove("show");
+          sheet.setAttribute("aria-hidden","true");
+        }
+      });
+      document.getElementById("action-edit").addEventListener("click", function(){
+        location.href = "site-edit.html?id=" + encodeURIComponent(SITE_ID);
+      });
+      document.getElementById("action-delete").addEventListener("click", async function(){
+        if (!confirm("साइट डिलिट गर्ने हो?")) return;
+        try{
+          var res = await fetch(API + "/sites/" + SITE_ID, { method:"DELETE", headers:authHeader });
+          if (!res.ok){
+            res = await fetch(API + "/sites/" + SITE_ID, {
+              method:"POST", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+              body:JSON.stringify({_method:"DELETE"})
+            });
+          }
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          alert("साइट मेटाइयो।"); location.href = "c-site-list.html";
+        }catch(e){ alert("मेटाउन असफल भयो।"); }
+      });
 
-// ---------- Load Finance ----------
+      /* ---------- MODALS ---------- */
+      var incomeModal = document.getElementById("income-modal");
+      var expenseModal = document.getElementById("expense-modal");
+      var today = new Date().toISOString().split("T")[0];
 
-async function loadFinanceRecords() {
-  totalIncome = 0;
-  totalExpense = 0;
-  tbody.innerHTML = "";
+      document.getElementById("open-income-modal").onclick = function(){
+        document.getElementById("income-form").reset();
+        ["income-title-err","income-amount-err","income-date-err","income-notes-err"].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=""; });
+        document.getElementById("income-date").value = today;
+        incomeModal.classList.add("show");
+      };
+      document.getElementById("open-expense-modal").onclick = function(){
+        document.getElementById("expense-form").reset();
+        ["expense-title-err","expense-amount-err","expense-date-err","expense-notes-err"].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=""; });
+        document.getElementById("expense-date").value = today;
+        expenseModal.classList.add("show");
+      };
+      document.getElementById("close-income-modal").onclick = function(){ incomeModal.classList.remove("show"); };
+      document.getElementById("close-expense-modal").onclick = function(){ expenseModal.classList.remove("show"); };
+      incomeModal.addEventListener("click", function(e){ if(e.target===incomeModal) incomeModal.classList.remove("show"); });
+      expenseModal.addEventListener("click", function(e){ if(e.target===expenseModal) expenseModal.classList.remove("show"); });
 
-  if (!token) {
-    document.getElementById("auth-error-message").style.display = "block";
-    activityTable.style.display = "none";
-    return;
-  }
+      // CREATE income
+      document.getElementById("income-form").addEventListener("submit", async function(e){
+        e.preventDefault();
+        var title = document.getElementById("income-title").value;
+        var amount = Number(document.getElementById("income-amount").value) || 0;
+        var date = document.getElementById("income-date").value;
+        var remark = document.getElementById("income-notes").value.trim();
 
-  try {
-    const res = await fetch(`${API_BASE}/finance/site/${SITE_ID}/details`, {
-      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
-    });
-    if (!res.ok) throw new Error(`Failed to fetch finance records: ${res.status}`);
-    const data = await res.json();
+        var ok = true;
+        if (!title.trim()){ document.getElementById("income-title-err").textContent = "शीर्षक आवश्यक छ"; ok=false; }
+        if (!(amount>0)){ document.getElementById("income-amount-err").textContent = "रकम आवश्यक छ"; ok=false; }
+        if (!date){ document.getElementById("income-date-err").textContent = "मिति आवश्यक छ"; ok=false; }
+        if (!ok) return;
 
-    const records = data.finance_records || [];
-    if (records.length === 0) {
-      document.getElementById("no-activities").style.display = "block";
-      activityTable.style.display = "none";
-      updateTotalsDisplay();
-      return;
-    }
+        try{
+          var ieRes = await fetch(API + "/income-expense", {
+            method:"POST", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+            body:JSON.stringify({ title:title.trim(), remarks:remark, type:"other" })
+          });
+          var ie = await ieRes.json();
+          if (!ieRes.ok || !(ie && ie.id)) throw new Error((ie && ie.message) || "IE create failed");
 
-    document.getElementById("no-activities").style.display = "none";
-    activityTable.style.display = "table";
+          var finRes = await fetch(API + "/finance", {
+            method:"POST", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+            body:JSON.stringify({ site_id:Number(SITE_ID), debit:0, credit:amount, remark:remark, date:date, income_expense_id:ie.id })
+          });
+          if (!finRes.ok) throw new Error("Finance create failed");
 
-    records.forEach(item => addRowToTable(item));
+          incomeModal.classList.remove("show");
+          await loadFinanceRecords();
+          toast("आम्दानी सफलतापूर्वक थपियो","success");
+        }catch(err){ toast(err && err.message ? err.message : "सेभ असफल","error"); }
+      });
 
-    updateTotalsDisplay();
-  } catch (err) {
-    console.error(err);
-    document.getElementById("activity-error").style.display = "block";
-    activityTable.style.display = "none";
-  }
-}
+      // CREATE expense
+      document.getElementById("expense-form").addEventListener("submit", async function(e){
+        e.preventDefault();
+        var title = document.getElementById("expense-title").value;
+        var amount = Number(document.getElementById("expense-amount").value) || 0;
+        var date = document.getElementById("expense-date").value;
+        var remark = document.getElementById("expense-notes").value.trim();
 
+        var ok = true;
+        if (!title.trim()){ document.getElementById("expense-title-err").textContent = "शीर्षक आवश्यक छ"; ok=false; }
+        if (!(amount>0)){ document.getElementById("expense-amount-err").textContent = "रकम आवश्यक छ"; ok=false; }
+        if (!date){ document.getElementById("expense-date-err").textContent = "मिति आवश्यक छ"; ok=false; }
+        if (!ok) return;
 
+        try{
+          var ieRes = await fetch(API + "/income-expense", {
+            method:"POST", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+            body:JSON.stringify({ title:title.trim(), remarks:remark, type:"other" })
+          });
+          var ie = await ieRes.json();
+          if (!ieRes.ok || !(ie && ie.id)) throw new Error((ie && ie.message) || "IE create failed");
 
-// ---------- Modal ----------
-function openModal(modal) { modal.style.display = "flex"; }
-function closeModal(modal) { modal.style.display = "none"; }
+          var finRes = await fetch(API + "/finance", {
+            method:"POST", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+            body:JSON.stringify({ site_id:Number(SITE_ID), debit:amount, credit:0, remark:remark, date:date, income_expense_id:ie.id })
+          });
+          if (!finRes.ok) throw new Error("Finance create failed");
 
-openIncomeBtn.addEventListener("click", () => {
-  incomeForm.reset();
-  incomeForm.querySelector("#income-date").value = new Date().toISOString().split("T")[0];
-  openModal(incomeModal);
-});
-closeIncomeBtn.addEventListener("click", () => closeModal(incomeModal));
-incomeModal.addEventListener("click", e => { if (e.target === incomeModal) closeModal(incomeModal); });
+          expenseModal.classList.remove("show");
+          await loadFinanceRecords();
+          toast("खर्च सफलतापूर्वक थपियो","success");
+        }catch(err){ toast((err && err.message) ? err.message : "सेभ असफल","error"); }
+      });
 
-openExpenseBtn.addEventListener("click", () => {
-  expenseForm.reset();
-  expenseForm.querySelector("#expense-date").value = new Date().toISOString().split("T")[0];
-  openModal(expenseModal);
-});
-closeExpenseBtn.addEventListener("click", () => closeModal(expenseModal));
-expenseModal.addEventListener("click", e => { if (e.target === expenseModal) closeModal(expenseModal); });
+      /* ---------- EDIT / DELETE ---------- */
+      document.getElementById("activities-tbody").addEventListener("click", function(e){
+        var btn = e.target.closest("button.btn-icon");
+        if (!btn) return;
+        var id = btn.getAttribute("data-id");
+        var rec = recordsById[id];
+        if (!rec) return;
 
-// ---------- Form Submit ----------
-async function handleIncomeSubmit(e) {
-  e.preventDefault();
-  if (!token) return alert("कृपया लगइन गर्नुहोस्।");
+        if (btn.classList.contains("edit")){
+          document.getElementById("fe-id").value = id;
+          document.getElementById("fe-kind").value = rec._kind;
+          document.getElementById("fe-ie-id").value = (rec.income_expense && rec.income_expense.id) ? rec.income_expense.id : (rec.income_expense_id || "");
+          document.getElementById("fe-title").value = (rec.income_expense && rec.income_expense.title) ? rec.income_expense.title : (rec.title || "");
+          document.getElementById("fe-amount").value = rec._amt || 0;
+          document.getElementById("fe-date").value = String(rec.date || "").slice(0,10);
+          document.getElementById("fe-remark").value = (rec.remark || rec.remarks || "");
+          ["fe-title-err","fe-amount-err","fe-date-err"].forEach(function(id){ var el=document.getElementById(id); if(el) el.textContent=""; });
+          document.getElementById("finance-edit-modal").classList.add("show");
+        }else if (btn.classList.contains("delete")){
+          var kind = rec._kind === "income" ? "income" : "expense";
+          var fdTitle = document.getElementById("fd-title");
+          var fdDesc  = document.getElementById("fd-desc");
+          var fdBtn   = document.getElementById("fd-confirm");
+          fdBtn.setAttribute("data-id", id);
+          fdBtn.setAttribute("data-kind", kind);
+          if (kind === "income"){
+            fdTitle.textContent = "आम्दानी मेटाउने हो?";
+            fdDesc.textContent  = "के तपाईं यो आम्दानी रेकर्ड मेट्न पक्का हुनुहुन्छ?";
+            fdBtn.textContent   = "आम्दानी मेटाउनुहोस्";
+          }else{
+            fdTitle.textContent = "खर्च मेटाउने हो?";
+            fdDesc.textContent  = "के तपाईं यो खर्च रेकर्ड मेट्न पक्का हुनुहुन्छ?";
+            fdBtn.textContent   = "खर्च मेटाउनुहोस्";
+          }
+          document.getElementById("finance-delete-modal").classList.add("show");
+        }
+      });
 
-  const amount = parseFloat(incomeForm.querySelector("#income-amount").value) || 0;
-  const date = incomeForm.querySelector("#income-date").value;
-  const remark = incomeForm.querySelector("#income-notes").value.trim();
-  const title = incomeForm.querySelector("#income-title").value.trim();
+      document.getElementById("close-finance-edit").onclick = function(){
+        document.getElementById("finance-edit-modal").classList.remove("show");
+      };
+      document.getElementById("fd-cancel").onclick = function(){
+        document.getElementById("finance-delete-modal").classList.remove("show");
+      };
+      ["finance-edit-modal","finance-delete-modal"].forEach(function(id){
+        var el = document.getElementById(id);
+        el.addEventListener("click", function(e){ if(e.target===el) el.classList.remove("show"); });
+      });
 
-  if (amount <= 0 || !date) return alert("कृपया मान्य विवरण प्रविष्ट गर्नुहोस्।");
+      // UPDATE
+      document.getElementById("finance-edit-form").addEventListener("submit", async function(e){
+        e.preventDefault();
+        var id = document.getElementById("fe-id").value;
+        var kind = document.getElementById("fe-kind").value;
+        var ieId = document.getElementById("fe-ie-id").value;
+        var title = document.getElementById("fe-title").value;
+        var amount = Number(document.getElementById("fe-amount").value) || 0;
+        var date = document.getElementById("fe-date").value;
+        var remark = document.getElementById("fe-remark").value.trim();
 
-  try {
-    const resIncomeExpense = await fetch(`${API_BASE}/income-expense`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ title, remarks: remark, type: "other" })
-    });
-    const incomeExpenseData = await resIncomeExpense.json();
+        var ok = true;
+        if (!title.trim()){ document.getElementById("fe-title-err").textContent = "शीर्षक आवश्यक छ"; ok=false; }
+        if (!(amount>0)){ document.getElementById("fe-amount-err").textContent = "रकम आवश्यक छ"; ok=false; }
+        if (!date){ document.getElementById("fe-date-err").textContent = "मिति आवश्यक छ"; ok=false; }
+        if (!ok) return;
 
-    await fetch(`${API_BASE}/finance`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ site_id: Number(SITE_ID), debit: 0, credit: amount, remark, date, income_expense_id: incomeExpenseData.id })
-    });
+        try{
+          if (ieId){
+            var ieRes = await fetch(API + "/income-expense/" + ieId, {
+              method:"PUT", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+              body:JSON.stringify({ title:title.trim(), remarks:remark })
+            });
+            if (!ieRes.ok) throw new Error((await ieRes.text()) || "IE update failed");
+          }
 
-    await loadFinanceRecords();
-    alert("आम्दानी सफलतापूर्वक थपियो।");
-    closeModal(incomeModal);
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-}
+          var body = { date:date, remark:remark, title:title.trim() };
+          if (kind === "income"){ body.debit = 0; body.credit = amount; } else { body.debit = amount; body.credit = 0; }
 
-async function handleExpenseSubmit(e) {
-  e.preventDefault();
-  if (!token) return alert("कृपया लगइन गर्नुहोस्।");
+          var fRes = await fetch(API + "/finance/" + id, {
+            method:"PUT", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+            body:JSON.stringify(body)
+          });
+          if (!fRes.ok) throw new Error((await fRes.text()) || "Finance update failed");
 
-  const amount = parseFloat(expenseForm.querySelector("#expense-amount").value) || 0;
-  const date = expenseForm.querySelector("#expense-date").value;
-  const remark = expenseForm.querySelector("#expense-notes").value.trim();
-  const title = expenseForm.querySelector("#expense-title").value.trim();
+          document.getElementById("finance-edit-modal").classList.remove("show");
+          toast("सम्पादन सफल भयो","success");
+          await loadFinanceRecords();
+        }catch(err){ toast((err && err.message) ? err.message : "अपडेट असफल","error"); }
+      });
 
-  if (amount <= 0 || !date) return alert("कृपया मान्य विवरण प्रविष्ट गर्नुहोस्।");
+      // DELETE
+      document.getElementById("fd-confirm").addEventListener("click", async function(){
+        var btn = document.getElementById("fd-confirm");
+        var id = btn.getAttribute("data-id");
+        var kind = btn.getAttribute("data-kind");
+        if (!id) return;
+        try{
+          var res = await fetch(API + "/finance/" + id, { method:"DELETE", headers:authHeader });
+          if (!res.ok){
+            res = await fetch(API + "/finance/" + id, {
+              method:"POST", headers:Object.assign({}, authHeader, {"Content-Type":"application/json"}),
+              body:JSON.stringify({_method:"DELETE"})
+            });
+          }
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          document.getElementById("finance-delete-modal").classList.remove("show");
+          toast(kind === "income" ? "आम्दानी मेटाइयो" : "खर्च मेटाइयो","success");
+          await loadFinanceRecords();
+        }catch(err){ toast(kind === "income" ? "आम्दानी मेटाउन असफल" : "खर्च मेटाउन असफल","error"); }
+      });
 
-  try {
-    const resIncomeExpense = await fetch(`${API_BASE}/income-expense`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ title, remarks: remark, type: "other" })
-    });
-    const incomeExpenseData = await resIncomeExpense.json();
-
-    await fetch(`${API_BASE}/finance`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ site_id: Number(SITE_ID), debit: amount, credit: 0, remark, date, income_expense_id: incomeExpenseData.id })
-    });
-
-    await loadFinanceRecords();
-    alert("खर्च सफलतापूर्वक थपियो।");
-    closeModal(expenseModal);
-  } catch (err) {
-    console.error(err);
-    alert(err.message);
-  }
-}
-
-incomeForm.addEventListener("submit", handleIncomeSubmit);
-expenseForm.addEventListener("submit", handleExpenseSubmit);
-
-// ---------- On Page Load ----------
-document.addEventListener("DOMContentLoaded", () => {
-  loadSiteInfo();
-  loadFinanceRecords();
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const rows = document.querySelectorAll('.site-row');
-
-    rows.forEach(row => {
-        row.addEventListener('click', () => {
-            const siteId = row.dataset.id;
-
-            // Optional: store in localStorage
-            localStorage.setItem('current_site_id', siteId);
-
-            // Redirect to resources page with ID in URL
-            window.location.href = `site-resources.html?id=${siteId}`;
-        });
-    });
-});
-</script>
-
-
-
+      /* ---------- INIT ---------- */
+      loadSiteInfo();
+      loadFinanceRecords();
+    </script>
   </body>
 </html>

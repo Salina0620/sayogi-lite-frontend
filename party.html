@@ -1,217 +1,383 @@
 <!DOCTYPE html>
 <html lang="ne">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>पार्टीहरु</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>पार्टीहरु</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Font & Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
-<style>
-:root {
-    --primary-green: #20907a;
-    --new-button-blue: #007bff;
-    --total-amount-bg: #ffe6e6;
-    --total-amount-border: #ffcccc;
-    --total-amount-text: #e74c3c;
-    --light-gray: #f7f7f7;
-    --text-dark: #333;
-    --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-body {
-    font-family: 'Arial', sans-serif;
-    margin:0;
-    padding:0;
-    background:#e0e0e0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    overflow:hidden;
-}
-.iphone-frame {
-    width:430px;
-    height:932px;
-    background:#fff;
-    border-radius:40px;
-    box-shadow:0 0 15px rgba(0,0,0,0.3);
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    padding-top:50px;
-    padding-bottom:34px;
-}
-.app-header {
-    background: var(--primary-green);
-    color: #fff;
-    padding:0.8rem;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-.header-title {
-    font-size:1.25rem;
-    font-weight:600;
-}
-.add-new-btn {
-    background: var(--new-button-blue);
-    color:#fff;
-    border:none;
-    padding:0.4rem 0.9rem;
-    border-radius:20px;
-    cursor:pointer;
-    font-size:0.85rem;
-    font-weight:500;
-}
-.add-new-btn:hover { background:#0056b3; }
-.main-content {
-    flex-grow:1;
-    background: var(--light-gray);
-    margin:0.7rem 0.8rem;
-    border-radius:8px;
-    padding:1rem;
-    display:flex;
-    flex-direction:column;
-    overflow-y:auto;
-}
-.total-amount-card {
-    background: var(--total-amount-bg);
-    border:1px solid var(--total-amount-border);
-    border-radius:8px;
-    padding:0.8rem 1rem;
-    text-align:center;
-    margin-bottom:1rem;
-}
-.total-amount-card .label { margin:0; font-size:0.9rem; color:var(--text-dark); }
-.total-amount-card .amount { margin:0.3rem 0 0; font-size:1.5rem; font-weight:bold; color:var(--total-amount-text); }
-.party-list { display:flex; flex-direction:column; gap:0.7rem; }
-.party-card {
-    background:#fff;
-    border-radius:8px;
-    padding:0.8rem 1rem;
-    box-shadow: var(--card-shadow);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    cursor:pointer;
-}
-.party-info .party-name { margin:0; font-weight:500; }
-.party-info .party-phone { margin:0.3rem 0 0; font-size:0.85rem; color:#777; }
-.arrow-icon { font-size:1.4rem; color:#bbb; margin-left:1rem; }
-.bottom-nav {
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    padding:0.5rem 0;
-    box-shadow:0 -2px 4px rgba(0,0,0,0.1);
-    flex-shrink:0;
-}
-.nav-item { display:flex; flex-direction:column; align-items:center; color:#a4d3c9; font-size:0.75rem; text-decoration:none; flex:1; }
-.nav-item.active { color:#20907a; }
-.nav-item.active::after {
-    content:"";
-    display:block;
-    width:28px;
-    height:2px;
-    background:#20907a;
-    margin-top:5px;
-    border-radius:1px;
-}
-.nav-item .icon { font-size:1.6rem; margin-bottom:0.2rem; }
-</style>
-</head>
+    <style>
+      :root {
+        --brand-green: #13a87d;
+        --cta-blue: #186b97;
+        --alert-red: #dc3545;
 
-<body>
-<div class="iphone-frame">
-    <div class="app-header">
-      <button class="back-btn" onclick="goBack()">←</button>
+        --nav-h: 60px;
 
-        <div class="header-title">पार्टीहरु</div>
-        <button class="add-new-btn" onclick="window.location.href='addparty.html'">+ नयाँ</button>
-    </div>
+        --bg: #f3f5f7;
+        --surface: #fff;
+        --text-900: #0f172a;
+        --text-600: #667085;
+        --shadow-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+      }
 
-    <div class="main-content">
+      /* Paint iOS status bar area */
+      body::before {
+        content: "";
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: env(safe-area-inset-top);
+        background: var(--brand-green);
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      /* Edge-to-edge base */
+      html, body {
+        margin: 0;
+        height: 100%;
+        background: var(--bg);
+        color: var(--text-900);
+        font-family: "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden; /* scroll lives in .page-content */
+      }
+      * { box-sizing: border-box; min-width: 0; }
+
+      /* Fullscreen container */
+      #party-page.mobile-container {
+        position: fixed; inset: 0; width: 100vw; height: 100dvh;
+        min-height: 100svh; min-height: -webkit-fill-available;
+        background: var(--surface); border-radius: 0; box-shadow: none;
+        display: flex; flex-direction: column; overflow: hidden;
+      }
+
+      /* Header */
+      .page-header {
+        background: var(--brand-green); color: #fff;
+        display: flex; flex-direction: column;
+        padding-top: env(safe-area-inset-top);
+        position: sticky; top: 0; z-index: 5;
+      }
+      .header-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 16px; position: relative;
+      }
+      .back-btn { background: none; border: 0; color: #fff; font-size: 20px; cursor: pointer; }
+      .title { margin: 0; font-size: 20px; font-weight: 700; text-align: center; flex: 1; transform: translateX(-10px); }
+      .header-divider { height: 0; background: transparent; }
+
+      /* Overlapping “नयाँ” */
+      .add-new-cta {
+        position: absolute; right: 16px; bottom: -18px;
+        background: var(--cta-blue); color: #fff !important;
+        padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 13px; text-decoration: none;
+        display: inline-flex; align-items: center; gap: 8px; box-shadow: none;
+      }
+      .add-new-cta i { font-size: 14px; line-height: 0; }
+
+      /* Content (pad for bottom-nav) */
+      .page-content {
+        flex: 1 1 auto; overflow: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+        background: #f8fafb;
+        padding: 14px 14px calc(16px + var(--nav-h) + env(safe-area-inset-bottom));
+        scrollbar-width: none;
+      }
+      .page-content::-webkit-scrollbar { width: 0; height: 0; }
+
+      .total-amount-card {
+        background: #fce4e4; border: 1px solid #f5c2c7;
+        border-radius: 12px; padding: 14px; text-align: center;
+        box-shadow: var(--shadow-card); margin: 14px 0;
+      }
+      .total-amount-card .label { margin: 0; color: var(--text-600); font-size: 13px; }
+      .total-amount-card .amount { margin: 4px 0 0; color: var(--alert-red); font-weight: 700; font-size: 22px; }
+
+      .party-list { display: flex; flex-direction: column; gap: 10px; }
+
+      .party-card {
+        background: #fff; border-radius: 12px; padding: 12px 14px;
+        display: flex; align-items: center; justify-content: space-between;
+        box-shadow: var(--shadow-card); cursor: pointer;
+      }
+      .party-name { margin: 0; font-weight: 600; font-size: 15px; color: var(--text-900); }
+      .party-phone { margin: 4px 0 0; font-size: 12px; color: #98a2b3; }
+      .arrow-icon { color: #d0d5dd; font-size: 18px; margin-left: 12px; }
+
+      .bottom-nav {
+        position: fixed; left: 0; right: 0; bottom: 0; height: var(--nav-h);
+        background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; align-items: center;
+        padding-bottom: env(safe-area-inset-bottom); z-index: 999;
+      }
+      .nav-item { text-decoration: none; color: #98a2b3; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; }
+      .nav-item i { font-size: 18px; }
+      .nav-item.active { color: var(--brand-green); font-weight: 700; }
+
+      /* Empty state */
+      .empty-wrap {
+        display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+        margin: 10vh auto 0; max-width: 420px; padding: 0 8px;
+      }
+      .empty-ill { width: 38vw; max-width: 124px; height: auto; filter: drop-shadow(0 4px 14px rgba(16, 24, 40, 0.12)); }
+      .empty-title { font-size: 28px; font-weight: 700; color: #2e3a46; margin: 10px 0 2px; }
+      .empty-sub { color: #667085; font-size: 14px; margin: 0 0 10px; }
+      .empty-cta {
+        background: var(--brand-green); color: #fff; border: none; padding: 10px 18px; border-radius: 14px; font-weight: 700; font-size: 14px; text-decoration: none;
+      }
+
+      /* Flash toast */
+      .flash-toast {
+        position: fixed; top: 12px; right: 12px; z-index: 1055;
+        background: #fff; border: 1px solid #e9eef3; border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); padding: 10px 12px; display: flex; align-items: center; gap: 10px;
+      }
+      .flash-icon { width: 28px; height: 28px; border-radius: 999px; background: #e6f4ea; display: grid; place-items: center; color: #13a87d; font-size: 16px; line-height: 1; }
+      .flash-text { font-size: 16px; color: #0f172a; white-space: nowrap; }
+      .flash-close { background: transparent; border: 0; font-size: 18px; line-height: 1; color: #667085; margin-left: 6px; padding: 0; cursor: pointer; }
+
+      @media (max-width: 340px) { .title { font-size: 18px; } }
+    </style>
+  </head>
+
+  <body>
+    <div id="party-page" class="mobile-container">
+      <!-- Header -->
+      <header class="page-header">
+        <div class="header-row">
+          <button class="back-btn" onclick="goBack()" aria-label="Back">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h1 class="title">पार्टीहरु</h1>
+        </div>
+        <a href="addparty.html" class="add-new-cta" id="btnAddNew">
+          <i class="fas fa-plus"></i> नयाँ
+        </a>
+        <div class="header-divider"></div>
+      </header>
+
+      <!-- Content -->
+      <main class="page-content">
         <div class="total-amount-card">
-            <p class="label">कुल रकम</p>
-            <p class="amount" id="total-amount">रु ०</p>
+          <p class="label">कुल रकम</p>
+          <p class="amount" id="total-amount">रु ०</p>
         </div>
 
-        <div class="party-list" id="party-list">
-            <!-- Parties will be inserted dynamically -->
-        </div>
+        <div class="party-list" id="party-list"></div>
+      </main>
+
+      <!-- Bottom nav -->
+      <nav class="bottom-nav">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>होम</span></a>
+        <a href="c-site-list.html" class="nav-item"><i class="fa-solid fa-person-digging"></i><span>साइट</span></a>
+        <a href="karobar.html" class="nav-item"><i class="fas fa-chart-bar"></i><span>कारोबारहरु</span></a>
+        <a href="party.html" class="nav-item active"><i class="fas fa-users"></i><span>पार्टीहरु</span></a>
+        <a href="more.html" class="nav-item"><i class="fas fa-grip"></i><span>अरु</span></a>
+      </nav>
     </div>
 
-    <div class="bottom-nav">
-        <a href="home.html" class="nav-item"><i class="fas fa-home icon"></i><span>होम</span></a>
-        <a href="site.html" class="nav-item"><i class="fas fa-person-digging icon"></i><span>साइट</span></a>
-        <a href="transactions.html" class="nav-item"><i class="fas fa-chart-bar icon"></i><span>कारोबारहरु</span></a>
-        <a href="parties.html" class="nav-item active"><i class="fas fa-users icon"></i><span>पार्टीहरु</span></a>
-        <a href="more.html" class="nav-item"><i class="fas fa-grip icon"></i><span>अरु</span></a>
-    </div>
-</div>
+    <script>
+      /* ---- Minimal fetch polyfill for older WebViews ---- */
+      (function () {
+        if (window.fetch) return;
+        window.fetch = function (url, options) {
+          options = options || {};
+          return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.open(options.method || "GET", url, true);
+            var headers = options.headers || {};
+            for (var k in headers) {
+              if (headers.hasOwnProperty(k))
+                xhr.setRequestHeader(k, headers[k]);
+            }
+            xhr.onload = function () {
+              var response = {
+                ok: xhr.status >= 200 && xhr.status < 300,
+                status: xhr.status,
+                json: function () {
+                  try { return Promise.resolve(JSON.parse(xhr.responseText)); }
+                  catch (e) { return Promise.reject(e); }
+                },
+                text: function () { return Promise.resolve(xhr.responseText); },
+              };
+              resolve(response);
+            };
+            xhr.onerror = function () { reject(new TypeError("Network request failed")); };
+            xhr.send(options.body || null);
+          });
+        };
+      })();
 
-<script>
-const API_BASE = "http://192.168.1.209:8000/api"; 
-const RAW_TOKEN = localStorage.getItem("auth_token");
+      /* Flash toast helpers */
+      function showFlashToast(message, ms = 2500) {
+        const el = document.createElement("div");
+        el.className = "flash-toast";
+        el.innerHTML = `
+          <div class="flash-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="flash-text">${message}</div>
+          <button class="flash-close" aria-label="Close">×</button>
+        `;
+        document.body.appendChild(el);
+        const close = () => el.remove();
+        el.querySelector(".flash-close").addEventListener("click", close);
+        setTimeout(close, ms);
+      }
+      (function bootFlashFromStorage() {
+        const msg = localStorage.getItem("flash_msg");
+        if (msg) {
+          localStorage.removeItem("flash_msg");
+          showFlashToast(msg);
+        }
+      })();
 
-// redirect if no token
-if (!RAW_TOKEN) { 
-    alert("कृपया लगइन गर्नुहोस्।"); 
-    window.location.href="login.html"; 
-}
+      var API_BASE = "http://192.168.1.209:8000/api";
+      var RAW_TOKEN = localStorage.getItem("auth_token");
+      if (!RAW_TOKEN) {
+        alert("कृपया लगइन गर्नुहोस्।");
+        window.location.href = "login.html";
+      }
+      var TOKEN =
+        RAW_TOKEN && RAW_TOKEN.indexOf("|") > -1
+          ? RAW_TOKEN.split("|")[1]
+          : RAW_TOKEN;
 
-const TOKEN = RAW_TOKEN.includes('|') ? RAW_TOKEN.split('|')[1] : RAW_TOKEN;
+      function extractParties(result) {
+        if (Object.prototype.toString.call(result) === "[object Array]") return result;
+        if (result && result.data && Object.prototype.toString.call(result.data) === "[object Array]") return result.data;
+        if (result && result.data && result.data.data && Object.prototype.toString.call(result.data.data) === "[object Array]") return result.data.data;
+        if (result && typeof result === "object") {
+          for (var k in result) {
+            if (!result.hasOwnProperty(k)) continue;
+            var v = result[k];
+            if (Object.prototype.toString.call(v) === "[object Array]" && v.length && typeof v[0] === "object") return v;
+          }
+        }
+        return [];
+      }
 
-async function fetchParties() {
-    try {
-        const res = await fetch(`${API_BASE}/parties`, {
-            headers: { Authorization: `Bearer ${TOKEN}`, "Content-Type":"application/json" }
-        });
+      function number(val) {
+        var n = Number(val);
+        return isNaN(n) ? 0 : n;
+      }
 
-        if (!res.ok) {
-            throw new Error(`API error: ${res.status}`);
+      function renderEmptyState() {
+        return (
+          "" +
+          '<div class="empty-wrap">' +
+          '<img src="illustration.png" alt="Empty Illustration" class="empty-ill" />' +
+          '<h2 class="empty-title">यो खाली छ,</h2>' +
+          '<p class="empty-sub">तपाईंको कुनै पनि पार्टी छैन जस्तो देखिन्छ।</p>' +
+          '<a href="addparty.html" class="empty-cta">सुरु गर्नुहोस्</a>' +
+          "</div>"
+        );
+      }
+
+      function renderParties(parties) {
+        var list = document.getElementById("party-list");
+        list.innerHTML = "";
+        if (!parties || !parties.length) {
+          list.innerHTML = renderEmptyState();
+          document.getElementById("total-amount").textContent = "रु ०";
+          return;
         }
 
-        const result = await res.json();
-        renderParties(result.data || []);
-    } catch (err) {
-        console.error("Fetch error:", err);
-        // silently fail: do not show alert if no parties
-        renderParties([]);
-    }
-}
+        var total = 0;
+        for (var i = 0; i < parties.length; i++) {
+          var p = parties[i];
+          total += number(p.total_amount);
 
-function renderParties(parties) {
-    const container = document.getElementById("party-list");
-    container.innerHTML = "";
-    let totalAmount = 0;
+          var card = document.createElement("div");
+          card.className = "party-card";
+          card.innerHTML =
+            "<div>" +
+            '<p class="party-name">' + (p.name || p.title || "पार्टी") + "</p>" +
+            '<p class="party-phone">' + (p.phone_no ? p.phone_no : "") + "</p>" +   // ← EXACT as API
+            "</div>" +
+            '<i class="fas fa-chevron-right arrow-icon"></i>';
 
-    parties.forEach(p => {
-        totalAmount += p.total_amount || 0;
-        const card = document.createElement("div");
-        card.className="party-card";
-        card.innerHTML = `<div class="party-info">
-            <p class="party-name">${p.name}</p>
-            <p class="party-phone">${p.phone_no||""}</p>
-        </div>
-        <span class="arrow-icon">></span>`;
-        card.onclick = ()=>window.location.href=`partyinfo.html?party_id=${p.id}`;
-        container.appendChild(card);
-    });
+          (function (id, phone) {
+            card.addEventListener("click", function () {
+              try {
+                // cache EXACT display (no conversion)
+                localStorage.setItem("party_phone_display_" + id, phone || "");
+              } catch (e) { /* ignore quota */ }
+              // also pass via query to guarantee exact display on first open
+              const url = "partyinfo.html?party_id=" + encodeURIComponent(id) +
+                          "&phone_display=" + encodeURIComponent(phone || "") +
+                          "&v=" + Date.now();
+              location.href = url;
+            });
+          })(p.id, p.phone_no);
 
-    document.getElementById("total-amount").textContent=`रु ${totalAmount.toLocaleString('ne-NP')}`;
-}
+          list.appendChild(card);
+        }
 
-fetchParties();
-</script>
+        document.getElementById("total-amount").textContent =
+          "रु " + (total || 0).toLocaleString("ne-NP");
+      }
 
-<script>
-  function goBack() {
-    // Redirect to home page
-    window.location.href = "home.html"; 
-  }
-</script>
+      function goBack() {
+        location.href = "home.html";
+      }
 
-</body>
+      function fetchParties() {
+        fetch(API_BASE + "/parties", {
+          headers: { Authorization: "Bearer " + TOKEN, Accept: "application/json" },
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error("API " + res.status);
+            return res.json();
+          })
+          .then(function (result) {
+            var parties = extractParties(result);
+            renderParties(parties);
+
+            if (!parties || !parties.length) return;
+
+            var metaGrand =
+              result && result.meta ? result.meta.overall_total_amount : undefined;
+            if (typeof metaGrand === "number" && !isNaN(metaGrand)) {
+              document.getElementById("total-amount").textContent =
+                "रु " + metaGrand.toLocaleString("ne-NP");
+              return;
+            }
+
+            var partySum = 0;
+            for (var i = 0; i < parties.length; i++) partySum += number(parties[i].total_amount);
+
+            return fetch(API_BASE + "/site-resources", {
+              headers: { Authorization: "Bearer " + TOKEN, Accept: "application/json" },
+            })
+              .then(function (srRes) { return srRes.ok ? srRes.json() : {}; })
+              .then(function (srJson) {
+                var rows = extractParties(srJson);
+                var siteSum = 0;
+                for (var j = 0; j < rows.length; j++) siteSum += number(rows[j].amount);
+                var grand = partySum + siteSum;
+                document.getElementById("total-amount").textContent =
+                  "रु " + grand.toLocaleString("ne-NP");
+              })
+              .catch(function () { /* ignore site-resources error */ });
+          })
+          .catch(function (e) {
+            console.error(e);
+            var list = document.getElementById("party-list");
+            list.innerHTML = renderEmptyState();
+            document.getElementById("total-amount").textContent = "रु ०";
+          });
+      }
+
+      fetchParties();
+    </script>
+  </body>
 </html>

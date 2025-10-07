@@ -2,183 +2,290 @@
 <html lang="ne">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- responsive + iOS notch support -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>Project Sayogi - Login</title>
+
+    <!-- Bootstrap -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="CSS/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Poppins font -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
+
+    <style>
+      :root {
+        --brand-green: #13a87d;
+        --text-900: #0f172a;
+        --text-600: #6b7280;
+        --stroke: #e5e7eb;
+        --radius: 14px;
+      }
+
+      /* --- reset & viewport fill --- */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f3f5f7;
+        min-height: 100dvh;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* Edge-to-edge app surface */
+      .mobile-container {
+        width: 100%;
+        min-height: 100dvh;
+        max-width: none;
+        border-radius: 0;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 28px);
+        background: #fff;
+
+        /* iOS safe areas */
+        padding-top: calc(clamp(20px, 4vw, 40px) + env(safe-area-inset-top));
+        padding-right: calc(
+          clamp(16px, 4vw, 28px) + env(safe-area-inset-right)
+        );
+        padding-bottom: calc(
+          clamp(20px, 4vw, 40px) + env(safe-area-inset-bottom)
+        );
+        padding-left: calc(clamp(16px, 4vw, 28px) + env(safe-area-inset-left));
+      }
+
+      .logo-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 32px;
+      }
+      .logo {
+        width: min(196px, 60vw);
+        height: auto;
+      }
+
+      .title {
+        text-align: left;
+        color: var(--text-900);
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 1.2;
+        margin: 0 0 6px 0;
+      }
+      .subtitle {
+        text-align: left;
+        color: var(--text-600);
+        font-size: 12px;
+        line-height: 1.8;
+        margin: 0 0 26px;
+      }
+
+      label.form-label {
+        color: var(--text-900);
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .form-control {
+        height: 46px;
+        border-radius: var(--radius);
+        border: 1px solid var(--stroke);
+        font-size: 12px;
+      }
+      .form-control:focus {
+        border-color: var(--brand-green);
+        box-shadow: 0 0 0 3px rgba(19, 168, 125, 0.18);
+      }
+
+      .btn-login {
+        height: 46px;
+        border-radius: 14px;
+        border: none;
+        background: var(--brand-green);
+        color: #fff;
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: 0.3px;
+        margin-top: 12px;
+      }
+      .btn-login:hover,
+      .btn-login:focus,
+      .btn-login:active {
+        background: var(--brand-green) !important;
+        color: #fff !important;
+      }
+      .btn-login[disabled] {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      .small-muted {
+        font-size: 12px;
+        color: #dc3545;
+      }
+
+      /* Prevent over-stretch on very wide screens */
+      .form-bound {
+        width: 100%;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      /* Global dim placeholder */
+      ::placeholder {
+        color: #9ca3af;
+        opacity: 1;
+      } /* आधुनिक ब्राउजर */
+      ::-webkit-input-placeholder {
+        color: #9ca3af;
+      } /* Chrome/Safari/iOS */
+      :-ms-input-placeholder {
+        color: #9ca3af;
+      } /* पुरानो Edge/IE */
+
+      /* तपाईंको specific input (Bootstrap) लाई मात्र target गर्न */
+      .form-control::placeholder {
+        color: #9ca3af;
+        opacity: 1;
+      }
+    </style>
   </head>
-  <body class="login-page-body">
-    <div class="mobile-container standalone-login">
-      <div class="login-content-wrapper">
-        <div class="logo-container">
-          <svg
-            class="logo-svg"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g transform="translate(5,5)">
-              <path
-                d="M 45 0 A 45 45 0 1 1 44.9 0 Z"
-                fill="none"
-                stroke="#1AB189"
-                stroke-width="10"
-              />
-              <path
-                d="M 70 22.5 A 25 25 0 1 1 69.9 22.5 Z"
-                fill="none"
-                stroke="#34495e"
-                stroke-width="10"
-                transform="translate(-25, -22.5) scale(1.8)"
-              />
-              <path d="M50,35 v30 a15,15 0 0,0 0,-30 Z" fill="#34495e" />
-            </g>
-          </svg>
-          <div class="logo-text">
-            <span class="logo-part-blue">Project</span
-            ><span class="logo-part-green">Sayogi</span>
+
+  <body>
+    <div class="mobile-container">
+      <div class="form-bound">
+        <div class="logo-wrap">
+          <img src="logo.png" alt="Project Sayogi" class="logo" />
+        </div>
+
+        <h1 class="title">स्वागत छ</h1>
+        <p class="subtitle">आफ्नो खाता पहुँच गर्न लगइन गर्नुहोस्</p>
+
+        <!-- NOTE: novalidate ले ब्राउजरको default HTML validation UI बन्द गर्छ -->
+        <form id="loginForm" autocomplete="off" novalidate>
+          <div class="mb-3">
+            <label for="phone" class="form-label">फोन नम्बर</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              placeholder="९xxxxxxxxx"
+              required
+              autocomplete="off"
+              inputmode="tel"
+              maxlength="10"
+            />
           </div>
-        </div>
 
-        <div class="login-form-wrapper">
-          <h1 class="login-title">स्वागत छ</h1>
-          <p class="login-subtitle">आफ्नो खाता पहुँच गर्न लगइन गर्नुहोस्</p>
-
-          <form id="loginForm">
-            <div class="mb-3">
-              <label for="phone" class="form-label">फोन नम्बर</label>
-              <input
-                type="tel"
-                class="form-control"
-                id="phone"
-                value="+९७७-९८२९६७७६४२"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-login w-100">लगइन</button>
-            <div id="feedback" class="mt-3 text-danger"></div>
-          </form>
-        </div>
+          <button type="submit" class="btn btn-login w-100" id="loginBtn">
+            लगइन
+          </button>
+          <div id="feedback" class="mt-2 small-muted"></div>
+        </form>
       </div>
     </div>
 
-    <!-- Bootstrap Modal for messages -->
-    <div
-      class="modal fade"
-      id="messageModal"
-      tabindex="-1"
-      aria-labelledby="messageModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="messageModalLabel">सन्देश</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body" id="modalMessage">
-            <!-- Message text will be injected here -->
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              ठिक छ
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
+      const API_LOGIN_URL = "http://192.168.1.209:8000/api/login";
 
-          const phoneInput = document.getElementById("phone");
-          const feedback = document.getElementById("feedback");
-          const modalMessage = document.getElementById("modalMessage");
-          let phone = phoneInput.value.trim();
+      const loginForm = document.getElementById("loginForm");
+      const phoneInput = document.getElementById("phone");
+      phoneInput.value = ""; // always start empty
+      const loginBtn = document.getElementById("loginBtn");
+      const feedback = document.getElementById("feedback");
 
-          feedback.textContent = "";
+      // Devanagari ०–९ -> ASCII 0–9, अनि गैर-अंक हटाउने
+      function normalizeDigits(str) {
+        return str
+          .replace(/[०-९]/g, (d) => "०१२३४५६७८९".indexOf(d))
+          .replace(/\D+/g, "");
+      }
 
-          try {
-            const response = await fetch(
-              "http://192.168.1.209:8000/api/login",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Accept: "application/json",
-                },
-                body: JSON.stringify({ phone: phone }),
-              }
-            );
+      // टाइप हुँदा: केवल अंक राख्ने, 10 भन्दा बढी काट्ने, र error clear गर्ने
+      phoneInput.addEventListener("input", () => {
+        let ascii = normalizeDigits(phoneInput.value);
+        if (ascii.length > 10) ascii = ascii.slice(0, 10);
+        phoneInput.value = ascii;
+        if (feedback.textContent) feedback.textContent = "";
+      });
 
-            const data = await response.json();
-           if (response.ok) {
-  const { user_id, otp, token, user } = data;
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        feedback.textContent = "";
+        loginBtn.disabled = true;
 
-  if (user && user.verified) {
-    // ✅ Already verified
-    localStorage.setItem("auth_token", token);
-    localStorage.setItem("user", JSON.stringify(user));
-    window.location.href = "home.html";
-  } else {
-    // ❗ Not verified (user object may not be present)
-    modalMessage.textContent =
-      data.message || "OTP पठाइयो। कृपया आफ्नो फोन जाँच गर्नुहोस्।";
+        const ascii = normalizeDigits(phoneInput.value);
 
-    const myModalEl = document.getElementById("messageModal");
-    const myModal = new bootstrap.Modal(myModalEl);
-    myModal.show();
+        // खाली छ भने: हाम्रो custom सानो error (ब्राउजरको default होइन)
+        if (ascii.length === 0) {
+          feedback.textContent = "फोन नम्बर हान्नुहोस्।";
+          loginBtn.disabled = false;
+          return;
+        }
 
-    myModalEl.addEventListener(
-      "hidden.bs.modal",
-      function () {
-        window.location.href = `otp.html?user_id=${user_id}&phone=${encodeURIComponent(
-          phone
-        )}`;
-      },
-      { once: true }
-    );
-  }
+        // 10-अंक र 9 बाट सुरु हुने नियम
+        if (!/^[9][0-9]{9}$/.test(ascii)) {
+          feedback.textContent =
+            "फोन नम्बर १० अंकको हुनुपर्छ, र 9 बाट सुरु हुनुपर्छ।";
+          loginBtn.disabled = false;
+          return;
+        }
 
+        try {
+          const response = await fetch(API_LOGIN_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ phone: ascii }),
+          });
 
+          const data = await response.json();
+
+          if (response.ok) {
+            const { user_id, token, user } = data;
+
+            if (user && user.verified) {
+              if (token) localStorage.setItem("auth_token", token);
+              localStorage.setItem("user", JSON.stringify(user));
+              window.location.href = "home.html";
             } else {
-              modalMessage.textContent = data.message || "लगइन असफल भयो।";
-              var myModal = new bootstrap.Modal(
-                document.getElementById("messageModal")
-              );
-              myModal.show();
+              window.location.href = `otp.html?user_id=${encodeURIComponent(
+                user_id ?? ""
+              )}&phone=${encodeURIComponent(ascii)}`;
             }
-          } catch (error) {
-            console.error("Login Error:", error);
-            feedback.textContent =
-              "सर्भरमा समस्या भयो। कृपया पछि प्रयास गर्नुहोस्।";
+          } else {
+            feedback.textContent = data.message || "लगइन असफल भयो।";
           }
-        });
+        } catch (err) {
+          console.error("Login Error:", err);
+          feedback.textContent =
+            "सर्भरमा समस्या भयो। कृपया पछि प्रयास गर्नुहोस्।";
+        } finally {
+          loginBtn.disabled = false;
+        }
+      });
     </script>
   </body>
 </html>

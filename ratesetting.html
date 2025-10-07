@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>दर सेटिङ (Rate Setting)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+      :root{
+        --brand-green:#13a87d; --cta-blue:#0b5db8; --danger:#dc3545;
+        --bg:#f0f2f5; --text:#111827; --muted:#667085; --border:#e5e7eb;
+      }
+      html,body{ margin:0; height:100%; min-height:100vh; background:var(--bg); font-family:Arial, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif; overflow-x:hidden; }
+      .app-container{ width:100%; height:100dvh; min-height:100svh; min-height:-webkit-fill-available; background:#fff; display:flex; flex-direction:column; overflow:hidden; position:relative; }
+
+      /* Header */
+      .header{ background:var(--brand-green); color:#fff; padding:12px max(20px, env(safe-area-inset-left)) 16px max(20px, env(safe-area-inset-right)); display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; }
+      .back-arrow{ position:absolute; left:calc(20px + env(safe-area-inset-left)); top:50%; transform:translateY(-50%); color:#fff; font-size:20px; text-decoration:none; }
+      .page-title{ margin:0; font-size:20px; font-weight:700; }
+      .subtitle{ margin:4px 0 0; font-size:14px; color:rgba(255,255,255,.9); }
+
+      /* Content */
+      .main-content{ flex:1 1 auto; min-height:0; padding:16px; overflow:auto; -webkit-overflow-scrolling:touch; background:#fff; padding-bottom:calc(76px + env(safe-area-inset-bottom)); }
+
+      .form-section{ background:#fff; padding:16px; border-radius:12px; box-shadow:0 2px 5px rgba(0,0,0,.05); margin-bottom:16px; }
+      .input-label{ display:block; font-size:14px; color:#555; margin-bottom:6px; font-weight:600; }
+      .text-input{ width:100%; padding:12px 10px; margin-bottom:6px; border:1px solid #ddd; border-radius:8px; font-size:16px; }
+      .price-input-container{ display:flex; align-items:center; margin-bottom:6px; border:1px solid #ddd; border-radius:8px; padding-left:10px; }
+      .currency-symbol{ margin-right:6px; font-weight:700; color:#777; }
+      .price-input{ flex:1; border:none; padding:12px 0; font-size:16px; background:#fff; }
+      .textarea-input{ min-height:88px; resize:vertical; }
+
+      .err{ color:#dc2626; font-size:12px; min-height:14px; margin:2px 0 10px; }
+      .is-invalid{ border-color:#dc2626 !important; box-shadow:0 0 0 2px rgba(220,38,38,.12); }
+
+      .add-button{ width:100%; padding:12px; background:var(--brand-green); color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer; display:flex; justify-content:center; align-items:center; gap:8px; font-weight:700; }
+
+      .rate-list-section{ padding-top:8px; }
+      .section-title{ font-size:18px; font-weight:700; margin:8px 0 12px; }
+      .search-bar-container{ display:flex; align-items:center; gap:8px; background:#fff; border-radius:10px; padding:6px 10px; box-shadow:0 2px 5px rgba(0,0,0,.05); }
+      .search-input{ flex:1; border:none; outline:none; padding:8px 4px; }
+      .search-icon{ color:#999; font-size:18px; }
+      .rate-list{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+      .rate-item{ border:1px solid #ddd; border-radius:10px; padding:10px 12px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+      .rate-left{ flex:1; min-width:0; }
+      .rate-left b{ display:block; }
+      .rate-left small{ color:#666; display:block; margin-top:2px; }
+      .rate-right{ text-align:right; white-space:nowrap; }
+      .rate-amount{ color:var(--brand-green); font-weight:700; }
+      .rate-actions{ margin-top:8px; display:flex; gap:8px; justify-content:flex-end; }
+      .rate-actions .edit{ background:var(--brand-green); color:#fff; border:none; padding:4px 10px; font-size:12px; border-radius:12px; cursor:pointer; }
+      .rate-actions .del{ background:var(--danger); color:#fff; border:none; padding:4px 10px; font-size:12px; border-radius:12px; cursor:pointer; }
+
+      /* Bottom nav (mask icons same as your other pages) */
+      .bottom-nav{ position:absolute; left:0; right:0; bottom:0; height:60px; background:#fff; border-top:1px solid #e5e7eb; display:flex; justify-content:space-around; align-items:center; z-index:1000; padding-bottom:env(safe-area-inset-bottom); }
+      .bottom-nav .nav-item{ padding:6px 0; text-decoration:none; color:#6b7280; display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; }
+      .bottom-nav .nav-item.active{ color:var(--brand-green); font-weight:700; }
+      .nav-icon{ width:clamp(20px,5.2vw,24px); height:clamp(20px,5.2vw,24px); background-color:#6b7280; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; -webkit-mask-size:contain; mask-size:contain; display:block; }
+      .ico-home{ -webkit-mask-image:url("./home.png"); mask-image:url("./home.png"); }
+      .ico-site{ -webkit-mask-image:url("./site.png"); mask-image:url("./site.png"); }
+      .ico-ledger{ -webkit-mask-image:url("./income.png"); mask-image:url("./income.png"); }
+      .ico-party{ -webkit-mask-image:url("./party.png"); mask-image:url("./party.png"); }
+      .ico-more{ -webkit-mask-image:url("./more.png"); mask-image:url("./more.png"); }
+      .bottom-nav .nav-item.active .nav-icon{ background-color:var(--brand-green); }
+
+      /* Delete Modal */
+      .modal-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; justify-content:center; align-items:center; z-index:9999; }
+      .modal-content{ background:#fff; padding:22px 24px; border-radius:12px; width:min(92vw,360px); box-shadow:0 10px 40px rgba(0,0,0,.3); max-height:90vh; overflow:auto; }
+      .modal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+      .modal-header h2{ margin:0; font-size:18px; }
+      .modal-close-btn{ background:none; border:none; font-size:24px; cursor:pointer; color:#555; }
+      .modal-actions{ display:flex; gap:10px; margin-top:14px; }
+      .btn{ flex:1; padding:12px; border:none; border-radius:10px; font-size:16px; font-weight:700; cursor:pointer; }
+      .btn-cancel{ background:#e5e7eb; color:#111827; }
+      .btn-danger{ background:var(--danger); color:#fff; }
+
+      /* Toast — like your screenshot (white card, green badge ✓, close X) */
+      #toast{
+        position:fixed;
+        top:calc(12px + env(safe-area-inset-top,0px));
+        right:calc(12px + env(safe-area-inset-right,0px));
+        background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+        padding:8px 12px 8px 10px; box-shadow:0 10px 24px rgba(0,0,0,.18);
+        display:grid; grid-template-columns:28px 1fr 18px; align-items:center; gap:10px;
+        width:max-content; max-width:92vw; color:#111827;
+        opacity:0; transform:translateY(-8px); pointer-events:none;
+        transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2;
+      }
+      #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+      .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; color:#fff; font-weight:700; }
+      .toast-badge.success{ background:#74c69d; }
+      .toast-badge.error{ background:#ef4444; }
+      .toast-msg{ font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#111827; }
+      .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
+    </style>
+  </head>
+
+  <body>
+    <div class="app-container">
+      <header class="header">
+        <a href="javascript:void(0)" class="back-arrow" onclick="window.history.back();"><i class="fas fa-arrow-left"></i></a>
+        <h1 class="page-title">दर सेटिङ</h1>
+        <p class="subtitle">कखग साइट</p>
+      </header>
+
+      <main class="main-content">
+        <form class="form-section" id="rateForm" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <label for="title" class="input-label">शीर्षक</label>
+          <input type="text" id="title" class="text-input" placeholder="प्रिमियर स्टील" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+          <div class="err" id="err-title"></div>
+
+          <label for="price" class="input-label">मूल्य</label>
+          <div class="price-input-container">
+            <span class="currency-symbol">रू</span>
+            <input type="text" id="price" class="price-input" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+          </div>
+          <div class="err" id="err-price"></div>
+
+          <label for="unit" class="input-label">एकाई</label>
+          <input type="text" id="unit" class="text-input" placeholder="१" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+          <div class="err" id="err-unit"></div>
+
+          <label for="remark" class="input-label">टिप्पणी</label>
+          <textarea id="remark" class="text-input textarea-input" placeholder="प्रिमियर स्टील ८ मिलिमिटरको २५ ओटा रड" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+          <div class="err" id="err-remark"></div>
+
+          <button type="button" class="add-button" id="saveBtn"><i class="fas fa-plus"></i> थप्नुहोस्</button>
+        </form>
+
+        <div class="rate-list-section">
+          <h2 class="section-title">दर को सूची</h2>
+          <div class="search-bar-container">
+            <input type="text" placeholder="दर खोज्नुहोस्..." class="search-input" id="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          <div class="rate-list" id="rateList"></div>
+        </div>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="home.html" class="nav-item" data-tab="home"><span class="nav-icon ico-home" aria-hidden="true"></span><span>होम</span></a>
+        <a href="c-site-list.html" class="nav-item active" data-tab="sites"><span class="nav-icon ico-site" aria-hidden="true"></span><span>साइट</span></a>
+        <a href="karobar.html" class="nav-item" data-tab="ledger"><span class="nav-icon ico-ledger" aria-hidden="true"></span><span>कारोबारहरू</span></a>
+        <a href="party.html" class="nav-item" data-tab="parties"><span class="nav-icon ico-party" aria-hidden="true"></span><span>पार्टीहरू</span></a>
+        <a href="more.html" class="nav-item" data-tab="more"><span class="nav-icon ico-more" aria-hidden="true"></span><span>अरू</span></a>
+      </nav>
+
+      <!-- Delete Modal -->
+      <div id="delete-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>हटाउने हो?</h2>
+            <button class="modal-close-btn" id="delete-close" aria-label="Close">&times;</button>
+          </div>
+          <p>यो दर स्थायी रूपमा हटाइनेछ। यो क्रिया पूर्ववत् गर्न सकिँदैन।</p>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-cancel" id="delete-cancel">रद्द</button>
+            <button type="button" class="btn btn-danger" id="delete-confirm">हटाउनुहोस्</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast host -->
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const API_BASE = "http://192.168.1.209:8000/api";
+        const RATES_API = API_BASE + "/rates";
+        const SITES_API = API_BASE + "/sites";
+
+        const RAW = localStorage.getItem("auth_token") || "";
+        const TOKEN = RAW.includes("|") ? RAW.split("|")[1] : RAW;
+
+        const H = () => ({
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: TOKEN ? "Bearer " + TOKEN : "",
+        });
+
+        /* ---------- Elements ---------- */
+        const subtitleEl = document.querySelector(".subtitle");
+        const form = document.getElementById("rateForm");
+        const saveBtn = document.getElementById("saveBtn");
+        const listEl = document.getElementById("rateList");
+        const searchEl = document.getElementById("search");
+
+        const titleEl = document.getElementById("title");
+        const priceEl = document.getElementById("price");
+        const unitEl = document.getElementById("unit");
+        const remarkEl = document.getElementById("remark");
+
+        const errTitle = document.getElementById("err-title");
+        const errPrice = document.getElementById("err-price");
+        const errUnit  = document.getElementById("err-unit");
+        const errRemark= document.getElementById("err-remark");
+
+        const delModal = document.getElementById("delete-modal");
+        const delClose = document.getElementById("delete-close");
+        const delCancel= document.getElementById("delete-cancel");
+        const delConfirm=document.getElementById("delete-confirm");
+
+        /* ---------- State ---------- */
+        let ACTIVE_SITE_ID = null;
+        let allRates = [];
+        let editingId = null;
+        let deletingId = null;
+
+        /* ---------- Helpers ---------- */
+        const NP="०१२३४५६७८९", EN="0123456789";
+        const toEn = (s) => String(s||"").replace(/[०-९]/g, d => EN[NP.indexOf(d)]);
+        const toNp = (s) => String(s||"").replace(/[0-9]/g, d => NP[d]);
+        const onlyDigits = (s) => String(s).replace(/[^\d]/g,"");
+
+        function setErr(el, msg, inputEl){
+          el.textContent = msg || "";
+          if(inputEl) inputEl.classList.toggle("is-invalid", !!msg);
+        }
+        function clearErrs(){
+          setErr(errTitle,"",titleEl); setErr(errPrice,"",priceEl);
+          setErr(errUnit,"",unitEl); setErr(errRemark,"",remarkEl);
+        }
+
+        function toast(msg, kind="success"){
+          const t=document.getElementById("toast");
+          t.innerHTML = '<span class="toast-badge '+(kind==='error'?'error':'success')+'">'+(kind==='error'?'✖':'✓')+'</span><span class="toast-msg">'+(msg||'')+'</span><span class="toast-x" aria-label="Close">×</span>';
+          t.classList.add("show");
+          t.querySelector(".toast-x").onclick = ()=> t.classList.remove("show");
+          clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove("show"), 2000);
+        }
+
+        function render(items){
+          if(!items?.length){ listEl.innerHTML = '<p style="color:#667085;margin:8px 4px;">डाटा छैन</p>'; return; }
+          listEl.innerHTML = items.map(r=>{
+            const amt = Number(String(r.rate ?? "").toString().replace(/[^\d.]/g,"")) || 0;
+            const amtNp = "रू " + (amt||0).toLocaleString("ne-NP");
+            return `
+              <div class="rate-item" data-id="${r.id}">
+                <div class="rate-left">
+                  <b>${r.title || ""}</b>
+                  ${r.remark ? `<small>${r.remark}</small>` : ""}
+                </div>
+                <div class="rate-right">
+                  <span class="rate-amount">${amtNp}</span>
+                  <div class="rate-actions">
+                    <button class="edit">एडिट</button>
+                    <button class="del">मेटाउनु</button>
+                  </div>
+                </div>
+              </div>`;
+          }).join("");
+        }
+
+        function clearForm(){
+          form.reset();
+          editingId = null;
+          saveBtn.innerHTML = '<i class="fas fa-plus"></i> थप्नुहोस्';
+          clearErrs();
+        }
+
+        function getUrlSiteId(){
+          const v = new URLSearchParams(location.search).get("site_id");
+          return (v==null || v==="null" || v==="undefined" || v==="") ? null : v;
+        }
+
+        async function verifySite(id){
+          try{
+            const res = await fetch(`${SITES_API}/${id}`, { headers:H() });
+            if(!res.ok) return false;
+            const j = await res.json();
+            if(j?.name) subtitleEl.textContent = j.name;
+            ACTIVE_SITE_ID = id;
+            localStorage.setItem("current_site_id", id);
+            return true;
+          }catch{ return false; }
+        }
+
+        async function resolveActiveSiteId(){
+          const fromUrl = getUrlSiteId();
+          if(fromUrl && await verifySite(fromUrl)) return;
+          const stored = localStorage.getItem("current_site_id");
+          if(stored && await verifySite(stored)) return;
+          throw new Error("site_id चाहिन्छ (URL वा localStorage)");
+        }
+
+        async function loadRates(){
+          try{
+            const res = await fetch(`${RATES_API}?site_id=${encodeURIComponent(ACTIVE_SITE_ID)}`, { headers:H() });
+            const ct = res.headers.get("content-type")||"";
+            const payload = ct.includes("json") ? await res.json().catch(()=>({})) : {};
+            if(!res.ok) throw new Error(payload?.message || `HTTP ${res.status}`);
+            allRates = Array.isArray(payload) ? payload : (payload.data || []);
+            render(allRates);
+          }catch(err){ toast("डेटा ल्याउन समस्या: "+ err.message, "error"); }
+        }
+
+        /* ---------- Inputs: stop suggestions & allow Nepali digits ---------- */
+        ;[titleEl, unitEl, remarkEl, searchEl].forEach(el=>{
+          el.setAttribute("autocomplete","off");
+          el.setAttribute("autocorrect","off");
+          el.setAttribute("autocapitalize","off");
+          el.setAttribute("spellcheck","false");
+        });
+
+        // Amount: allow Nepali digits, show what user types; convert to EN for API
+        priceEl.addEventListener("input", (e)=>{
+          const raw = e.target.value;
+          // keep only EN/NP digits
+          const normalized = raw.replace(/[^\d०-९]/g, "");
+          e.target.value = normalized; // keep Nepali if typed
+          setErr(errPrice,"",priceEl);
+        });
+
+        /* ---------- Save (Create/Update) ---------- */
+        async function saveRate(){
+          clearErrs();
+          const title = (titleEl.value||"").trim();
+          const unit  = (unitEl.value||"").trim();
+          const remark= (remarkEl.value||"").trim();
+
+          // Get numeric from Nepali/English digits
+          const enDigits = onlyDigits(toEn(priceEl.value));
+          const amountNumber = Number(enDigits) || 0;
+
+          let ok = true;
+          if(!title){ setErr(errTitle,"शीर्षक आवश्यक छ।", titleEl); ok=false; }
+          if(!enDigits){ setErr(errPrice,"मूल्य आवश्यक छ।", priceEl); ok=false; }
+          if(!unit){ setErr(errUnit,"एकाई आवश्यक छ।", unitEl); ok=false; }
+          if(!ok) return;
+
+          const payload = {
+            site_id: Number(ACTIVE_SITE_ID),
+            title, unit,
+            rate: amountNumber,
+            remark
+          };
+          const url = editingId ? `${RATES_API}/${editingId}` : RATES_API;
+          const method = editingId ? "PUT" : "POST";
+
+          saveBtn.disabled = true;
+          saveBtn.innerHTML = editingId ? '<i class="fas fa-save"></i> सेभ हुँदै…' : '<i class="fas fa-plus"></i> थप्दै…';
+
+          try{
+            const res = await fetch(url, { method, headers:H(), body:JSON.stringify(payload) });
+            const ct = res.headers.get("content-type")||"";
+            const json = ct.includes("json") ? await res.json().catch(()=>({})) : {};
+            if(!res.ok) throw new Error(json?.message || `HTTP ${res.status}`);
+
+            toast(editingId ? "दर सफलतापूर्वक अपडेट भयो!" : "दर सफलतापूर्वक सिर्जना भयो!", "success");
+            clearForm();
+            await loadRates();
+          }catch(err){
+            toast("सेभ/अपडेट असफल: " + err.message, "error");
+          }finally{
+            saveBtn.disabled=false;
+            saveBtn.innerHTML = editingId ? '<i class="fas fa-save"></i> अपडेट' : '<i class="fas fa-plus"></i> थप्नुहोस्';
+          }
+        }
+
+        saveBtn.addEventListener("click", saveRate);
+
+        /* ---------- List actions ---------- */
+        listEl.addEventListener("click", (e)=>{
+          const row = e.target.closest(".rate-item"); if(!row) return;
+          const id = row.dataset.id;
+          const item = allRates.find(r => String(r.id)===String(id));
+          if(!item) return;
+
+          if(e.target.classList.contains("edit")){
+            titleEl.value = item.title || "";
+            unitEl.value  = item.unit || "";
+            remarkEl.value= item.remark || "";
+            priceEl.value = toNp(String(item.rate ?? "").replace(/[^\d]/g,""));
+            editingId = id;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> अपडेट';
+            document.querySelector(".form-section").scrollIntoView({behavior:"smooth", block:"start"});
+            clearErrs();
+          }
+
+          if(e.target.classList.contains("del")){
+            deletingId = id;
+            delModal.style.display = "flex";
+          }
+        });
+
+        // Delete modal
+        function closeDel(){ delModal.style.display="none"; deletingId=null; }
+        delClose.addEventListener("click", closeDel);
+        delCancel.addEventListener("click", closeDel);
+        delModal.addEventListener("click", (e)=>{ if(e.target===delModal) closeDel(); });
+
+        delConfirm.addEventListener("click", async ()=>{
+          if(!deletingId) return;
+          delConfirm.disabled=true; delConfirm.textContent="मेटाउँदै…";
+          try{
+            const res = await fetch(`${RATES_API}/${deletingId}`, { method:"DELETE", headers:H() });
+            const ct = res.headers.get("content-type")||"";
+            const j = ct.includes("json") ? await res.json().catch(()=>({})) : {};
+            if(!res.ok) throw new Error(j?.message || `HTTP ${res.status}`);
+            toast("दर मेटाइयो!", "success");
+            closeDel();
+            await loadRates();       // ← stay on same page, refresh list
+          }catch(err){
+            toast("मेटाउन असफल: " + err.message, "error");
+          }finally{
+            delConfirm.disabled=false; delConfirm.textContent="हटाउनुहोस्";
+          }
+        });
+
+        /* ---------- Search ---------- */
+        let tmr;
+        document.getElementById("search").addEventListener("input", (e)=>{
+          clearTimeout(tmr);
+          const q = (e.target.value||"").trim().toLowerCase();
+          tmr = setTimeout(()=>{
+            const filtered = (allRates||[]).filter(r =>
+              (r.title||"").toLowerCase().includes(q) ||
+              (r.remark||"").toLowerCase().includes(q) ||
+              String(r.rate??"").includes(q) ||
+              (r.unit||"").toLowerCase().includes(q)
+            );
+            render(filtered);
+          }, 180);
+        });
+
+        /* ---------- Init ---------- */
+        (async ()=>{
+          try{
+            await resolveActiveSiteId();
+            await loadRates();
+          }catch(err){
+            toast(err.message, "error");
+          }
+        })();
+      });
+    </script>
+  </body>
+</html>

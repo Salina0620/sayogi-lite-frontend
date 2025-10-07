@@ -1,161 +1,1816 @@
 <!DOCTYPE html>
 <html lang="ne">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#13a87d" />
     <title>Project Sayogi - Home</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="CSS/style.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
-    <!-- Google Fonts for Nepali & Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --brand-green: #1ab189;
+        --cta-blue: #0b5db8;
+        --alert-red: #dc3545;
+        --bg: #f3f5f7;
+        --surface: #fff;
+        --text-900: #0f172a;
+        --text-700: #344054;
+        --text-600: #667085;
+        --radius-xl: 28px;
+        --shadow-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+        --chart-h: 150px;
+        --bar-w: clamp(34px, 12vw, 56px);
+        --nav-inactive: #6b7280;
+        --nav-h: 60px; /* updated by JS */
+        --sheet-overlap: 16px; /* equals .sheet negative margin */
+        --sheet-radius: 24px; /* equals .sheet top radius */
+      }
 
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-<body>
+      * {
+        box-sizing: border-box;
+      }
 
+      /* -------- Frame -------- */
+      html,
+      body {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        background: var(--bg);
+        min-height: 100vh;
+        height: 100%;
+        color: var(--text-700);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        overflow-x: hidden;
+        overscroll-behavior: contain;
+        display: block;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: env(safe-area-inset-top);
+        background: var(--brand-green);
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      .mobile-container {
+        width: 100%;
+        height: 100dvh;
+        min-height: 100svh;
+        min-height: -webkit-fill-available;
+        background: var(--surface);
+        overflow-x: hidden;
+        overflow-y: visible;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+      .mobile-container * {
+        min-width: 0;
+      }
+
+      /* -------- Header -------- */
+      .app-header {
+        background: var(--brand-green);
+        color: #fff;
+        padding: calc(16px + env(safe-area-inset-top)) 16px 12px;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+
+      .user-bar .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #e6f4ea;
+        color: #0e8d6a;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+      .header-icon {
+        font-size: 18px;
+        margin-left: 14px;
+        color: #fff;
+      }
+
+      /* -------- Scroll area -------- */
+      .content-area {
+        flex: 1 1 auto;
+        background: linear-gradient(#fff, #fff) padding-box, var(--bg);
+        overflow: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        overscroll-behavior-y: contain;
+        padding-bottom: calc(
+          max(72px, var(--nav-h)) + env(safe-area-inset-bottom) + 12px
+        );
+      }
+      .content-area::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+
+      /* -------- Hero + Sheet -------- */
+      .hero {
+        background: var(--brand-green);
+        color: #fff;
+        padding: 16px 16px 24px;
+        position: relative;
+        z-index: 1;
+        margin-top: -1px;
+      }
+      .hero h1 {
+        margin: 0 0 4px;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .hero .sub {
+        margin: 0;
+        font-size: 12px;
+        opacity: 0.95;
+      }
+      .sheet {
+        background: #fff;
+        border-radius: 24px 24px 0 0;
+        margin-top: -16px;
+        padding: 16px;
+        position: relative;
+        z-index: 2;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: calc(-1 * var(--sheet-overlap));
+        height: calc(var(--sheet-radius) + var(--sheet-overlap));
+        background: var(--brand-green);
+        z-index: 0;
+      }
+
+      /* -------- Pills & Cards -------- */
+      .filter-pills {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(6px, 2.2vw, 10px);
+      }
+      .btn-pill {
+        width: 100%;
+        min-height: 32px;
+        padding: 4px clamp(6px, 2.4vw, 10px);
+        border-radius: 12px;
+        font-size: clamp(10px, 2.8vw, 13px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4em;
+        line-height: 1.15;
+        white-space: normal;
+        text-align: center;
+      }
+      .btn-pill i {
+        font-size: 1em;
+        line-height: 0;
+        flex: 0 0 auto;
+      }
+      .btn-pill .btn-label {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .btn-dark-blue {
+        background: #186b97;
+        color: #fff;
+        border: 0;
+        box-shadow: 0 2px 6px rgba(11, 93, 184, 0.22);
+      }
+      .btn-dark-blue:hover,
+      .btn-dark-blue:focus {
+        background: #0b5db8;
+        color: #fff;
+      }
+      .btn-filter {
+        background: #1ab189;
+        color: #fff;
+        border: 0;
+        box-shadow: 0 3px 8px rgba(19, 168, 125, 0.25);
+      }
+      .btn-filter:hover,
+      .btn-filter:focus,
+      .btn-filter:active {
+        background: #1ab189;
+        color: #fff;
+      }
+      .btn-filter .btn-label {
+        white-space: nowrap;
+      }
+      @media (max-width: 340px) {
+        .btn-pill {
+          padding-block: 4px;
+        }
+      }
+
+      .summary-cards .row > [class*="col-"] {
+        display: flex;
+      }
+      .summary-cards .card {
+        flex: 1;
+        min-height: 118px;
+        border: none;
+        border-radius: 14px;
+        box-shadow: var(--shadow-card);
+        text-align: center;
+        padding: 16px 10px;
+      }
+      .summary-card .icon {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .summary-card .amount {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+      }
+      .summary-card .label {
+        color: var(--text-600);
+        font-size: 12px;
+      }
+      .summary-card.income {
+        background: #e6f4ea;
+        border: 1px solid #cfece0;
+      }
+      .summary-card.income .icon,
+      .summary-card.income .amount {
+        color: var(--brand-green);
+      }
+      .summary-card.expense {
+        background: #fceaec;
+        border: 1px solid #f5c2c7;
+      }
+      .summary-card.expense .icon,
+      .summary-card.expense .amount {
+        color: var(--alert-red);
+      }
+
+      .panel {
+        background: #fff;
+        border: 1px solid #e9eef3;
+        border-radius: 18px;
+        box-shadow: var(--shadow-card);
+        padding: 14px 16px;
+      }
+      .shortcut-item {
+        text-align: center;
+        margin-bottom: 16px;
+      }
+      .shortcut-link {
+        text-decoration: none;
+        color: var(--text-700);
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .shortcut-icon-wrapper {
+        width: clamp(44px, 12vw, 52px);
+        height: clamp(44px, 12vw, 52px);
+        border-radius: 999px;
+        background: #e6f4ea;
+        display: grid;
+        place-items: center;
+      }
+      .shortcut-icon-wrapper i {
+        font-size: 22px;
+        color: var(--brand-green);
+      }
+      .shortcut-link span {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .transaction-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .transaction-item {
+        border-radius: 14px;
+        box-shadow: var(--shadow-card);
+        border: none;
+      }
+      .transaction-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-900);
+      }
+      .transaction-date {
+        font-size: 11px;
+        background: #eef2f6;
+        color: #475467;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .label {
+        color: #98a2b3;
+        font-size: 11px;
+      }
+      .amount-income,
+      .amount-expense {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 500;
+      }
+      .amount-income {
+        color: var(--brand-green);
+      }
+      .amount-expense {
+        color: var(--alert-red);
+      }
+      .btn-oval {
+        border-radius: 999px !important;
+      }
+
+      .chart-card {
+        background: #fff;
+        border: 1px solid #e9eef3;
+        border-radius: 14px;
+        padding: 12px;
+      }
+
+      .chart-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 6px 0 4px;
+      }
+      .chart-head .label-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #475467;
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .chart-head .form-select {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 1.25;
+        height: 36px;
+        padding: 6px 34px 6px 12px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        vertical-align: middle;
+        background-position: right 10px center;
+        width: auto;
+        max-width: 60vw;
+        flex: 0 0 auto;
+      }
+      .chart-head .form-select:focus {
+        box-shadow: 0 0 0 2px rgba(19, 168, 125, 0.15);
+        border-color: #cdeee3;
+        outline: 0;
+      }
+
+      .chart-container {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0;
+        margin-top: 6px;
+        padding: 10px 8px 0;
+      }
+      .y-axis {
+        position: relative;
+        height: var(--chart-h);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        font-size: 12px;
+        color: #475467;
+        padding-right: 6px;
+      }
+      .y-axis::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #cbd5e1;
+      }
+      .y-axis span {
+        line-height: 1;
+      }
+      .plot-wrap {
+        display: grid;
+        grid-template-rows: var(--chart-h) auto;
+      }
+      .bars-area {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+        align-items: end;
+        position: relative;
+        height: var(--chart-h);
+      }
+      .bars-area::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        background: #cbd5e1;
+      }
+      .bar {
+        width: var(--bar-w);
+        border-radius: 10px 10px 6px 6px;
+      }
+      .bar-income {
+        background: var(--brand-green);
+      }
+      .bar-expense {
+        background: var(--alert-red);
+        opacity: 0.9;
+      }
+      .x-axis {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+        margin-top: 8px;
+        color: #475467;
+        font-size: 12px;
+      }
+      .chart-caption {
+        text-align: center;
+        font-weight: 700;
+        color: #344054;
+        font-size: 14px;
+      }
+      .chart-summary {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+      .chart-summary .income-text,
+      .chart-summary .expense-text,
+      #sumProfitTxt.positive,
+      #sumProfitTxt.negative {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 500;
+      }
+      .chart-summary .income-text {
+        color: var(--brand-green);
+      }
+      .chart-summary .expense-text {
+        color: var(--alert-red);
+      }
+      .section-header {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+      }
+      @media (max-height: 650px) {
+        :root {
+          --chart-h: 120px;
+        }
+      }
+      @media (min-height: 900px) {
+        :root {
+          --chart-h: 180px;
+        }
+      }
+
+      /* -------- Bottom nav -------- */
+      .bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1030;
+        min-height: 60px;
+        padding-bottom: calc(6px + env(safe-area-inset-bottom));
+        transform: translateZ(0);
+      }
+      .bottom-nav .nav-item {
+        padding: 6px 0;
+        text-decoration: none;
+        color: var(--nav-inactive);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        height: 100%;
+        justify-content: center;
+      }
+      .bottom-nav .nav-item.active {
+        color: var(--brand-green);
+        font-weight: 700;
+      }
+      .nav-icon {
+        width: clamp(20px, 5.2vw, 24px);
+        height: clamp(20px, 5.2vw, 24px);
+        background-color: var(--nav-inactive);
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        display: block;
+      }
+      .ico-home {
+        -webkit-mask-image: url("./home.png");
+        mask-image: url("./home.png");
+      }
+      .ico-site {
+        -webkit-mask-image: url("./site.png");
+        mask-image: url("./site.png");
+      }
+      .ico-ledger {
+        -webkit-mask-image: url("./income.png");
+        mask-image: url("./income.png");
+      }
+      .ico-party {
+        -webkit-mask-image: url("./party.png");
+        mask-image: url("./party.png");
+      }
+      .ico-more {
+        -webkit-mask-image: url("./more.png");
+        mask-image: url("./more.png");
+      }
+      .bottom-nav .nav-item.active .nav-icon {
+        background-color: var(--brand-green);
+      }
+
+      /* Recent activities (border-only look) */
+      .recent-activities .transaction-item {
+        border: 1px solid #e9eef3;
+        box-shadow: none;
+        border-radius: 14px;
+        background: #fff;
+      }
+      .recent-activities .transaction-list {
+        gap: 8px;
+      }
+      .recent-activities .transaction-item .card-body {
+        padding: 10px 12px;
+      }
+
+      /* Edit Shortcuts modal */
+      .edit-modal .modal-dialog {
+        width: min(92vw, 360px);
+        max-width: 360px !important;
+        margin: 1rem auto;
+      }
+      .edit-modal .modal-content {
+        border-radius: 14px;
+        display: flex;
+        flex-direction: column;
+        max-height: 78vh;
+        overflow: hidden;
+      }
+      .edit-modal .modal-body {
+        flex: 1 1 auto;
+        overflow-y: auto;
+      }
+      .edit-modal .inset-panel {
+        background: #fff;
+        border: 1px solid #e9eef3;
+        border-radius: 14px;
+        padding: 18px 16px;
+      }
+      .shortcut-picker {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px 16px;
+      }
+      @media (max-width: 360px) {
+        .shortcut-picker {
+          gap: 16px 14px;
+        }
+        .sc-circle {
+          width: 56px;
+          height: 56px;
+        }
+        .sc-name {
+          font-size: 10px;
+        }
+      }
+      .sc-tile {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        position: relative;
+      }
+      .sc-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 999px;
+        background: #e6f4ea;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+      }
+      .sc-circle i {
+        font-size: 20px;
+        color: var(--brand-green);
+      }
+      .sc-name {
+        font-size: 14px;
+        color: #344054;
+        text-align: center;
+      }
+      .minus-dot,
+      .plus-dot {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 13px;
+        line-height: 1;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
+      .minus-dot {
+        background: #f04438;
+      }
+      .plus-dot {
+        background: #1ab189;
+      }
+      .sc-tile[aria-selected="true"] .plus-dot {
+        display: none;
+      }
+      .sc-tile[aria-selected="false"] .minus-dot {
+        display: none;
+      }
+
+      .edit-menu-btn {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--brand-green);
+        text-decoration: none !important;
+        padding: 2px 6px;
+        line-height: 1.2;
+        border-radius: 6px;
+      }
+      .edit-menu-btn:hover,
+      .edit-menu-btn:focus,
+      .edit-menu-btn:active {
+        color: var(--brand-green);
+        text-decoration: none !important;
+      }
+      .edit-menu-btn i {
+        font-size: 12px;
+        margin-right: 6px;
+      }
+
+      #chartMonth option {
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+      #chartMonth {
+        position: absolute !important;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .chart-select-btn {
+        font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 1.25;
+        height: 36px;
+        padding: 6px 34px 6px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .chart-select-menu .dropdown-item {
+        font-size: clamp(10px, 4.5vw, 10px);
+        font-weight: 500;
+        line-height: 1.4;
+      }
+      .chart-select-menu {
+        max-height: 55vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .chart-select-menu .dropdown-item.active {
+        background: rgba(19, 168, 125, 0.12);
+        color: #0b5b4a;
+      }
+
+      .shortcut-icon-wrapper img,
+      .sc-circle img {
+        width: clamp(18px, 5vw, 24px);
+        height: clamp(18px, 5vw, 24px);
+        object-fit: contain;
+        display: block;
+      }
+
+      /* ---- OTP success toast (lightweight) ---- */
+      .flash-toast {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        left: auto;
+        transform: none;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1055; /* above header */
+        border: 1px solid #e9eef3;
+      }
+      .flash-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: #e6f4ea;
+        display: grid;
+        place-items: center;
+        color: var(--brand-green);
+        font-size: 16px;
+        line-height: 1;
+      }
+      .flash-text {
+        font-size: 16px;
+        color: var(--text-700);
+      }
+      .flash-close {
+        background: transparent;
+        border: 0;
+        font-size: 18px;
+        line-height: 1;
+        color: #667085;
+        margin-left: 6px;
+      }
+
+      .app-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: var(--brand-green);
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        will-change: transform;
+      }
+      .app-header::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px; /* overlap next section by 1px */
+        height: 2px;
+        background: var(--brand-green);
+        pointer-events: none;
+      }
+      .content-area {
+        background: #fff; /* ← replace the linear-gradient(...) */
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/ad-bs-converter@2/dist/index.umd.js"></script>
+  </head>
+
+  <body>
     <div class="mobile-container">
-        <header class="app-header">
-             
-            <div class="user-bar d-flex justify-content-between">
-                <div class="user-info">
-                    <div class="avatar">ह</div>
-                    <span class="user-name">हरि पौडेल</span>
+      <header class="app-header">
+        <div class="user-bar d-flex justify-content-between">
+          <div class="user-info">
+            <div class="avatar" id="avatarInitial">उ</div>
+            <span class="user-name" id="userName">प्रयोगकर्ताको नाम</span>
+          </div>
+          <div class="header-icons">
+            <a href="notelist.html" class="header-icon"
+              ><i class="fa-solid fa-file-lines"></i
+            ></a>
+            <a href="#" class="header-icon"
+              ><i class="fa-regular fa-bell"></i
+            ></a>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-area">
+        <section class="hero">
+          <h1>नमस्ते, स्वागत छ</h1>
+          <p class="sub" id="greetSub">शुभ बिहान</p>
+        </section>
+
+        <div class="sheet">
+          <!-- Filter Pills -->
+          <section class="filter-pills mb-4">
+            <a href="#" class="btn btn-dark-blue btn-pill" data-range="7_days"
+              ><span class="btn-label">७ दिन</span></a
+            >
+            <a href="#" class="btn btn-dark-blue btn-pill" data-range="15_days"
+              ><span class="btn-label">१५ दिन</span></a
+            >
+            <a href="#" class="btn btn-dark-blue btn-pill" data-range="30_days"
+              ><span class="btn-label">१ महिना</span></a
+            >
+            <button
+              type="button"
+              class="btn btn-filter btn-pill"
+              data-bs-toggle="modal"
+              data-bs-target="#dateFilterModal"
+            >
+              <i class="bi bi-funnel"></i
+              ><span class="btn-label">छान्नुहोस्</span>
+            </button>
+          </section>
+
+          <!-- Summary Cards -->
+          <section class="summary-cards mb-4">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="card summary-card income">
+                  <div class="icon">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                  </div>
+                  <div class="amount" id="homeIncome">रु. ५,०००</div>
+                  <div class="label">आम्दानी</div>
                 </div>
-                <div class="header-icons">
-                    <a href="notelist.html" class="header-icon text-white"><i class="fa-solid fa-file-lines"></i></a>
-                    <a href="#" class="header-icon text-white"><i class="fa-regular fa-bell"></i></a>
+              </div>
+              <div class="col-6">
+                <div class="card summary-card expense">
+                  <div class="icon">
+                    <i class="fa-solid fa-sack-dollar"></i>
+                  </div>
+                  <div class="amount" id="homeExpense">रु. ३,०००</div>
+                  <div class="label">खर्च</div>
                 </div>
+              </div>
             </div>
-            <div class="greeting">
-                <h1>नमस्ते, फेरि स्वागत छ</h1>
-                <p>शुभ बिहानी</p>
+          </section>
+
+          <!-- Shortcuts -->
+          <section class="shortcuts-section mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h2 class="section-header m-0">सर्टकटहरू</h2>
+              <a href="#" class="edit-menu-btn"
+                ><i class="fas fa-pencil-alt me-1"></i> एडिट मेनु</a
+              >
             </div>
-        </header>
+            <div class="panel">
+              <div class="row gx-3 gy-3" id="shortcutGrid"></div>
+            </div>
+          </section>
 
-        <main class="content-area">
-            <!-- Filter Pills -->
-            <section class="filter-pills d-flex justify-content-between mb-4">
-                <a href="#" class="btn btn-dark-blue">७ दिन</a>
-                <a href="#" class="btn btn-dark-blue">१५ दिन</a>
-                <a href="#" class="btn btn-dark-blue">१ महिना</a>
-                <a href="#" class="btn btn-app-green"><i class="fas fa-filter me-1"></i> छान्नुहोस्</a>
-            </section>
-            
-            <!-- Summary Cards -->
-            <section class="summary-cards mb-4">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="card summary-card income">
-                            <div class="icon"><i class="fas fa-sack-dollar"></i></div>
-                            <div class="amount">रु. ५,०००</div>
-                            <div class="label">आम्दानी (वैशाख)</div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card summary-card expense">
-                            <div class="icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                            <div class="amount">रु. ३,०००</div>
-                            <div class="label">खर्च (वैशाख)</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+          <!-- Recent Activities -->
+          <section class="recent-activities mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="section-header">हालैका गतिविधिहरू</h2>
+            </div>
+            <div class="transaction-list" id="recent-activities"></div>
+            <div class="text-center mt-3">
+              <a
+                id="recent-cta"
+                href="karobar.html"
+                class="btn btn-dark-blue btn-sm btn-oval"
+                >सबै हेर्नुहोस् →</a
+              >
+            </div>
+          </section>
 
-            <!-- Shortcuts -->
-            <section class="shortcuts-section mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="section-header">सर्टकटहरू</h2>
-                    <a href="#" class="text-decoration-none edit-menu-btn"><i class="fas fa-pencil-alt me-1"></i> एडिट मेनु</a>
+          <!-- Chart -->
+          <section class="chart-section">
+            <h2 class="section-header mb-2">आम्दानी र खर्च</h2>
+            <div class="chart-card">
+              <div class="chart-head">
+                <span class="label-text">महिना छान्नुहोस्:</span>
+                <div class="dropdown chart-select">
+                  <button
+                    class="chart-select-btn dropdown-toggle"
+                    type="button"
+                    id="chartMonthBtn"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <span class="chart-select-label">—</span>
+                  </button>
+                  <ul
+                    class="dropdown-menu dropdown-menu-end chart-select-menu"
+                    id="chartMonthMenu"
+                  ></ul>
                 </div>
-<div class="row">
-  <div class="col-4 shortcut-item">
-    <a href="ownerlist.html" class="shortcut-link">
-      <div class="shortcut-icon-wrapper"><i class="fas fa-user"></i></div>
-      <span>घरधनी</span>
-    </a>
-  </div>
-  
-  <div class="col-4 shortcut-item">
-    <a href="party.html" class="shortcut-link">
-      <div class="shortcut-icon-wrapper"><i class="fas fa-user-plus"></i></div>
-      <span>पार्टी थप्नुहोस्</span>
-    </a>
-  </div>
+                <select
+                  class="form-select"
+                  id="chartMonth"
+                  aria-hidden="true"
+                  tabindex="-1"
+                ></select>
+              </div>
 
-  <div class="col-4 shortcut-item">
-    <a href="c-site-list.html" class="shortcut-link">
-      <div class="shortcut-icon-wrapper"><i class="fa-solid fa-person-digging"></i></div>
-      <span>साइट सिर्जना</span>
-    </a>
-  </div>
+              <div class="chart-container">
+                <div class="y-axis" id="chartYAxis">
+                  <span>—</span><span>—</span><span>—</span><span>रु. ०</span>
+                </div>
+                <div class="plot-wrap">
+                  <div class="bars-area">
+                    <div class="bar bar-income" id="barIncome"></div>
+                    <div class="bar bar-expense" id="barExpense"></div>
+                  </div>
+                  <div class="x-axis">
+                    <span>आम्दानी</span><span>खर्च</span>
+                  </div>
+                </div>
+              </div>
 
-  <div class="col-4 shortcut-item">
-    <a href="#" class="shortcut-link">
-      <div class="shortcut-icon-wrapper"><i class="fa-solid fa-money-bill-transfer"></i></div>
-      <span>आम्दानी</span>
-    </a>
-  </div>
+              <div class="chart-caption" id="chartCaption">—</div>
+              <div class="chart-summary">
+                <div>
+                  <span class="income-text" id="sumIncomeTxt">रु. ०</span
+                  ><span class="label">आय</span>
+                </div>
+                <div>
+                  <span class="expense-text" id="sumExpenseTxt">रु. ०</span
+                  ><span class="label">खर्च</span>
+                </div>
+                <div>
+                  <span class="profit-text" id="sumProfitTxt">रु. ०</span
+                  ><span class="label">नाफा</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
 
-  <div class="col-4 shortcut-item">
-    <a href="#" class="shortcut-link">
-      <div class="shortcut-icon-wrapper"><i class="fa-solid fa-arrow-down-wide-short"></i></div>
-      <span>खर्च</span>
-    </a>
-  </div>
-</div>
-
-            </section>
-
-            <!-- Recent Activities -->
-            <section class="recent-activities mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="section-header">हालैका गतिविधिहरू</h2>
-                    <a href="#" class="text-decoration-none filter-btn"><i class="fas fa-filter me-1"></i> छान्नुहोस्</a>
-                </div>
-                <div class="transaction-list">
-                    <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">सामान किन्न</span><span class="transaction-date">आज</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ०</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु १,०००</div></div></div></div></div>
-                    <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">तलब</span><span class="transaction-date">जेठ २५</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ६०,०००</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु ०</div></div></div></div></div>
-                    <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">सामान किन्न</span><span class="transaction-date">जेठ ३०</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ०</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु १५,०००</div></div></div></div></div>
-                     <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">सामान किन्न</span><span class="transaction-date">असार ५</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु १,०००</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु ८००</div></div></div></div></div>
-                     <div class="card transaction-item"><div class="card-body p-3"><div class="d-flex justify-content-between align-items-center mb-2"><span class="transaction-title">तलब आम्दानी</span><span class="transaction-date">जेठ ०५</span></div><div class="row transaction-details"><div class="col"><div class="label">आम्दानी</div><div class="amount-income">रु ६०,०००</div></div><div class="col text-end"><div class="label">खर्च</div><div class="amount-expense">रु ०</div></div></div></div></div>
-                </div>
-                <div class="text-center mt-3">
-                    <a href="#" class="btn btn-dark-blue btn-sm">सबै हेर्नुहोस् →</a>
-                </div>
-            </section>
-            
-            <!-- Chart Section -->
-            <section class="chart-section">
-                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="section-header">आम्दानी र खर्च</h2>
-                    <select class="form-select"> <option selected>मासिक</option> <option value="1">हप्ता</option> <option value="2">त्रैमासिक</option> <option value="3">वर्ष</option> </select>
-                </div>
-                <div class="chart-container">
-                    <div class="y-axis"> <span>रु. ६०,०००</span> <span>रु. ४०,०००</span> <span>रु. २०,०००</span> <span>रु. ०</span> </div>
-                    <div class="bars-area"> <div class="bar bar-income"></div> <div class="bar bar-expense"></div> </div>
-                </div>
-                <div class="x-axis"> <span>आम्दानी</span> <span>खर्च</span> </div>
-                <div class="chart-summary">
-                    <div> <span class="income-text">रु. ६०,०००</span> <span class="label">आय</span> </div>
-                    <div> <span class="expense-text">रु. ३०,०००</span> <span class="label">खर्च</span> </div>
-                    <div> <span class="profit-text">रु. ३०,०००</span> <span class="label">नाफा</span> </div>
-                </div>
-            </section>
-        </main>
+        <!-- Bottom nav -->
+        <nav class="bottom-nav">
+          <a href="home.html" class="nav-item active" data-tab="home"
+            ><span class="nav-icon ico-home" aria-hidden="true"></span
+            ><span>होम</span></a
+          >
+          <a href="c-site-list.html" class="nav-item" data-tab="sites"
+            ><span class="nav-icon ico-site" aria-hidden="true"></span
+            ><span>साइट</span></a
+          >
+          <a href="karobar.html" class="nav-item" data-tab="ledger"
+            ><span class="nav-icon ico-ledger" aria-hidden="true"></span
+            ><span>कारोबारहरू</span></a
+          >
+          <a href="party.html" class="nav-item" data-tab="parties"
+            ><span class="nav-icon ico-party" aria-hidden="true"></span
+            ><span>पार्टीहरू</span></a
+          >
+          <a href="more.html" class="nav-item" data-tab="more"
+            ><span class="nav-icon ico-more" aria-hidden="true"></span
+            ><span>अरू</span></a
+          >
+        </nav>
+      </main>
     </div>
-    
-    <nav class="bottom-nav">
-        <a href="#" class="nav-item active"> <i class="fas fa-home"></i> <span>गृह</span> </a>
-        <a href="#" class="nav-item"> <i class="fas fa-book"></i> <span>खाता</span> </a>
-        <a href="#" class="nav-item"> <i class="fas fa-chart-bar"></i> <span>विश्लेषण</span> </a>
-        <a href="#" class="nav-item"> <i class="fas fa-users"></i> <span>पार्टीहरु</span> </a>
-        <a href="#" class="nav-item"> <i class="fas fa-grip"></i> <span>मेनु</span> </a>
-    </nav
+
+    <!-- Date filter modal -->
+    <div
+      class="modal fade"
+      id="dateFilterModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 360px">
+        <div class="modal-content" style="border-radius: 14px">
+          <div class="modal-header">
+            <h5 class="modal-title">मिति छान्नुहोस्</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">सुरुआत मिति</label>
+              <input type="date" class="form-control" id="dfStart" />
+            </div>
+            <div>
+              <label class="form-label">अन्त्य मिति</label>
+              <input type="date" class="form-control" id="dfEnd" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              रद्द
+            </button>
+            <button class="btn btn-success" id="applyDateFilter">लागू</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Shortcuts Modal -->
+    <div
+      class="modal fade edit-modal"
+      id="shortcutModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">सर्टकटहरू</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body pt-0">
+            <div class="inset-panel">
+              <div id="shortcutPicker" class="shortcut-picker"></div>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              रद्द
+            </button>
+            <button class="btn btn-success" id="saveShortcuts">लागू</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* bottom-nav highlight (unchanged) */
+      document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          document
+            .querySelectorAll(".bottom-nav .nav-item")
+            .forEach((n) => n.classList.remove("active"));
+          item.classList.add("active");
+        });
+      });
+    </script>
+
+    <script>
+      /* ======= DATA + HELPERS ======= */
+      const API_BASE = "http://192.168.1.209:8000/api";
+      const RAW_TOKEN = localStorage.getItem("auth_token");
+      if (!RAW_TOKEN) {
+        alert("कृपया लगइन गर्नुहोस्।");
+        location.href = "login.html";
+      }
+      const TOKEN = RAW_TOKEN.includes("|")
+        ? RAW_TOKEN.split("|")[1]
+        : RAW_TOKEN;
+      const AUTH_HEADERS = {
+        Authorization: `Bearer ${TOKEN}`,
+        Accept: "application/json",
+      };
+
+      const NP_DIG = "०१२३४५६७८९";
+      const NP_DIGITS = "०१२३४५६७८९";
+      const esc = (s) =>
+        (s || "").replace(
+          /[&<>\"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[m])
+        );
+      const nepaliNumber = (n) =>
+        new Intl.NumberFormat("ne-NP", { maximumFractionDigits: 0 }).format(
+          n || 0
+        );
+      const rupee = (n) => `रु ${nepaliNumber(n || 0)}`;
+      const fmtRs = (n) => "रु. " + Number(n || 0).toLocaleString("ne-NP");
+      const toNpNum = (x) => String(x).replace(/\d/g, (d) => NP_DIG[d]);
+      const npToAscii = (s) =>
+        String(s ?? "0").replace(/[०-९]/g, (d) => String(NP_DIGITS.indexOf(d)));
+      const toNumber = (v) => {
+        if (typeof v === "number") return v;
+        const n = parseFloat(npToAscii(String(v)).replace(/[^\d.-]/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      };
+
+      const AD_MONTHS_NP = [
+        "जनवरी",
+        "फेब्रुअरी",
+        "मार्च",
+        "अप्रिल",
+        "मे",
+        "जुन",
+        "जुलाई",
+        "अगस्ट",
+        "सेप्टेम्बर",
+        "अक्टोबर",
+        "नोभेम्बर",
+        "डिसेम्बर",
+      ];
+      function datePillAd(iso) {
+        const d = new Date(iso),
+          t = new Date();
+        if (d.toDateString() === t.toDateString()) return "आज";
+        return `${AD_MONTHS_NP[d.getMonth()]} ${toNpNum(d.getDate())}`;
+      }
+
+      /* HEADER */
+      function setHeaderName() {
+        // Always start with defaults; avoid stale localStorage name.
+        const el = document.getElementById("userName");
+        if (el) el.textContent = "प्रयोगकर्ताको नाम";
+        const av = document.getElementById("avatarInitial");
+        if (av) av.textContent = "उ";
+      }
+      function initialsOf(name = "") {
+        const n = (name || "").trim();
+        return n ? n.charAt(0).toUpperCase() : "उ"; // single first letter
+      }
+
+      async function loadUserHeader() {
+        try {
+          const res = await fetch(`${API_BASE}/user`, {
+            headers: AUTH_HEADERS,
+          });
+          if (!res.ok) throw new Error(await res.text());
+          const user = await res.json();
+          const name =
+            (user && typeof user.name === "string" && user.name.trim()) ||
+            "प्रयोगकर्ताको नाम";
+          const nameEl = document.getElementById("userName");
+          if (nameEl) nameEl.textContent = name;
+          const av = document.getElementById("avatarInitial");
+          if (av) av.textContent = initialsOf(name);
+        } catch (e) {
+          // keep defaults on failure
+        }
+      }
+      function setGreeting() {
+        const el = document.getElementById("greetSub");
+        if (!el) return;
+        const h = new Date().getHours();
+        let g = "नमस्ते";
+        if (h < 12) g = "शुभ बिहानी";
+        else if (h < 17) g = "शुभ अपरान्ह";
+        else if (h < 20) g = "शुभ साँझ";
+        else g = "शुभ रात्री";
+        el.textContent = g;
+      }
+      // Keep listener (harmless), but we don't read localStorage for name anymore.
+      window.addEventListener("storage", (e) => {
+        if (["user_name", "user", "profile"].includes(e.key)) {
+          setHeaderName();
+          loadUserHeader();
+        }
+      });
+
+      /* RECENT LIST */
+      async function loadRecentTransactions(limit = 5) {
+        const list = document.getElementById("recent-activities");
+        const ctaBtn = document.getElementById("recent-cta");
+        if (!list) return;
+        list.innerHTML = "";
+        const qs = new URLSearchParams({ limit, other_only: 1 });
+        try {
+          const res = await fetch(`${API_BASE}/finance/recent?${qs}`, {
+            headers: AUTH_HEADERS,
+          });
+          if (!res.ok) throw new Error(`(${res.status}) ${await res.text()}`);
+          const items = (await res.json())?.slice(0, limit) || [];
+          if (!items.length) {
+            list.innerHTML =
+              "<div class='text-muted text-center py-2'>हालैका कुनै गतिविधि छैन</div>";
+            if (ctaBtn) ctaBtn.textContent = "सुरु गर्नुहोस् →";
+            return;
+          }
+          if (ctaBtn) ctaBtn.textContent = "थप हेर्नुहोस् →";
+          items.forEach((it) => {
+            list.insertAdjacentHTML(
+              "beforeend",
+              `
+              <div class="card transaction-item">
+                <div class="card-body p-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="transaction-title">${esc(
+                      it.title || "—"
+                    )}</span>
+                    <span class="transaction-date">${datePillAd(it.date)}</span>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="label">आम्दानी</div>
+                      <div class="amount-income">${rupee(it.credit)}</div>
+                    </div>
+                    <div class="col text-end">
+                      <div class="label">खर्च</div>
+                      <div class="amount-expense">${rupee(it.debit)}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+            );
+          });
+        } catch (e) {
+          list.innerHTML = `<div class="text-danger">लोड असफल। ${esc(
+            e.message
+          )}</div>`;
+          if (ctaBtn) ctaBtn.textContent = "थप हेर्नुहोस् →";
+        }
+      }
+
+      /* CARD TOTALS + FILTERS */
+      function rangeFromFilter(filter) {
+        const today = new Date(),
+          end = today,
+          start = new Date(today);
+        const daysBack =
+          { "7_days": 6, "15_days": 14, "30_days": 29 }[filter] ?? 6;
+        start.setDate(today.getDate() - daysBack);
+        const iso = (d) => d.toISOString().slice(0, 10);
+        return { start_date: iso(start), end_date: iso(end) };
+      }
+      function pickNumber(obj, ...keys) {
+        for (const k of keys) {
+          const raw = obj?.[k];
+          if (raw !== null && raw !== undefined && raw !== "") {
+            const n = Number(raw);
+            if (!Number.isNaN(n)) return n;
+          }
+        }
+        return 0;
+      }
+      async function loadCardTotals(q = {}) {
+        const qs = new URLSearchParams(q).toString();
+        const url = `${API_BASE}/finance/totals${qs ? `?${qs}` : ""}`;
+        try {
+          const res = await fetch(url, { headers: AUTH_HEADERS });
+          if (!res.ok) throw new Error(`(${res.status}) ${await res.text()}`);
+          const data = await res.json();
+          const totals = data?.totals ?? data ?? {};
+          const income = pickNumber(totals, "total_credit", "credit");
+          const expense = pickNumber(totals, "total_debit", "debit");
+          document.getElementById("homeIncome").textContent = fmtRs(income);
+          document.getElementById("homeExpense").textContent = fmtRs(expense);
+        } catch {
+          document.getElementById("homeIncome").textContent = fmtRs(0);
+          document.getElementById("homeExpense").textContent = fmtRs(0);
+        }
+      }
+      function setupFilterPills() {
+        document
+          .querySelectorAll(".filter-pills .btn-dark-blue")
+          .forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              e.preventDefault();
+              loadCardTotals(rangeFromFilter(btn.dataset.range));
+            });
+          });
+      }
+
+      /* Custom date filter (modal) -> cards */
+      function initDateFilter() {
+        const start = document.getElementById("dfStart");
+        const end = document.getElementById("dfEnd");
+        const today = new Date(),
+          iso = (d) => d.toISOString().slice(0, 10);
+        const s = new Date();
+        s.setDate(today.getDate() - 6);
+        start.value = iso(s);
+        end.value = iso(today);
+        document
+          .getElementById("applyDateFilter")
+          .addEventListener("click", () => {
+            if (start.value && end.value) {
+              loadCardTotals({ start_date: start.value, end_date: end.value });
+              bootstrap.Modal.getInstance(
+                document.getElementById("dateFilterModal")
+              ).hide();
+            }
+          });
+      }
+
+      /* CHART */
+      const BS_MONTHS = [
+        "बैशाख",
+        "जेठ",
+        "असार",
+        "साउन",
+        "भदौ",
+        "असोज",
+        "कार्तिक",
+        "मंसिर",
+        "पौष",
+        "माघ",
+        "फागुन",
+        "चैत्र",
+      ];
+      const hasAdbs = () =>
+        !!(
+          window.adbs &&
+          typeof window.adbs.ad2bs === "function" &&
+          typeof window.adbs.bs2ad === "function"
+        );
+      function bsToAdDate(y, m, d) {
+        if (hasAdbs()) {
+          const { year, month, day } = window.adbs.bs2ad({
+            year: +y,
+            month: +m,
+            day: +d,
+          });
+          return new Date(year, month - 1, day);
+        }
+        return new Date(+y, +m - 1, +d);
+      }
+      function getLast12BsMonths() {
+        const out = [],
+          now = new Date();
+        if (hasAdbs()) {
+          const cur = window.adbs.ad2bs({
+            year: now.getFullYear(),
+            month: now.getMonth() + 1,
+            day: now.getDate(),
+          });
+          let y = cur.year,
+            m = cur.month;
+          for (let i = 0; i < 12; i++) {
+            out.push({
+              value: `${y}-${String(m).padStart(2, "0")}`,
+              label: `${BS_MONTHS[m - 1]} ${toNpNum(y)}`,
+            });
+            m--;
+            if (m === 0) {
+              m = 12;
+              y--;
+            }
+          }
+        } else {
+          const AD_MONTHS_NP = [
+            "जनवरी",
+            "फेब्रुअरी",
+            "मार्च",
+            "अप्रिल",
+            "मे",
+            "जुन",
+            "जुलाई",
+            "अगस्ट",
+            "सेप्टेम्बर",
+            "अक्टोबर",
+            "नोभेम्बर",
+            "डिसेम्बर",
+          ];
+          let y = now.getFullYear(),
+            m = now.getMonth() + 1;
+          for (let i = 0; i < 12; i++) {
+            out.push({
+              value: `${y}-${String(m).padStart(2, "0")}`,
+              label: `${AD_MONTHS_NP[m - 1]} ${toNpNum(y)}`,
+            });
+            m--;
+            if (m === 0) {
+              m = 12;
+              y--;
+            }
+          }
+        }
+        return out;
+      }
+      function bsMonthToAdRange(bsYm) {
+        const [yStr, mStr] = bsYm.split("-");
+        const y = +yStr,
+          m = +mStr;
+        const start = bsToAdDate(y, m, 1);
+        const nextY = m === 12 ? y + 1 : y,
+          nextM = m === 12 ? 1 : m + 1;
+        const nextStart = bsToAdDate(nextY, nextM, 1);
+        const end = new Date(nextStart.getTime() - 86400000);
+        const iso = (d) => d.toISOString().slice(0, 10);
+        return { start_date: iso(start), end_date: iso(end) };
+      }
+      function syncChartSelectUI() {
+        const sel = document.getElementById("chartMonth");
+        const label = document.querySelector(
+          "#chartMonthBtn .chart-select-label"
+        );
+        const items = document.querySelectorAll(
+          "#chartMonthMenu .dropdown-item"
+        );
+        const text = sel.selectedOptions[0]?.textContent || "—";
+        label.textContent = text;
+        items.forEach((b) =>
+          b.classList.toggle("active", b.dataset.value === sel.value)
+        );
+      }
+      function buildBsMonthDropdown() {
+        const sel = document.getElementById("chartMonth");
+        const menu = document.getElementById("chartMonthMenu");
+        const btn = document.getElementById("chartMonthBtn");
+        if (!sel || !menu || !btn) return;
+
+        const months = getLast12BsMonths();
+        sel.innerHTML = months
+          .map((m) => `<option value="${m.value}">${m.label}</option>`)
+          .join("");
+        sel.value = months[0].value;
+
+        menu.innerHTML = months
+          .map(
+            (m) =>
+              `<li><button type="button" class="dropdown-item" data-value="${m.value}">${m.label}</button></li>`
+          )
+          .join("");
+        menu.querySelectorAll(".dropdown-item").forEach((it) => {
+          it.addEventListener("click", () => {
+            sel.value = it.dataset.value;
+            sel.dispatchEvent(new Event("change", { bubbles: true }));
+            syncChartSelectUI();
+          });
+        });
+
+        sel.addEventListener("change", () => {
+          applyBsMonth(sel.value);
+          updateChartCaptionFromSelect();
+          syncChartSelectUI();
+        });
+
+        applyBsMonth(sel.value);
+        updateChartCaptionFromSelect();
+        syncChartSelectUI();
+      }
+      function applyBsMonth(bsMonthStr) {
+        const { start_date, end_date } = bsMonthToAdRange(bsMonthStr);
+        loadChartTotalsByRange({ start_date, end_date });
+      }
+      function getBarsHeight() {
+        const el = document.querySelector(".bars-area");
+        return el ? el.clientHeight : 150;
+      }
+      function niceTop(maxVal) {
+        if (!maxVal || maxVal < 0) maxVal = 0;
+        const step = Math.max(5000, Math.ceil(maxVal / 3 / 5000) * 5000);
+        return step * 3;
+      }
+      function setBarHeight(el, val, top) {
+        const v = Math.max(0, +val || 0),
+          t = Math.max(1, +top || 1);
+        const px = Math.max(6, Math.round((v / t) * getBarsHeight()));
+        el.style.height = px + "px";
+      }
+      let LAST_CHART = { inc: 0, exp: 0 };
+      function updateChart(inc, exp) {
+        LAST_CHART = { inc, exp };
+        const top = niceTop(Math.max(inc, exp));
+        const yAxis = document.getElementById("chartYAxis");
+        const t23 = Math.round((top * 2) / 3),
+          t13 = Math.round(top / 3);
+        yAxis.innerHTML = `<span>${fmtRs(top)}</span><span>${fmtRs(
+          t23
+        )}</span><span>${fmtRs(t13)}</span><span>${fmtRs(0)}</span>`;
+        setBarHeight(document.getElementById("barIncome"), inc, top);
+        setBarHeight(document.getElementById("barExpense"), exp, top);
+        const profit = inc - exp;
+        document.getElementById("sumIncomeTxt").textContent = fmtRs(inc);
+        document.getElementById("sumExpenseTxt").textContent = fmtRs(exp);
+        const p = document.getElementById("sumProfitTxt");
+        p.textContent = fmtRs(profit);
+        p.classList.toggle("positive", profit > 0);
+        p.classList.toggle("negative", profit < 0);
+      }
+      async function loadChartTotalsByRange(rangeParams) {
+        const qs = new URLSearchParams(rangeParams).toString();
+        try {
+          const res = await fetch(`${API_BASE}/finance/totals?${qs}`, {
+            headers: AUTH_HEADERS,
+          });
+          if (!res.ok) throw new Error(`(${res.status}) ${await res.text()}`);
+          const j = await res.json();
+          const t = j?.totals ?? j;
+          updateChart(toNumber(t?.total_credit), toNumber(t?.total_debit));
+        } catch {
+          updateChart(0, 0);
+        }
+      }
+      function updateChartCaptionFromSelect() {
+        const s = document.getElementById("chartMonth");
+        const t = (s?.selectedOptions?.[0]?.textContent || "").trim();
+        const monthOnly = t.split(/\s+/)[0] || t;
+        const cap = document.getElementById("chartCaption");
+        if (cap) cap.textContent = monthOnly || "—";
+      }
+
+      /* SHORTCUTS (fixed order) — staged changes, saved on "लागू" only */
+      const SHORTCUTS = [
+        {
+          id: "owner",
+          name: "घरधनी",
+          img: "owner.png",
+          href: "ownerlist.html",
+        },
+        {
+          id: "party_add",
+          name: "पार्टी थप्नुहोस्",
+          img: "party.png",
+          href: "party.html",
+        },
+        {
+          id: "site_new",
+          name: "साइट सिर्जना",
+          img: "site.png",
+          href: "c-site-list.html",
+        },
+        {
+          id: "income",
+          name: "आम्दानी",
+          img: "amdani.png",
+          href: "karobar.html?type=income",
+        },
+        {
+          id: "expense",
+          name: "खर्च",
+          img: "kharcha.png",
+          href: "karobar.html?type=expense",
+        },
+        { id: "note", name: "नोट", icon: "fa-copy", href: "notelist.html" },
+      ];
+      const FIXED_ORDER = SHORTCUTS.map((s) => s.id);
+      const SHORTCUT_KEY = "home_shortcuts";
+      const MAX_SHORTCUTS = 6;
+      const DEFAULT_SHORTCUTS = [
+        "owner",
+        "party_add",
+        "site_new",
+        "income",
+        "expense",
+        "note",
+      ];
+
+      const getSavedShortcuts = () => {
+        try {
+          const arr = JSON.parse(localStorage.getItem(SHORTCUT_KEY));
+          return Array.isArray(arr) && arr.length
+            ? arr
+            : DEFAULT_SHORTCUTS.slice();
+        } catch {
+          return DEFAULT_SHORTCUTS.slice();
+        }
+      };
+      const saveShortcuts = (ids) =>
+        localStorage.setItem(SHORTCUT_KEY, JSON.stringify(ids));
+
+      const sortByFixedOrder = (ids) => {
+        const set = new Set(ids);
+        return FIXED_ORDER.filter((id) => set.has(id)).slice(0, MAX_SHORTCUTS);
+      };
+      const findById = (id) => SHORTCUTS.find((s) => s.id === id);
+
+      function renderShortcutGrid(ids) {
+        const grid = document.getElementById("shortcutGrid");
+        grid.innerHTML = "";
+        const ordered = sortByFixedOrder(ids);
+        ordered.forEach((id) => {
+          const sc = findById(id);
+          if (!sc) return;
+          grid.insertAdjacentHTML(
+            "beforeend",
+            `
+            <div class="col-4 shortcut-item">
+              <a href="${sc.href}" class="shortcut-link">
+                <div class="shortcut-icon-wrapper">
+                  ${
+                    sc.img
+                      ? `<img src="shortcut/${sc.img}" alt="${sc.name}" />`
+                      : `<i class="fa-solid ${sc.icon || ""}"></i>`
+                  }
+                </div>
+                <span>${sc.name}</span>
+              </a>
+            </div>
+          `
+          );
+        });
+      }
+
+      /* ----- staged selection inside modal ----- */
+      let stagedSet = null; // Set<string> while modal is open
+
+      function renderShortcutPicker(ids) {
+        const picker = document.getElementById("shortcutPicker");
+        picker.innerHTML = "";
+        FIXED_ORDER.forEach((id) => {
+          const sc = findById(id);
+          if (!sc) return;
+          const on = ids.includes(id);
+          picker.insertAdjacentHTML(
+            "beforeend",
+            `
+            <button type="button" class="sc-tile" data-id="${id}" aria-selected="${on}">
+              <span class="minus-dot">−</span><span class="plus-dot">+</span>
+              <div class="sc-circle">
+                ${
+                  sc.img
+                    ? `<img src="shortcut/${sc.img}" alt="${sc.name}" />`
+                    : `<i class="fa-solid ${sc.icon || ""}"></i>`
+                }
+              </div>
+              <div class="sc-name">${sc.name}</div>
+            </button>
+          `
+          );
+        });
+
+        // Toggle only staged set; do NOT touch grid/localStorage yet
+        picker.querySelectorAll(".sc-tile").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.id;
+            const isOn = stagedSet.has(id);
+            if (isOn) {
+              stagedSet.delete(id);
+            } else {
+              if (stagedSet.size >= MAX_SHORTCUTS) return;
+              stagedSet.add(id);
+            }
+            renderShortcutPicker(sortByFixedOrder([...stagedSet]));
+          });
+        });
+      }
+
+      function setupShortcuts() {
+        // initial grid from saved (normalized order)
+        const savedOrdered = sortByFixedOrder(getSavedShortcuts());
+        saveShortcuts(savedOrdered);
+        renderShortcutGrid(savedOrdered);
+
+        // open modal -> start a staged copy
+        document
+          .querySelector(".edit-menu-btn")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            stagedSet = new Set(getSavedShortcuts());
+            renderShortcutPicker(sortByFixedOrder([...stagedSet]));
+            bootstrap.Modal.getOrCreateInstance(
+              document.getElementById("shortcutModal")
+            ).show();
+          });
+
+        // apply/save only when "लागू" is clicked
+        document
+          .getElementById("saveShortcuts")
+          .addEventListener("click", () => {
+            if (!stagedSet) return;
+            const finalList = sortByFixedOrder([...stagedSet]);
+            saveShortcuts(finalList);
+            renderShortcutGrid(finalList);
+            bootstrap.Modal.getInstance(
+              document.getElementById("shortcutModal")
+            ).hide();
+          });
+
+        // discard staged changes on close without apply
+        document
+          .getElementById("shortcutModal")
+          .addEventListener("hidden.bs.modal", () => {
+            stagedSet = null;
+          });
+      }
+
+      /* ---- OTP success toast helpers ---- */
+      function showFlashToast(
+        message = "साइट सफलतापूर्वक हटाइयो",
+        duration = 3500
+      ) {
+        const el = document.createElement("div");
+        el.className = "flash-toast";
+        el.innerHTML = `
+          <div class="flash-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="flash-text">${esc(message)}</div>
+          <button class="flash-close" aria-label="Close">×</button>
+        `;
+        document.body.appendChild(el);
+        const close = () => {
+          el.remove();
+        };
+        el.querySelector(".flash-close").addEventListener("click", close);
+        setTimeout(close, duration);
+      }
+      function maybeShowOtpToast() {
+        const urlFlag = new URLSearchParams(location.search).get("flash");
+        const ssFlag = sessionStorage.getItem("show_otp_toast");
+        const lsMsg = localStorage.getItem("flash_msg"); // optional custom text
+        if (urlFlag === "otp_ok" || ssFlag === "1" || lsMsg) {
+          const msg = lsMsg || "OTP सफलतापूर्वक प्रमाणित भयो";
+          showFlashToast(msg, 3500);
+          sessionStorage.removeItem("show_otp_toast");
+          if (lsMsg) localStorage.removeItem("flash_msg");
+          if (urlFlag === "otp_ok") {
+            const u = new URL(location.href);
+            u.searchParams.delete("flash");
+            history.replaceState({}, "", u);
+          }
+        }
+      }
+
+      /* BOOT */
+      document.addEventListener("DOMContentLoaded", () => {
+        setHeaderName(); // start with defaults
+        loadUserHeader(); // then fetch from API like “अरू” page
+        setGreeting();
+        loadRecentTransactions(5);
+        loadCardTotals();
+        setupFilterPills();
+        initDateFilter();
+        buildBsMonthDropdown();
+        setupShortcuts();
+        maybeShowOtpToast();
+      });
+      window.addEventListener("resize", () => {
+        updateChart(LAST_CHART.inc, LAST_CHART.exp);
+      });
+      window.addEventListener("orientationchange", () => {
+        updateChart(LAST_CHART.inc, LAST_CHART.exp);
+      });
+    </script>
+
+    <script>
+      function setNavHeightVar() {
+        const nav = document.querySelector(".bottom-nav");
+        if (!nav) return;
+        const h = Math.round(nav.getBoundingClientRect().height);
+        document.documentElement.style.setProperty("--nav-h", h + "px");
+      }
+      window.addEventListener("DOMContentLoaded", setNavHeightVar);
+      window.addEventListener("resize", setNavHeightVar);
+      window.addEventListener("orientationchange", setNavHeightVar);
+      window.addEventListener("pageshow", setNavHeightVar);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

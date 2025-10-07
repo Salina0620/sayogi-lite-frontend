@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>ट्र्यास हिस्ट्री</title>
+
+    <!-- Poppins + Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --brand: #13a87d;
+        --bg: #f3f5f7;
+        --surface: #fff;
+        --t700: #344054;
+        --t600: #667085;
+        --t500: #98a2b3;
+        --danger: #ef4444;
+        --ok: #10b981;
+        --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+        --radius: 16px;
+        --header-h: 60px;
+        --nav-h: 60px;
+
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--bg);
+        min-height: 100dvh;
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Arial, sans-serif;
+        display: block;
+      }
+
+      .phone {
+        width: 100vw;
+        height: 100dvh;
+        background: var(--surface);
+        border-radius: 0;
+        box-shadow: none;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        height: var(--header-h);
+        background: var(--brand);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding-top: var(--safe-top);
+      }
+      .header .back {
+        position: absolute;
+        left: 12px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 18px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      .content {
+        flex: 1 1 auto;
+        background: #f8fafb;
+        padding: 12px;
+        overflow: auto;
+        padding-bottom: calc(var(--nav-h) + var(--safe-bottom) + 12px);
+      }
+      .row-search {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .search {
+        flex: 1 1 auto;
+        position: relative;
+      }
+      .search input {
+        width: 100%;
+        height: 40px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0 36px 0 12px;
+        font-size: 14px;
+        outline: none;
+        background: #fff;
+        font-weight: 400;
+      }
+      .search i {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--t500);
+      }
+      .btn {
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        color: #374151;
+        font-weight: 400;
+      }
+      .btn.filter {
+        background: var(--brand);
+        color: #fff;
+        border-color: var(--brand);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .select-all {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 8px 4px;
+        color: #475467;
+        font-size: 13px;
+      }
+      .select-all input {
+        accent-color: var(--brand);
+      }
+
+      .item {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 12px;
+        border-top: 1px solid #eef2f6;
+      }
+      .item:first-child {
+        border-top: 0;
+      }
+      .sel {
+        width: 18px;
+        height: 18px;
+        margin-right: 2px;
+        accent-color: var(--brand);
+      }
+      .stack {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .title {
+        margin: 0;
+        font-size: 14px;
+        color: var(--t600);
+        font-weight: 400;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .meta {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: var(--t500);
+        font-weight: 400;
+      }
+      .date {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: var(--t500);
+        font-weight: 400;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-left: auto;
+      }
+      .iconbtn {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+      }
+      .iconbtn.restore {
+        color: var(--ok);
+        border-color: #d1fae5;
+        background: #ecfdf5;
+      }
+      .iconbtn.delete {
+        color: var(--danger);
+        border-color: #fee2e2;
+        background: #fef2f2;
+      }
+
+      .bottom {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--nav-h);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: #fff;
+        border-top: 1px solid #e5e7eb;
+        padding-bottom: var(--safe-bottom);
+      }
+      .bottom a {
+        color: #98a2b3;
+        text-decoration: none;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-weight: 400;
+      }
+      .bottom a i {
+        font-size: 18px;
+      }
+      .bottom a.active {
+        color: var(--brand);
+      }
+
+      .filter-menu {
+        position: absolute;
+        display: none;
+        min-width: 240px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 8px 0;
+        z-index: 20;
+      }
+      .filter-menu.open {
+        display: block;
+      }
+      .filter-menu .mi {
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 15px;
+        color: #1f2937;
+        user-select: none;
+      }
+      .filter-menu .mi + .mi {
+        border-top: 1px solid #f0f2f4;
+      }
+      .filter-menu .mi:hover {
+        background: #f8fafb;
+      }
+
+      /* === Toast (match previous page) === */
+      #toast {
+        position: fixed;
+        top: calc(12px + var(--safe-top));
+        right: 12px;
+        background: #fff;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px 10px 10px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        display: grid;
+        grid-template-columns: 32px 1fr 20px;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        max-width: 92vw;
+        color: #111827;
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.22s, transform 0.22s;
+        z-index: 10000;
+        line-height: 1.2;
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .toast-badge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #74c69d;
+      }
+      .toast-badge.error {
+        background: #ef4444;
+      }
+      .toast-badge svg {
+        width: 18px;
+        height: 18px;
+        stroke: #fff;
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .toast-msg {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #111827;
+        font-weight: 600;
+      }
+      .toast-x {
+        color: #6b7280;
+        cursor: pointer;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1;
+      }
+
+      /* === Permanent Delete Modal === */
+      .sheet-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 16px;
+      }
+      .sheet-overlay.show {
+        display: flex;
+      }
+      .sheet {
+        width: min(92vw, 360px);
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+      }
+      .sheet .hdr {
+        padding: 18px 20px 8px;
+        font-weight: 700;
+        font-size: 18px;
+        color: #334155;
+      }
+      .sheet .txt {
+        padding: 0 20px 16px;
+        color: #475467;
+        font-size: 14px;
+      }
+      .sheet .row {
+        display: flex;
+        gap: 10px;
+        padding: 0 20px 20px;
+      }
+      .sheet .btn {
+        flex: 1;
+        height: 44px;
+        border-radius: 12px;
+        border: 0;
+        font-weight: 700;
+      }
+      .sheet .btn.cancel {
+        background: #eef2f6;
+        color: #475467;
+      }
+      .sheet .btn.danger {
+        background: #dc3545;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone" id="phone">
+      <header class="header">
+        <a class="back" href="more.html"
+          ><i class="fa-solid fa-angle-left"></i
+        ></a>
+        <h1>ट्र्यास हिस्ट्री</h1>
+      </header>
+
+      <main class="content">
+        <div class="row-search">
+          <div class="search">
+            <input
+              id="q"
+              type="text"
+              placeholder="मेटाइएको रेकर्ड खोज्नुहोस्"
+            />
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </div>
+          <button class="btn filter" id="filterBtn">
+            <i class="fa-solid fa-filter"></i> छान्नुहोस्
+          </button>
+        </div>
+
+        <div class="select-all" aria-label="सबै चयन">
+          <input type="checkbox" id="checkAll" />
+          <span>सबै चयन</span>
+        </div>
+
+        <div class="card" id="list"></div>
+      </main>
+
+      <nav class="bottom">
+        <a href="home.html"
+          ><i class="fa-solid fa-house"></i><span>होम</span></a
+        >
+        <a href="c-site-list.html"
+          ><i class="fa-solid fa-trowel-bricks"></i><span>साइट</span></a
+        >
+        <a href="karobar.html"
+          ><i class="fa-solid fa-chart-line"></i><span>कारोबार</span></a
+        >
+        <a href="party.html"
+          ><i class="fa-solid fa-user-group"></i><span>पार्टी</span></a
+        >
+        <a href="more.html" class="active"
+          ><i class="fa-solid fa-grip"></i><span>अरू</span></a
+        >
+      </nav>
+
+      <div class="filter-menu" id="filterMenu" role="menu" aria-hidden="true">
+        <div class="mi" data-group="all">सबै</div>
+        <div class="mi" data-group="sites">साइटहरु</div>
+        <div class="mi" data-group="income">आम्दानी खर्च</div>
+        <div class="mi" data-group="notes">नोटहरु</div>
+        <div class="mi" data-group="owners">घरधनी</div>
+        <div class="mi" data-group="parties">पार्टीहरु</div>
+      </div>
+    </div>
+
+    <!-- Toast host -->
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Permanent Delete Modal -->
+    <div id="permModal" class="sheet-overlay" aria-hidden="true">
+      <div
+        class="sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="pm-title"
+      >
+        <div class="hdr" id="pm-title">सधैंका लागि मेटाउने?</div>
+        <div class="txt" id="pm-text">
+          यो रेकर्ड पुनः फिर्ता गर्न सकिँदैन। मेटाउन चाहनुहुन्छ?
+        </div>
+        <div class="row">
+          <button id="pm-cancel" class="btn cancel">रद्द</button>
+          <button id="pm-confirm" class="btn danger">मेटाउनुहोस्</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ---------------- CONFIG ---------------- */
+      const API = "http://192.168.1.209:8000/api";
+      const RAW = localStorage.getItem("auth_token");
+      if (!RAW) {
+        alert("कृपया लगइन गर्नुहोस्।");
+        location.href = "login.html";
+      }
+      const TOKEN = RAW.includes("|") ? RAW.split("|")[1] : RAW;
+      const HDRS = {
+        Authorization: `Bearer ${TOKEN}`,
+        Accept: "application/json",
+      };
+
+      /* ---------------- Helpers ---------------- */
+      const NP = "०१२३४५६७८९";
+      const toNp = (s) => String(s ?? "").replace(/\d/g, (d) => NP[d]);
+      const fmtDateNP = (iso) => {
+        const d = new Date(iso || Date.now());
+        try {
+          return d.toLocaleDateString("ne-NP");
+        } catch {
+          return toNp(d.toISOString().slice(0, 10));
+        }
+      };
+      const esc = (s) =>
+        String(s ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c])
+        );
+      const num = (v) => {
+        v = v == null ? "" : String(v);
+        v = v.replace(/[,\s]/g, "");
+        const n = Number(v);
+        return isNaN(n) ? 0 : n;
+      };
+
+      /* --- detect income vs expense for finance rows --- */
+      function inferFinanceKind(x) {
+        let raw =
+          (x &&
+            (x.type ||
+              x.txn_type ||
+              x.transaction_type ||
+              x.kind ||
+              x.category)) ||
+          (x &&
+            x.income_expense &&
+            (x.income_expense.type || x.income_expense.title)) ||
+          (x && (x.title || x.remark || x.remarks)) ||
+          "";
+        if (typeof raw === "string") {
+          const s = raw.toLowerCase();
+          if (s.includes("income") || s.includes("amdani") || s.includes("आम"))
+            return "income";
+          if (
+            s.includes("expense") ||
+            s.includes("kharcha") ||
+            s.includes("खर्च")
+          )
+            return "expense";
+        }
+        if (typeof x?.is_income === "boolean")
+          return x.is_income ? "income" : "expense";
+        if (typeof x?.is_expense === "boolean")
+          return x.is_expense ? "expense" : "income";
+        const credit = num(x && (x.credit ?? x.credit_amount));
+        const debit = num(x && (x.debit ?? x.debit_amount));
+        const amount = num(x && (x.amount ?? x.value));
+        if (credit > 0 && debit === 0) return "income";
+        if (debit > 0 && credit === 0) return "expense";
+        if (amount > 0 && credit === 0 && debit === 0) return "income";
+        if (amount < 0 && credit === 0 && debit === 0) return "expense";
+        return debit >= credit ? "expense" : "income";
+      }
+
+      /* ---------------- Endpoints + mapping ---------------- */
+      const TYPES = {
+        sites: {
+          label: "साइट",
+          t: "/sites/trashed",
+          r: ["/sites/restore/{id}", "/sites/{id}/restore"],
+          f: ["/sites/force-delete/{id}", "/sites/{id}/force-delete"],
+          map: (x) => ({
+            id: x.id,
+            title: x.name,
+            date: x.deleted_at || x.updated_at,
+            meta: "साइट",
+          }),
+        },
+        siteResources: {
+          label: "साइट रिसोर्स",
+          t: "/site-resources/trashed",
+          r: ["/site-resources/restore/{id}", "/site-resources/{id}/restore"],
+          f: [
+            "/site-resources/force-delete/{id}",
+            "/site-resources/{id}/force-delete",
+          ],
+          map: (x) => ({
+            id: x.id || x.resource_id,
+            title: x.item_name || "—",
+            date: x.deleted_at || x.date,
+            meta: "साइट",
+          }),
+        },
+        rates: {
+          label: "रेट सेटिङ",
+          t: "/rates/trashed",
+          r: ["/rates/restore/{id}", "/rates/{id}/restore"],
+          f: ["/rates/force-delete/{id}", "/rates/{id}/force-delete"],
+          map: (x) => ({
+            id: x.id,
+            title: x.title,
+            date: x.deleted_at || x.updated_at,
+            meta: "रेट सेटिङ",
+          }),
+        },
+        owners: {
+          label: "घरधनी",
+          t: "/owners/trashed",
+          r: ["/owners/restore/{id}", "/owners/{id}/restore"],
+          f: ["/owners/force-delete/{id}", "/owners/{id}/force-delete"],
+          map: (x) => ({
+            id: x.id,
+            title: x.name,
+            date: x.deleted_at,
+            meta: "घरधनी",
+          }),
+        },
+        notes: {
+          label: "नोट",
+          t: "/notes/trashed",
+          r: ["/notes/restore/{id}", "/notes/{id}/restore"],
+          f: ["/notes/force-delete/{id}", "/notes/{id}/force-delete"],
+          map: (x) => ({
+            id: x.id,
+            title: x.title,
+            date: x.deleted_at || x.updated_at,
+            meta: "नोट",
+          }),
+        },
+        parties: {
+          label: "पार्टी",
+          t: "/parties/trashed",
+          r: ["/parties/restore/{id}", "/parties/{id}/restore"],
+          f: ["/parties/force-delete/{id}", "/parties/{id}/force-delete"],
+          map: (x) => ({
+            id: x.id,
+            title: x.name || x.title,
+            date: x.deleted_at || x.updated_at,
+            meta: "पार्टी",
+          }),
+        },
+        partyExpenses: {
+          label: "पार्टी खर्च",
+          t: "/party-expenses/trashed",
+          r: ["/party-expenses/restore/{id}", "/party-expenses/{id}/restore"],
+          f: [
+            "/party-expenses/force-delete/{id}",
+            "/party-expenses/{id}/force-delete",
+          ],
+          map: (x) => ({
+            id: x.id,
+            title: x.title,
+            date: x.deleted_at || x.date,
+            meta: "पार्टी",
+          }),
+        },
+        finances: {
+          label: "क्याशबुक",
+          t: "/finance/trashed",
+          // add multiple restore/force-delete shapes to cover API variants
+          r: [
+            "/finance/restore/{id}",
+            "/finance/{id}/restore",
+            "/finances/restore/{id}",
+            "/finances/{id}/restore",
+          ],
+          f: [
+            "/finance/force-delete/{id}",
+            "/finance/{id}/force-delete",
+            "/finances/force-delete/{id}",
+            "/finances/{id}/force-delete",
+          ],
+          map: (x) => {
+            const kind = inferFinanceKind(x);
+            const meta = kind === "income" ? "आम्दानी" : "खर्च";
+            const title =
+              x?.income_expense?.title ||
+              x?.title ||
+              x?.remark ||
+              x?.remarks ||
+              "—";
+            const date =
+              x?.deleted_at ||
+              x?.date ||
+              x?.updated_at ||
+              x?.created_at ||
+              null;
+            return { id: x.id, title, date, meta };
+          },
+        },
+        incomeExpenses: {
+          label: "शीर्षक",
+          t: "/income-expense/trashed",
+          r: ["/income-expense/restore/{id}", "/income-expenses/{id}/restore"],
+          f: [
+            "/income-expense/force-delete/{id}",
+            "/income-expenses/{id}/force-delete",
+          ],
+          map: (x) => ({
+            id: x.id,
+            title: x.title,
+            date: x.deleted_at || x.updated_at,
+            meta: "शीर्षक",
+          }),
+        },
+      };
+
+      const GROUPS = {
+        all: Object.keys(TYPES),
+        sites: ["sites", "siteResources", "rates"],
+        income: ["finances", "incomeExpenses"],
+        notes: ["notes"],
+        owners: ["owners"],
+        parties: ["parties", "partyExpenses"],
+      };
+
+      /* ---------------- State ---------------- */
+      let items = [];
+      let view = [];
+      let selectedTypes = new Set(GROUPS.all);
+      let selectedRows = new Set();
+      let pendingDelete = null; // {type,id}
+
+      /* ---------------- Fetch ---------------- */
+      async function getJson(u) {
+        const r = await fetch(u, { headers: HDRS });
+        if (!r.ok) throw new Error(await r.text());
+        return r.json();
+      }
+      function tryUrls(arr, id) {
+        return arr.map((p) => API + p.replace("{id}", id));
+      }
+
+      async function restoreItem(urls) {
+        // Try POST, then PUT, then PATCH; finally POST with _method
+        for (const u of urls) {
+          for (const m of ["POST", "PUT", "PATCH"]) {
+            try {
+              const res = await fetch(u, { method: m, headers: HDRS });
+              if (res.ok) return res;
+            } catch {}
+          }
+          try {
+            const res = await fetch(u, {
+              method: "POST",
+              headers: { ...HDRS, "Content-Type": "application/json" },
+              body: JSON.stringify({ _method: "PATCH" }),
+            });
+            if (res.ok) return res;
+          } catch {}
+        }
+        throw new Error("restore failed");
+      }
+
+      async function forceDelete(urls) {
+        for (const u of urls) {
+          try {
+            const r1 = await fetch(u, { method: "DELETE", headers: HDRS });
+            if (r1.ok) return r1;
+          } catch {}
+          try {
+            const r2 = await fetch(u, {
+              method: "POST",
+              headers: { ...HDRS, "Content-Type": "application/json" },
+              body: JSON.stringify({ _method: "DELETE" }),
+            });
+            if (r2.ok) return r2;
+          } catch {}
+        }
+        throw new Error("force delete failed");
+      }
+
+      async function loadAll() {
+        items = [];
+        await Promise.all(
+          Object.entries(TYPES).map(async ([key, cfg]) => {
+            try {
+              const raw = await getJson(API + cfg.t);
+              const arr = Array.isArray(raw)
+                ? raw
+                : raw.data || raw.items || [];
+              (arr || []).forEach((x) => {
+                const m = cfg.map(x);
+                items.push({
+                  type: key,
+                  id: String(m.id),
+                  title: m.title,
+                  date: m.date,
+                  meta: m.meta,
+                });
+              });
+            } catch {
+              /* ignore missing endpoint */
+            }
+          })
+        );
+        items.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        applyFilters();
+      }
+
+      /* ---------------- Render ---------------- */
+      function render(list) {
+        const el = document.getElementById("list");
+        el.innerHTML = "";
+        if (!list.length) {
+          el.innerHTML = `<div class="item"><input type="checkbox" class="sel" disabled/>
+            <div class="stack"><p class="meta" style="margin:0;">हाल मेटिएका रेकर्ड छैनन्।</p></div></div>`;
+          document.getElementById("checkAll").checked = false;
+          return;
+        }
+        for (const it of list) {
+          const row = document.createElement("div");
+          row.className = "item";
+          const key = `${it.type}:${it.id}`;
+          row.innerHTML = `
+            <input type="checkbox" class="sel" data-key="${key}" ${
+            selectedRows.has(key) ? "checked" : ""
+          }/>
+            <div class="stack">
+              <p class="title" title="${esc(it.title || "—")}">${esc(
+            it.title || "—"
+          )}</p>
+              <p class="meta">${esc(it.meta || "")}</p>
+              <p class="date">${it.date ? esc(fmtDateNP(it.date)) : ""}</p>
+            </div>
+            <div class="actions">
+              <button class="iconbtn restore" data-act="restore" data-id="${key}" title="पुनर्स्थापना" aria-label="पुनर्स्थापना">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+              <button class="iconbtn delete" data-act="delete" data-id="${key}" title="सधैँका लागि मेटाउनुहोस्" aria-label="सधैँका लागि मेटाउनुहोस्">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>`;
+          el.appendChild(row);
+        }
+        updateMasterCheckbox();
+      }
+
+      /* ---------------- Search + filters ---------------- */
+      function applyFilters() {
+        const q = (document.getElementById("q").value || "")
+          .trim()
+          .toLowerCase();
+        view = items.filter((i) => {
+          const okType = selectedTypes.has(i.type);
+          const okQ = !q || (i.title || "").toLowerCase().includes(q);
+          return okType && okQ;
+        });
+        render(view);
+      }
+      document.getElementById("q").addEventListener("input", applyFilters);
+
+      /* ---------------- Selection + actions ---------------- */
+      document.getElementById("list").addEventListener("change", (e) => {
+        const cb = e.target.closest(".sel");
+        if (!cb) return;
+        const key = cb.dataset.key;
+        if (cb.checked) selectedRows.add(key);
+        else selectedRows.delete(key);
+        updateMasterCheckbox();
+      });
+      function updateMasterCheckbox() {
+        const visKeys = view.map((i) => `${i.type}:${i.id}`);
+        const allChecked =
+          visKeys.length > 0 && visKeys.every((k) => selectedRows.has(k));
+        document.getElementById("checkAll").checked = allChecked;
+      }
+      document.getElementById("checkAll").addEventListener("change", (e) => {
+        const checked = e.target.checked;
+        document
+          .getElementById("list")
+          .querySelectorAll(".sel")
+          .forEach((cb) => {
+            cb.checked = checked;
+            const key = cb.dataset.key;
+            if (checked) selectedRows.add(key);
+            else selectedRows.delete(key);
+          });
+      });
+
+      // open modal for permanent delete; handle restore directly
+      document.getElementById("list").addEventListener("click", async (e) => {
+        const btn = e.target.closest("[data-act]");
+        if (!btn) return;
+        const [type, id] = btn.dataset.id.split(":");
+        const cfg = TYPES[type];
+        if (!cfg) return;
+
+        if (btn.dataset.act === "restore") {
+          try {
+            await restoreItem(tryUrls(cfg.r, id));
+            toast("पुनर्स्थापना भयो");
+            loadAll();
+          } catch {
+            toast("Restore असफल भयो", "error");
+          }
+        } else {
+          pendingDelete = { type, id };
+          document.getElementById("pm-text").textContent =
+            "यो रेकर्ड सधैंका लागि मेटाउन चाहनुहुन्छ?";
+          openPermModal(true);
+        }
+      });
+
+      /* ---------------- Dropdown filter ---------------- */
+      const phone = document.getElementById("phone");
+      const fBtn = document.getElementById("filterBtn");
+      const menu = document.getElementById("filterMenu");
+
+      function positionMenu() {
+        const b = fBtn.getBoundingClientRect();
+        const p = phone.getBoundingClientRect();
+        menu.style.left = b.left - p.left + "px";
+        menu.style.top = b.bottom - p.top + 8 + "px";
+      }
+      fBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        positionMenu();
+        menu.classList.toggle("open");
+        menu.setAttribute(
+          "aria-hidden",
+          menu.classList.contains("open") ? "false" : "true"
+        );
+      });
+      document.addEventListener("click", (e) => {
+        if (!menu.contains(e.target) && e.target !== fBtn)
+          menu.classList.remove("open");
+      });
+      menu.addEventListener("click", (e) => {
+        const mi = e.target.closest(".mi");
+        if (!mi) return;
+        const g = mi.dataset.group;
+        menu.classList.remove("open");
+        selectedTypes = new Set(
+          g === "all" ? GROUPS.all : GROUPS[g] || GROUPS.all
+        );
+        applyFilters();
+      });
+
+      /* ---------------- Toast (top-right badge) ---------------- */
+      function toast(msg, kind = "success") {
+        const t = document.getElementById("toast");
+        const icon =
+          kind === "error"
+            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+        t.innerHTML = `
+          <span class="toast-badge ${
+            kind === "error" ? "error" : ""
+          }">${icon}</span>
+          <span class="toast-msg">${esc(msg || "")}</span>
+          <span class="toast-x" aria-label="Close">×</span>`;
+        t.classList.add("show");
+        t.querySelector(".toast-x").onclick = () => t.classList.remove("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(() => t.classList.remove("show"), 2000);
+      }
+
+      /* ---------------- Permanent Delete Modal Logic ---------------- */
+      const permModal = document.getElementById("permModal");
+      function openPermModal(show) {
+        permModal.classList.toggle("show", !!show);
+        permModal.setAttribute("aria-hidden", show ? "false" : "true");
+      }
+      document
+        .getElementById("pm-cancel")
+        .addEventListener("click", () => openPermModal(false));
+      permModal.addEventListener("click", (e) => {
+        if (e.target === permModal) openPermModal(false);
+      });
+      document
+        .getElementById("pm-confirm")
+        .addEventListener("click", async () => {
+          if (!pendingDelete) return openPermModal(false);
+          const { type, id } = pendingDelete;
+          const cfg = TYPES[type];
+          try {
+            await forceDelete(tryUrls(cfg.f, id));
+            openPermModal(false);
+            toast("सधैंका लागि मेटाइयो");
+            loadAll();
+          } catch {
+            openPermModal(false);
+            toast("Permanent delete असफल भयो", "error");
+          } finally {
+            pendingDelete = null;
+          }
+        });
+
+      /* ---------------- Init ---------------- */
+      loadAll();
+    </script>
+  </body>
+</html>

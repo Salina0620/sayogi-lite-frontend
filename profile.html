@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- edge-to-edge + notches/home-indicator -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>प्रोफाइल सेटिङ्</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --brand: #13a87d;
+        --bg: #f3f5f7;
+        --surface: #fff;
+        --text-900: #0f172a;
+        --text-700: #344054;
+        --text-600: #667085;
+        --text-500: #98a2b3;
+        --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+        --w: 375px;
+        --h: 812px;
+        --radius-xl: 28px;
+        --nav-h: 60px;
+
+        /* NEW: safe-area vars for iOS/Android cutouts */
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      /* FULL-BLEED: let the app fill the viewport (no centered phone frame) */
+      html,
+      body {
+        margin: 0;
+        background: var(--bg);
+        min-height: 100dvh;
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Arial, sans-serif;
+        /* removed centering grid */
+        display: block;
+      }
+
+      /* === profile fine-tuning === */
+
+      /* 1) Normal weight values (not bold) */
+      .row-value {
+        font-weight: 400; /* was 600 */
+        color: #0f172a; /* keep readable, same tone */
+      }
+
+      /* 2) Chevron all the way to the right with spacing */
+      .row {
+        padding-right: 16px;
+      } /* room on the right edge */
+      .chev {
+        margin-left: auto; /* pushes chevron to far right */
+        padding-left: 10px; /* not stuck to the text */
+        font-size: 18px;
+        color: #98a2b3;
+      }
+
+      /* 3) Do not darken background when sheet opens */
+      .sheet-overlay {
+        background: transparent !important;
+      }
+
+      /* APP CONTAINER: now edge-to-edge */
+      .phone {
+        width: 100vw; /* was var(--w) */
+        height: 100dvh; /* was var(--h) */
+        background: var(--surface);
+        border-radius: 0; /* remove phone frame */
+        overflow: hidden;
+        box-shadow: none; /* remove floating card shadow */
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding-top: var(--safe-top); /* respect status/notch */
+      }
+
+      /* header */
+      .header {
+        background: var(--brand);
+        color: #fff;
+        padding: 14px 16px;
+      }
+      .header-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .back {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #fff;
+        font-size: 18px;
+        text-decoration: none;
+      }
+      .header-title {
+        margin: 0;
+        font-weight: 500;
+        font-size: 20px;
+      }
+
+      /* content */
+      .content {
+        flex: 1 1 auto;
+        overflow: auto;
+        background: #f8fafb;
+        /* keep original side/top, make bottom clear of nav + home indicator */
+        padding: 18px 16px calc(var(--nav-h) + var(--safe-bottom) + 24px);
+      }
+      .avatar-wrap {
+        display: grid;
+        place-items: center;
+        padding: 24px 0 10px;
+      }
+      .avatar {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        background: var(--brand);
+        display: grid;
+        place-items: center;
+        box-shadow: var(--shadow);
+      }
+      .avatar i {
+        font-size: 72px;
+        color: #fff;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-700);
+        margin: 12px 2px 12px;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+      }
+      .row + .row {
+        border-top: 1px solid #eef2f6;
+      }
+      .row-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+      }
+      .row-icon {
+        width: 22px;
+        text-align: center;
+        color: var(--brand);
+        font-size: 18px;
+      }
+      .row-text {
+        display: flex;
+        flex-direction: column;
+      }
+      .row-label {
+        font-size: 12px;
+        color: var(--text-600);
+      }
+      .row-value {
+        font-size: 16px;
+        color: var(--text-900);
+        font-weight: 600;
+      }
+      .chev {
+        color: var(--text-500);
+      }
+
+      /* bottom nav (unchanged, but safe-area aware) */
+      .nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--nav-h);
+        background: #fff;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: var(--safe-bottom); /* NEW: home indicator clearance */
+      }
+      .nav a {
+        text-decoration: none;
+        color: #98a2b3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+      }
+      .nav a i {
+        font-size: 18px;
+      }
+      .nav a.active {
+        color: var(--brand);
+        font-weight: 700;
+      }
+
+      /* toast */
+      .toast {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(var(--nav-h) + var(--safe-bottom) + 72px);
+        background: #111827;
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+
+      /* bottom sheet */
+      .sheet-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 10;
+      }
+      .sheet-overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .sheet {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        bottom: calc(12px + var(--safe-bottom)); /* NEW: safe bottom */
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+        transform: translateY(24px);
+        opacity: 0;
+        transition: all 0.22s ease;
+        z-index: 11;
+      }
+      .sheet.open {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .sheet h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+      .input {
+        width: 100%;
+        border: 1px solid #cbd5e1;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 16px;
+        outline: none;
+      }
+      .cta {
+        margin-top: 14px;
+        width: 100%;
+        height: 48px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--brand);
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      /* values not bold */
+      .row-value,
+      #nameValue,
+      #phoneValue {
+        font-weight: 400 !important;
+      }
+      .row-label {
+        font-weight: 500;
+      }
+      .row-left {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .chev {
+        margin-left: auto;
+        padding-left: 10px;
+        font-size: 18px;
+        color: #98a2b3;
+        align-self: center;
+      }
+
+      /* list row */
+      .row-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        width: 100%;
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+      .row-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      .row-text {
+        display: flex;
+        flex-direction: column;
+      }
+      .row-label {
+        font-size: 12px;
+        color: #667085;
+        font-weight: 500;
+      }
+      .row-value,
+      #nameValue,
+      #phoneValue {
+        font-weight: 400 !important;
+        color: #0f172a;
+      }
+      .chev {
+        margin-left: auto;
+        padding-left: 10px;
+        font-size: 18px;
+        color: #98a2b3;
+        align-self: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <!-- header -->
+      <header class="header">
+        <div class="header-row">
+          <a class="back" href="javascript:history.back()"
+            ><i class="fa-solid fa-angle-left"></i
+          ></a>
+          <h1 class="header-title">प्रोफाइल सेटिङ्</h1>
+        </div>
+      </header>
+
+      <!-- content -->
+      <main class="content">
+        <div class="avatar-wrap">
+          <div class="avatar"><i class="fa-regular fa-user"></i></div>
+        </div>
+
+        <h2 class="section-title">मूल जानकारी</h2>
+
+        <div class="card">
+          <button class="row-item w-100 text-start" id="nameRow" type="button">
+            <div class="row-left">
+              <span class="row-icon"
+                ><i class="fa-regular fa-id-card"></i
+              ></span>
+              <div class="row-text">
+                <span class="row-label">नाम</span>
+                <span class="row-value" id="nameValue">—</span>
+              </div>
+            </div>
+            <i class="fa-solid fa-angle-right chev" aria-hidden="true"></i>
+          </button>
+
+          <div class="row">
+            <div class="row-left">
+              <span class="row-icon"><i class="fa-solid fa-phone"></i></span>
+              <div class="row-text">
+                <span class="row-label">फोन नम्बर</span>
+                <span class="row-value" id="phoneValue">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- optional bottom nav (keep if needed) -->
+     
+
+      <!-- toast -->
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+      <!-- bottom sheet (name edit) -->
+      <div id="sheetOverlay" class="sheet-overlay"></div>
+      <div id="nameSheet" class="sheet" aria-modal="true" role="dialog">
+        <h3>नाम बदल्नुहोस्</h3>
+        <input
+          id="nameInput"
+          type="text"
+          class="input"
+          placeholder="तपाईंको नाम"
+        />
+        <button id="saveName" class="cta">हाल्नुहोस्</button>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://192.168.1.209:8000/api";
+
+      // auth
+      const RAW_TOKEN = localStorage.getItem("auth_token");
+      if (!RAW_TOKEN) {
+        alert("कृपया लगइन गर्नुहोस्।");
+        location.href = "login.html";
+      }
+      const TOKEN = RAW_TOKEN.includes("|")
+        ? RAW_TOKEN.split("|")[1]
+        : RAW_TOKEN;
+      const AUTH = {
+        Authorization: `Bearer ${TOKEN}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      };
+
+      // helpers
+      const npDigits = "०१२३४५६७८९";
+      const toNP = (s) =>
+        (s || "").toString().replace(/[0-9]/g, (d) => npDigits[+d]);
+      const toast = document.getElementById("toast");
+      const showToast = (msg, ms = 1500) => {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => toast.classList.remove("show"), ms);
+      };
+
+      // elements
+      const nameVal = document.getElementById("nameValue");
+      const phoneVal = document.getElementById("phoneValue");
+      const nameRow = document.getElementById("nameRow");
+      const sheet = document.getElementById("nameSheet");
+      const overlay = document.getElementById("sheetOverlay");
+      const nameInput = document.getElementById("nameInput");
+      const saveBtn = document.getElementById("saveName");
+
+      // sheet controls
+      const openSheet = () => {
+        overlay.classList.add("open");
+        sheet.classList.add("open");
+        nameInput.focus();
+      };
+      const closeSheet = () => {
+        overlay.classList.remove("open");
+        sheet.classList.remove("open");
+      };
+      overlay.addEventListener("click", closeSheet);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeSheet();
+      });
+
+      // load profile
+      async function loadUser() {
+        try {
+          const res = await fetch(`${API_BASE}/user`, { headers: AUTH });
+          const data = await res.json();
+          const name = data?.name || data?.user?.name || "—";
+          const phone =
+            data?.phone_no || data?.phone || data?.user?.phone_no || "";
+          nameVal.textContent = name;
+          nameInput.value = name;
+          phoneVal.textContent = phone ? toNP(phone) : "—";
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // edit name flow
+      nameRow.addEventListener("click", openSheet);
+      saveBtn.addEventListener("click", async () => {
+        const newName = (nameInput.value || "").trim();
+        if (!newName) return;
+        try {
+          const res = await fetch(`${API_BASE}/set-name`, {
+            method: "POST",
+            headers: AUTH,
+            body: JSON.stringify({ name: newName }),
+          });
+          if (!res.ok) throw new Error(await res.text());
+          nameVal.textContent = newName;
+          localStorage.setItem("user_name", newName);
+          try {
+            const u = JSON.parse(localStorage.getItem("user") || "{}");
+            if (u && typeof u === "object") {
+              u.name = newName;
+              localStorage.setItem("user", JSON.stringify(u));
+            }
+          } catch {}
+
+          closeSheet();
+          showToast("नाम अपडेट भयो ✅");
+        } catch (e) {
+          console.error(e);
+          showToast("नाम परिवर्तन असफल भयो");
+        }
+      });
+
+      loadUser();
+    </script>
+  </body>
+</html>

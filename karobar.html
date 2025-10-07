@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <title>आम्दानी खर्च साइट</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+    <style>
+      :root{ --brand-green:#13a87d; --cta-blue:#0b5db8; --alert-red:#dc3545;
+        --bg:#f6f7f9; --surface:#fff; --ink-900:#0f172a; --ink-700:#374151; --ink-500:#6b7280;
+        --shadow-card:0 8px 24px rgba(16,24,40,.06); }
+      *{box-sizing:border-box}
+      html,body{height:100%;margin:0;background:var(--bg);color:var(--ink-900);
+        font-family:"Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+        font-weight:500;min-height:100vh;overflow-y:auto;-webkit-font-smoothing:antialiased;
+        -ms-overflow-style:none;scrollbar-width:none}
+      html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{width:0!important;height:0!important;background:transparent}
+
+      .mobile{width:100%;min-height:100vh;background:#fff;display:flex;flex-direction:column;position:relative}
+      .app-header{background:var(--brand-green);color:#fff;padding:calc(16px + env(safe-area-inset-top)) 16px 12px;text-align:center}
+      .app-title{margin:0;font-size:22px;font-weight:700}
+      .content{flex:1 1 auto;background:#f8fafb;padding:14px 16px;padding-bottom:calc(16px + env(safe-area-inset-bottom) + 52px + 56px)}
+
+      .ic{width:24px;height:24px;display:inline-block;background-color:currentColor;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
+      .ic-income{-webkit-mask-image:url("Group 442.svg");mask-image:url("Group 442.svg")}
+      .ic-expense{-webkit-mask-image:url("healthicons_low-income-level.svg");mask-image:url("healthicons_low-income-level.svg")}
+
+      .summary .card{border-radius:16px;box-shadow:var(--shadow-card);text-align:center;padding:14px;border:1.5px solid transparent}
+      .summary .badge .ic{width:34px;height:34px}
+      .summary .amount{font-family:"Poppins",system-ui;font-weight:600;font-size:18px}
+      .summary .label{font-size:12px;color:var(--ink-500)}
+      .summary .badge{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;font-size:16px}
+      .card-income{background:#eaf8f2;border-color:#8eddc6}
+      .card-income .badge{color:#0e8d6a}
+      .card-expense{background:#fcebed;border-color:#f7b7be}
+      .card-expense .badge{color:#dc3545}
+
+      .total-card{border:1.6px solid #cfe3ff;background:#f4f8ff;border-radius:14px;padding:10px 12px;text-align:center}
+      .total-card .t-label{color:var(--ink-700);font-size:14px;margin-bottom:2px}
+      .total-card .t-amt{font-family:"Poppins",system-ui;color:#0b5db8;font-size:20px;font-weight:600}
+
+      .section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 8px;flex-wrap:wrap}
+      .section-head h3{margin:0;font-size:16px;font-weight:700}
+
+      .block{background:#fff;border-radius:16px;box-shadow:var(--shadow-card);border:1px solid #e3edf6;margin-bottom:10px;cursor:pointer}
+      .block:active{transform:scale(.997)}
+      .block .head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f1f3f6;gap:8px}
+      .block .title{font-weight:700;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .pill{font-size:12px;background:#eef2f6;color:#475467;border-radius:999px;padding:4px 10px;white-space:nowrap}
+      .rowio{display:flex;justify-content:space-between;gap:12px;padding:10px 12px}
+      .label{font-size:12px;color:var(--ink-500)}
+      .amt-in,.amt-out{font-family:"Poppins",system-ui;font-weight:600}
+      .amt-in{color:#0e8d6a}
+      .amt-out{color:#dc3545}
+
+      .sticky-actions{position:fixed;left:16px;right:16px;bottom:calc(52px + 12px + env(safe-area-inset-bottom));display:flex;gap:10px;z-index:3;flex-wrap:nowrap}
+
+      /* ===== Button colors locked (no hover change) ===== */
+      .btn-income { --btn-bg:#0b5db8; --btn-border:#0b5db8; --btn-fg:#fff; }
+      .btn-expense{ --btn-bg:#d33;    --btn-border:#d33;    --btn-fg:#fff; }
+      .btn-update { --btn-bg:var(--cta-blue);   --btn-border:var(--cta-blue);   --btn-fg:#fff; }
+      .btn-filter { --btn-bg:var(--brand-green);--btn-border:var(--brand-green);--btn-fg:#fff; }
+      .btn-success{ --btn-bg:#198754; --btn-border:#198754; --btn-fg:#fff; }
+      .btn-danger { --btn-bg:#dc3545; --btn-border:#dc3545; --btn-fg:#fff; }
+      .btn-primary{ --btn-bg:var(--cta-blue); --btn-border:var(--cta-blue); --btn-fg:#fff; }
+      .btn-light  { --btn-bg:#f8f9fa; --btn-border:#e3edf6; --btn-fg:#0f172a; }
+      .range-btn  { --btn-bg:#fff; --btn-border:#e1f1ea; --btn-fg:#0f172a; }
+      .btn, button, .range-btn,
+      .btn-income,.btn-expense,.btn-update,.btn-filter,
+      .btn-success,.btn-danger,.btn-primary,.btn-light {
+        background: var(--btn-bg, initial) !important;
+        border: 1px solid var(--btn-border, transparent) !important;
+        color: var(--btn-fg, inherit) !important;
+        box-shadow: none !important;
+        transition: none !important;
+        outline: none !important;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .btn:hover, .btn:focus, .btn:active,
+      button:hover, button:focus, button:active,
+      .range-btn:hover, .range-btn:focus, .range-btn:active,
+      .btn-income:hover, .btn-income:focus, .btn-income:active,
+      .btn-expense:hover, .btn-expense:focus, .btn-expense:active,
+      .btn-update:hover, .btn-update:focus, .btn-update:active,
+      .btn-filter:hover, .btn-filter:focus, .btn-filter:active,
+      .btn-success:hover, .btn-success:focus, .btn-success:active,
+      .btn-danger:hover,  .btn-danger:focus,  .btn-danger:active,
+      .btn-primary:hover, .btn-primary:focus, .btn-primary:active,
+      .btn-light:hover,   .btn-light:focus,   .btn-light:active {
+        background: var(--btn-bg, inherit) !important;
+        border-color: var(--btn-border, inherit) !important;
+        color: var(--btn-fg, inherit) !important;
+        box-shadow: none !important;
+        filter: none !important;
+        opacity: 1 !important;
+      }
+
+      .btn-income,.btn-expense{flex:1 1 0%;min-width:0;border-radius:14px;padding:12px 10px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap}
+      .btn-income .ic,.btn-expense .ic{color:#fff}
+
+      .bottom-nav{position:fixed;left:0;right:0;bottom:0;height:52px;z-index:2;background:#fff;border-top:1px solid #e5e7eb;display:flex;justify-content:space-around;align-items:center;padding-bottom:env(safe-area-inset-bottom)}
+      .bottom-nav a{text-decoration:none;color:#98a2b3;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;min-width:56px;line-height:1}
+      .bottom-nav a i{font-size:20px}
+      .bottom-nav a.active{color:var(--brand-green)}
+      .bottom-nav a.active::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:3px;background:var(--brand-green);border-radius:2px}
+
+      .modal-content{border-radius:16px}
+      .modal-header{border:none}
+      .modal-title{font-weight:700}
+      .form-label{font-weight:600;color:var(--ink-700)}
+      .form-control,.form-select{border-radius:12px;font-size:1rem;background:#fff;border:1px solid #e3edf6}
+      .form-control.is-invalid,.form-select.is-invalid{box-shadow:none}
+      .modal-dialog{max-width:520px;width:calc(100vw - 32px);margin:0.75rem auto}
+
+      .range-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px}
+      .range-btn{border-radius:12px;padding:12px;text-align:left;font-weight:700}
+      .range-btn.active{background:#effef7;border-color:#78d8be;position:relative}
+      .range-btn.active::after{content:"";position:absolute;right:14px;top:50%;transform:translateY(-50%);width:10px;height:10px;background:var(--brand-green);border-radius:50%}
+      .hint{font-size:11px;color:#667085;margin-top:4px}
+
+      @media (min-width:576px){
+        .summary .amount{font-size:20px}
+        .section-head h3{font-size:18px}
+      }
+
+      .empty-wrap{display:grid;place-items:center;text-align:center;padding:36px 16px 18px;color:#475467}
+      .empty-ill{width:130px;max-width:50vw;height:auto;display:block;margin:0 auto 14px}
+      .empty-title{margin:0 0 6px;font-weight:700;font-size:20px;color:#111827}
+      .empty-sub{margin:0;font-size:13px;color:#667085}
+
+      /* Toast */
+      #toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));
+        right:calc(12px + env(safe-area-inset-right,0px));background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+        box-shadow:0 10px 24px rgba(0,0,0,.18);padding:8px 12px 8px 10px;
+        display:grid;grid-template-columns:28px 1fr 18px;align-items:center;gap:10px;
+        width:max-content;max-width:92vw;color:#111827;opacity:0;transform:translateY(-8px);
+        pointer-events:none;transition:opacity .22s, transform .22s;z-index:10000;line-height:1.2;
+        font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+      #toast.show{opacity:1;transform:translateY(0);pointer-events:auto}
+      .toast-badge{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700}
+      .toast-badge.success{background:#74c69d}
+      .toast-badge.error{background:#ef4444}
+      .toast-badge svg{width:18px;height:18px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+      .toast-msg{font-family:"Noto Sans Devanagari",system-ui,"Poppins","Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .toast-x{color:#6b7280;cursor:pointer;font-size:18px;text-align:center;line-height:1}
+    </style>
+  </head>
+  <body>
+    <div class="mobile">
+      <header class="app-header">
+        <h1 class="app-title">आम्दानी खर्च साइट</h1>
+      </header>
+
+      <main class="content">
+        <section class="summary mb-2">
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="card card-income">
+                <div class="badge"><span class="ic ic-income"></span></div>
+                <div id="sumIncome" class="amount">रु ०</div>
+                <div class="label">आम्दानी</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card card-expense">
+                <div class="badge"><span class="ic ic-expense"></span></div>
+                <div id="sumExpense" class="amount">रु ०</div>
+                <div class="label">खर्च</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-2">
+          <div class="total-card">
+            <div class="t-label">कुल रकम</div>
+            <div id="sumNet" class="t-amt">रु ०</div>
+          </div>
+        </section>
+
+        <div class="section-head">
+          <h3>रेकर्डहरू</h3>
+          <button type="button" class="btn btn-sm btn-filter" id="btnFilter">
+            <i class="fa-solid fa-filter"></i> छान्नुहोस्
+          </button>
+        </div>
+
+        <div id="records"></div>
+
+        <div class="sticky-actions">
+          <button class="btn btn-income" data-bs-toggle="modal" data-bs-target="#incomeModal">
+            <span class="ic ic-income"></span> आम्दानी थप्नुहोस्
+          </button>
+          <button class="btn btn-expense" data-bs-toggle="modal" data-bs-target="#expenseModal">
+            <span class="ic ic-expense"></span> खर्च थप्नुहोस्
+          </button>
+        </div>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="home.html"><i class="fa-solid fa-house"></i><span>होम</span></a>
+        <a href="c-site-list.html"><i class="fa-solid fa-tower-observation"></i><span>साइट</span></a>
+        <a href="#" class="active"><i class="fa-solid fa-chart-line"></i><span>कारोबारहरू</span></a>
+        <a href="party.html"><i class="fa-solid fa-users"></i><span>पार्टीहरू</span></a>
+        <a href="more.html"><i class="fa-solid fa-table-cells-large"></i><span>अर्क</span></a>
+      </nav>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Income Modal -->
+    <div class="modal fade" id="incomeModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">आम्दानी</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="incomeForm" class="modal-body" novalidate autocomplete="off">
+            <div class="mb-3">
+              <label class="form-label">साइट</label>
+              <select id="incomeSite" class="form-select" autocomplete="off" name="site_select_income"></select>
+              <div class="invalid-feedback">कृपया साइट छान्नुहोस्।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">शिर्षक</label>
+              <input id="incomeTitleText" class="form-control" placeholder="शिर्षक लेख्नुहोस् वा सूचीबाट छान्नुहोस्"
+                     inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" name="title_income"/>
+              <div class="invalid-feedback">शिर्षक आवश्यक छ।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">रकम</label>
+              <input id="incomeAmount" type="text" inputmode="numeric" class="form-control amt-only" placeholder="रु १,०००" autocomplete="off" name="amount_income"/>
+              <div class="invalid-feedback">केवल 0-9 वा ०-९ अंक मात्र।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">मिति</label>
+              <input id="incomeDate" type="date" class="form-control" autocomplete="off" name="date_income"/>
+              <div class="invalid-feedback">मिति छान्नुहोस्।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">कैफियत</label>
+              <textarea id="incomeRemark" class="form-control" rows="2" placeholder="केही लेख्नुहोस्" autocomplete="off" name="remark_income"></textarea>
+            </div>
+            <div class="d-flex gap-2 pt-2">
+              <button class="btn btn-success flex-fill" type="submit">थप्नुहोस्</button>
+              <button class="btn btn-light flex-fill" type="button" data-bs-dismiss="modal">रद्द गर्नुहोस्</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div class="modal fade" id="expenseModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">खर्च</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="expenseForm" class="modal-body" novalidate autocomplete="off">
+            <div class="mb-3">
+              <label class="form-label">साइट</label>
+              <select id="expenseSite" class="form-select" autocomplete="off" name="site_select_expense"></select>
+              <div class="invalid-feedback">कृपया साइट छान्नुहोस्।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">शिर्षक</label>
+              <input id="expenseTitleText" class="form-control" placeholder="शिर्षक लेख्नुहोस् वा सूचीबाट छान्नुहोस्"
+                     inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" name="title_expense"/>
+              <div class="invalid-feedback">शिर्षक आवश्यक छ।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">रकम</label>
+              <input id="expenseAmount" type="text" inputmode="numeric" class="form-control amt-only" placeholder="रु १,०००" autocomplete="off" name="amount_expense"/>
+              <div class="invalid-feedback">केवल 0-9 वा ०-९ अंक मात्र।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">मिति</label>
+              <input id="expenseDate" type="date" class="form-control" autocomplete="off" name="date_expense"/>
+              <div class="invalid-feedback">मिति छान्नुहोस्।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">कैफियत</label>
+              <textarea id="expenseRemark" class="form-control" rows="2" placeholder="केही लेख्नुहोस्" autocomplete="off" name="remark_expense"></textarea>
+            </div>
+            <div class="d-flex gap-2 pt-2">
+              <button class="btn btn-danger flex-fill" type="submit">थप्नुहोस्</button>
+              <button class="btn btn-light flex-fill" type="button" data-bs-dismiss="modal">रद्द गर्नुहोस्</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <datalist id="titleOptions"></datalist>
+
+    <!-- View/Update Modal -->
+    <div class="modal fade" id="recordModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="recModalTitle" class="modal-title">आम्दानी</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="recordForm" class="modal-body" novalidate autocomplete="off">
+            <input type="hidden" id="recId"/>
+            <input type="hidden" id="recIsIncome"/>
+            <input type="hidden" id="recTitleId"/>
+            <input type="hidden" id="recOrigTitle"/>
+            <div class="mb-3">
+              <label class="form-label">साइट</label>
+              <input id="recSite" class="form-control" disabled/>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">शिर्षक</label>
+              <input id="recTitle" class="form-control" placeholder="शिर्षक लेख्नुहोस्" autocomplete="off" name="title_update"/>
+              <div class="invalid-feedback">शिर्षक आवश्यक छ।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">रकम</label>
+              <input id="recAmount" type="text" inputmode="numeric" class="form-control amt-only" autocomplete="off" name="amount_update"/>
+              <div class="invalid-feedback">केवल 0-9 वा ०-९ अंक मात्र।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">मिति</label>
+              <input id="recDate" type="date" class="form-control" autocomplete="off" name="date_update"/>
+              <div class="invalid-feedback">मिति छान्नुहोस्।</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">कैफियत</label>
+              <textarea id="recRemark" class="form-control" rows="2" autocomplete="off" name="remark_update"></textarea>
+            </div>
+            <button class="btn btn-update w-100" type="submit">अपडेट गर्नुहोस्</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+          <h5 class="modal-title mb-2">समय अवधि छान्नुहोस्</h5>
+          <div class="range-grid">
+            <button class="range-btn" data-range="7">७ दिन</button>
+            <button class="range-btn" data-range="15">१५ दिन</button>
+            <button class="range-btn" data-range="30">१ महिना</button>
+            <button class="range-btn" data-range="custom">कस्टम</button>
+          </div>
+          <div id="customDates" style="display:none">
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label">सुरु मिति</label>
+                <input type="date" id="flt_from" class="form-control"/>
+                <div class="hint" id="flt_from_bs"></div>
+              </div>
+              <div class="col-6">
+                <label class="form-label">अन्त्य मिति</label>
+                <input type="date" id="flt_to" class="form-control"/>
+                <div class="hint" id="flt_to_bs"></div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-primary flex-fill" id="applyFilter">लागू गर्नुहोस्</button>
+            <button class="btn btn-light flex-fill" data-bs-dismiss="modal">रद्द गर्नुहोस्</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const API_BASE = "http://192.168.1.209:8000/api";
+
+      const RAW = localStorage.getItem("auth_token");
+      if (!RAW){ alert("कृपया लगइन गर्नुहोस्।"); location.href = "login.html"; }
+      const TOKEN = RAW.includes("|") ? RAW.split("|")[1] : RAW;
+      const AUTH = { Authorization:`Bearer ${TOKEN}`, Accept:"application/json", "Content-Type":"application/json" };
+
+      /* ===== Numerals & parsing ===== */
+      const NP_DIG = {"०":"0","१":"1","२":"2","३":"3","४":"4","५":"5","६":"6","७":"7","८":"8","९":"9"};
+      const EN_TO_NP = {"0":"०","1":"१","2":"२","3":"३","4":"४","5":"५","6":"६","7":"७","8":"८","9":"९"};
+      const nepToLatin = (s="") => String(s).replace(/[०-९]/g,d=>NP_DIG[d]||d);
+      const enToNep   = (s="") => String(s).replace(/[0-9]/g,d=>EN_TO_NP[d]||d);
+      const hasNepDigit = s => /[०-९]/.test(String(s));
+      const digitsOnly = s => String(s).replace(/[^0-9०-९,]/g,"");
+      const parseAmount = v => { const n = Number(nepToLatin(String(v)).replace(/[, ]+/g,"")); return Number.isFinite(n)?n:NaN; };
+
+      // Strong formatter + manual digit swap
+      const groupEN = new Intl.NumberFormat("en-US",{maximumFractionDigits:0});
+      const DEFAULT_SCRIPT = "np"; // FIX: default UI script is Nepali
+      function fmtAmount(n, script){
+        const base = groupEN.format(+n||0);    // "12,345"
+        const digits = (script==="en") ? base : enToNep(base);
+        return "रु " + digits;
+      }
+
+      /* ===== Per-record numeral preference (persist) ===== */
+      const AMT_SCRIPT_PREF = (()=>{ try{ return JSON.parse(localStorage.getItem("amt_script_pref")||"{}"); }catch{ return {}; }})();
+      const saveAmtPref = () => localStorage.setItem("amt_script_pref", JSON.stringify(AMT_SCRIPT_PREF));
+
+      /* ===== Toast ===== */
+      function showToast(msg, kind="success"){
+        const t=document.getElementById("toast");
+        const icon = kind==="error"
+          ? `<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>`
+          : `<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`;
+        t.innerHTML = `
+          <span class="toast-badge ${kind==="error"?"error":"success"}">${icon}</span>
+          <span class="toast-msg">${msg||""}</span>
+          <span class="toast-x" aria-label="Close">×</span>`;
+        t.classList.add("show");
+        t.querySelector(".toast-x").onclick = ()=>t.classList.remove("show");
+        clearTimeout(showToast._t); showToast._t = setTimeout(()=>t.classList.remove("show"), 2000);
+      }
+
+      /* ===== Misc utils ===== */
+      const esc = s => (s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+      const todayStr = () => new Date().toISOString().slice(0,10);
+      const toISO = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+      const sameCI = (a,b)=>String(a||"").trim().toLowerCase()===String(b||"").trim().toLowerCase();
+
+      function isActiveRow(r){ const x=r||{}; return !(x.deleted_at||x.trashed||x.is_deleted===true||x.status===0); }
+      function isOtherFinance(r){
+        const t=(r?.income_expense?.type||r?.incomeExpense?.type||r?.type||"").toLowerCase();
+        if (t) return t==="other"; if (r?.party_id) return false; return true;
+      }
+
+      let SITES=[], TITLES=[], filterState={type:"30",from:null,to:null};
+
+      /* ===== DOM refs ===== */
+      const incomeSiteSel=document.getElementById("incomeSite");
+      const expenseSiteSel=document.getElementById("expenseSite");
+      const incomeTitleText=document.getElementById("incomeTitleText");
+      const expenseTitleText=document.getElementById("expenseTitleText");
+      const titleOptions=document.getElementById("titleOptions");
+      const sumIncome=document.getElementById("sumIncome");
+      const sumExpense=document.getElementById("sumExpense");
+      const sumNet=document.getElementById("sumNet");
+      const records=document.getElementById("records");
+
+      const filterModal=new bootstrap.Modal(document.getElementById("filterModal"));
+      const rangeBtns=[...document.querySelectorAll(".range-btn")];
+      const customDatesBox=document.getElementById("customDates");
+      const flt_from=document.getElementById("flt_from");
+      const flt_to=document.getElementById("flt_to");
+
+      /* ===== Filter UI ===== */
+      document.getElementById("btnFilter").addEventListener("click",()=>{
+        rangeBtns.forEach(b=>b.classList.toggle("active",b.dataset.range===filterState.type));
+        customDatesBox.style.display=filterState.type==="custom"?"block":"none";
+        if(filterState.from) flt_from.value=filterState.from;
+        if(filterState.to) flt_to.value=filterState.to;
+        filterModal.show();
+      });
+      rangeBtns.forEach(btn=>btn.addEventListener("click",()=>setQuickRange(btn.getAttribute("data-range"))));
+      document.getElementById("applyFilter").addEventListener("click",()=>{
+        if(filterState.type==="custom"){
+          if(!flt_from.value || !flt_to.value){ alert("दुवै मिति छान्नुहोस्।"); return; }
+          filterState.from=flt_from.value; filterState.to=flt_to.value;
+        }
+        filterModal.hide();
+        refresh();
+      });
+
+      function setQuickRange(type){
+        filterState.type=type;
+        rangeBtns.forEach(b=>b.classList.toggle("active",b.getAttribute("data-range")===type));
+        if(type==="custom"){
+          customDatesBox.style.display="block";
+        }else{
+          customDatesBox.style.display="none";
+          const to=new Date(); const from=new Date(to);
+          from.setDate(to.getDate()-((Number(type)||7)-1));
+          filterState.from=toISO(from);
+          filterState.to=toISO(to);
+          flt_from.value=filterState.from;
+          flt_to.value=filterState.to;
+        }
+      }
+
+      /* ===== Title datalist ===== */
+      function attachTitleDatalist(){
+        if ((TITLES||[]).length){
+          titleOptions.innerHTML=TITLES.map(t=>`<option value="${esc(t.title||"—")}"></option>`).join("");
+          incomeTitleText.setAttribute("list","titleOptions");
+          expenseTitleText.setAttribute("list","titleOptions");
+        }else{
+          titleOptions.innerHTML="";
+          incomeTitleText.removeAttribute("list");
+          expenseTitleText.removeAttribute("list");
+        }
+      }
+      function fillSelect(sel,list,placeholder,labeller){
+        sel.innerHTML=`<option value="">[ ${placeholder} ]</option>`;
+        (list||[]).forEach(item=>{
+          const o=document.createElement("option");
+          o.value=item.id; o.textContent=labeller(item); sel.appendChild(o);
+        });
+      }
+      function titleIdFor(text){
+        const t=(text||"").trim().toLowerCase(); if(!t) return null;
+        const found=(TITLES||[]).find(x=>(x.title||"").trim().toLowerCase()===t);
+        return found?found.id:null;
+      }
+      async function ensureTitleId(text){
+        const matched=titleIdFor(text); if(matched) return matched;
+        if(!text) return null;
+        try{
+          const r=await fetch(`${API_BASE}/income-expense`,{
+            method:"POST", headers:AUTH, body:JSON.stringify({title:text,type:"other"})
+          });
+          if(r.ok){
+            const obj=await r.json(); const data=obj?.data||obj;
+            if(data?.id){ TITLES.push(data); attachTitleDatalist(); return data.id; }
+          }
+        }catch{}
+        return null;
+      }
+
+      /* ===== Amount input: allow only Nep/Eng digits & comma ===== */
+      function wireAmountOnly(selector){
+        document.querySelectorAll(selector).forEach(el=>{
+          el.addEventListener("input", ()=>{
+            const cur = el.value;
+            const cleaned = digitsOnly(cur);
+            if(cur!==cleaned) el.value = cleaned;
+          });
+          el.addEventListener("paste",(e)=>{
+            e.preventDefault();
+            const text=(e.clipboardData||window.clipboardData).getData('text');
+            document.execCommand('insertText',false,digitsOnly(text));
+          });
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", async ()=>{
+        document.getElementById("incomeDate").value=todayStr();
+        document.getElementById("expenseDate").value=todayStr();
+        wireAmountOnly(".amt-only");
+
+        setQuickRange("30");
+
+        await Promise.all([loadSites(), loadTitles()]);
+        attachTitleDatalist();
+        await refresh();
+
+        document.getElementById("incomeForm").addEventListener("submit", submitIncome);
+        document.getElementById("expenseForm").addEventListener("submit", submitExpense);
+        document.getElementById("recordForm").addEventListener("submit", updateRecord);
+
+        ["incomeSite","incomeTitleText","incomeAmount","incomeDate",
+         "expenseSite","expenseTitleText","expenseAmount","expenseDate",
+         "recTitle","recAmount","recDate"].forEach(id=>{
+          const el=document.getElementById(id); if(el) el.addEventListener("input",()=>clearError(el));
+        });
+
+        document.getElementById("recTitle").addEventListener("input",()=>{
+          document.getElementById("recTitleId").value="";
+        });
+
+        document.getElementById("incomeModal").addEventListener("hidden.bs.modal",()=>resetFormValidation("incomeForm",true));
+        document.getElementById("expenseModal").addEventListener("hidden.bs.modal",()=>resetFormValidation("expenseForm",true));
+        document.getElementById("recordModal").addEventListener("hidden.bs.modal",()=>resetFormValidation("recordForm",false));
+
+        records.addEventListener("click",(e)=>{
+          const card=e.target.closest(".block"); if(!card) return;
+          openRecordModal(card.dataset.id, card.dataset.isIncome==="1");
+        });
+      });
+
+      async function loadSites(){
+        try{
+          const r=await fetch(`${API_BASE}/sites`,{headers:AUTH});
+          SITES=(await r.json())||[];
+          fillSelect(incomeSiteSel,SITES,"साइट छान्नुहोस्",x=>x.name);
+          fillSelect(expenseSiteSel,SITES,"साइट छान्नुहोस्",x=>x.name);
+        }catch(e){ console.error(e); }
+      }
+      async function loadTitles(){
+        try{
+          const r=await fetch(`${API_BASE}/income-expense`,{headers:AUTH});
+        const js=(await r.json())||[];
+          TITLES=(Array.isArray(js)?js:(js.data||[])).filter(t=>(t.type||"").toLowerCase()!=="party");
+        }catch(e){ console.error(e); }
+      }
+
+      async function refresh(){ await loadRecords(); }
+
+      function showError(inputEl,msg){ inputEl.classList.add("is-invalid"); const fb=inputEl.parentElement.querySelector(".invalid-feedback"); if(fb) fb.textContent=msg; }
+      function clearError(inputEl){ inputEl.classList.remove("is-invalid"); }
+      function resetFormValidation(formId, resetValues){
+        const form=document.getElementById(formId); if(!form) return;
+        form.querySelectorAll(".is-invalid").forEach(el=>el.classList.remove("is-invalid"));
+        if(resetValues){
+          form.reset();
+          const dateEl=form.querySelector('input[type="date"]'); if(dateEl) dateEl.value=todayStr();
+        }
+      }
+
+      /* ===== Client-side date filter ===== */
+      function inRange(dateStr){
+        if(!filterState.from || !filterState.to) return true;
+        const d = new Date(dateStr);
+        const a = new Date(filterState.from+"T00:00:00");
+        const b = new Date(filterState.to+"T23:59:59");
+        return !isNaN(d) && d>=a && d<=b;
+      }
+
+      async function loadRecords(){
+        records.innerHTML="";
+        try{
+          const r=await fetch(`${API_BASE}/finance`,{headers:AUTH});
+          if(!r.ok) throw new Error(await r.text());
+          const js=await r.json();
+          let rows=(Array.isArray(js)?js:(js.data||js.items||js.records||[]))
+            .filter(isActiveRow).filter(isOtherFinance)
+            .filter(x=>inRange(x.date||x.created_at||x.updated_at||""));
+
+          rows.sort((a,b)=>{
+            const ad=new Date(a.date||a.created_at||0).getTime()||0;
+            const bd=new Date(b.date||b.created_at||0).getTime()||0;
+            if(bd!==ad) return bd-ad;
+            return (Number(b.id||0))-(Number(a.id||0));
+          });
+
+          if(!rows.length){
+            records.innerHTML=`
+              <div class="empty-wrap">
+                <img class="empty-ill" src="illustration.png" alt="खाली सूची चित्र"/>
+                <h3 class="empty-title">यो खाली छ,</h3>
+                <p class="empty-sub">तपाईंको कुनै पनि रेकर्ड छैन जस्तो देखिन्छ।</p>
+              </div>`;
+            sumIncome.textContent=fmtAmount(0,"np");
+            sumExpense.textContent=fmtAmount(0,"np");
+            sumNet.textContent=fmtAmount(0,"np");
+            return;
+          }
+
+          let totIn=0, totOut=0;
+          records.innerHTML = "";
+
+          rows.forEach(f=>{
+            const id=f.id;
+            const title=f.title||f.income_expense?.title||f.incomeExpense?.title||"—";
+            let credit=parseAmount(f.credit??f.credit_amount??f.creditAmount);
+            let debit =parseAmount(f.debit ??f.debit_amount ??f.debitAmount);
+            if(!credit && !debit){
+              const amount=parseAmount(f.amount??f.value);
+              const isInc=typeof f.is_income==="boolean"?f.is_income:null;
+              if(amount){ if(isInc===true) credit=amount; else if(isInc===false) debit=amount; }
+            }
+            const isIncome=credit>0 && !debit;
+            if(isIncome) totIn+=credit; else totOut+=debit;
+
+            const d=new Date(f.date||f.created_at);
+            const dLabel=isNaN(d)?"":d.toLocaleDateString("ne-NP",{month:"short",day:"numeric"});
+
+            // FIX: default Nepali unless explicitly saved "en"
+            const pref = AMT_SCRIPT_PREF[id] || DEFAULT_SCRIPT;
+
+            records.insertAdjacentHTML("beforeend",`
+              <div class="block" data-id="${id}" data-is-income="${isIncome?1:0}">
+                <div class="head"><div class="title">${esc(title)}</div><div class="pill">${esc(dLabel)}</div></div>
+                <div class="rowio">
+                  <div><div class="label">आम्दानी</div><div class="amt-in">${fmtAmount(credit||0, pref)}</div></div>
+                  <div class="text-end"><div class="label">खर्च</div><div class="amt-out">${fmtAmount(debit||0,  pref)}</div></div>
+                </div>
+              </div>`);
+          });
+
+          sumIncome.textContent=fmtAmount(totIn,"np");
+          sumExpense.textContent=fmtAmount(totOut,"np");
+          sumNet.textContent=fmtAmount(totIn-totOut,"np");
+        }catch(e){
+          console.error("records",e);
+          records.innerHTML=`<div class="text-danger small">लोड असफल।</div>`;
+          sumIncome.textContent=fmtAmount(0,"np");
+          sumExpense.textContent=fmtAmount(0,"np");
+          sumNet.textContent=fmtAmount(0,"np");
+        }
+      }
+
+      /* ===== Create Income ===== */
+      async function submitIncome(ev){
+        ev.preventDefault();
+        const site=document.getElementById("incomeSite");
+        const titleEl=document.getElementById("incomeTitleText");
+        const amtEl=document.getElementById("incomeAmount");
+        const dateEl=document.getElementById("incomeDate");
+
+        let ok=true;
+        if(!+site.value){ showError(site,"कृपया साइट छान्नुहोस्।"); ok=false; }
+        if(!titleEl.value.trim()){ showError(titleEl,"शिर्षक आवश्यक छ।"); ok=false; }
+        if(!(parseAmount(amtEl.value)>0)){ showError(amtEl,"केवल 0-9 वा ०-९ अंक मात्र।"); ok=false; }
+        if(!dateEl.value){ showError(dateEl,"मिति छान्नुहोस्।"); ok=false; }
+        if(!ok) return;
+
+        const idIE = await ensureTitleId(titleEl.value.trim());
+        const payload={
+          site_id:+site.value, debit:0, credit:parseAmount(amtEl.value),
+          ...(idIE ? {income_expense_id:idIE} : {title:titleEl.value.trim()}),
+          remark:document.getElementById("incomeRemark").value?.trim()||"",
+          date:dateEl.value,
+        };
+
+        try{
+          const r=await fetch(`${API_BASE}/finance`,{method:"POST",headers:AUTH,body:JSON.stringify(payload)});
+          if(!r.ok) throw new Error(await r.text());
+
+          // FIX: handle {data:{...}} AND bare object
+          const obj = await r.json();
+          const created = obj?.data || obj;
+          if(created?.id){
+            AMT_SCRIPT_PREF[created.id] = hasNepDigit(amtEl.value) ? "np" : "en"; // FIX: save pref
+            saveAmtPref();
+          }
+
+          bootstrap.Modal.getInstance(document.getElementById("incomeModal")).hide();
+          showToast("आम्दानी सफलतापूर्वक थपियो","success");
+          await refresh();
+        }catch(e){ showToast("आम्दानी थप्न समस्या","error"); }
+      }
+
+      /* ===== Create Expense ===== */
+      async function submitExpense(ev){
+        ev.preventDefault();
+        const site=document.getElementById("expenseSite");
+        const titleEl=document.getElementById("expenseTitleText");
+        const amtEl=document.getElementById("expenseAmount");
+        const dateEl=document.getElementById("expenseDate");
+
+        let ok=true;
+        if(!+site.value){ showError(site,"कृपया साइट छान्नुहोस्।"); ok=false; }
+        if(!titleEl.value.trim()){ showError(titleEl,"शिर्षक आवश्यक छ।"); ok=false; }
+        if(!(parseAmount(amtEl.value)>0)){ showError(amtEl,"केवल 0-9 वा ०-९ अंक मात्र।"); ok=false; }
+        if(!dateEl.value){ showError(dateEl,"मिति छान्नुहोस्।"); ok=false; }
+        if(!ok) return;
+
+        const idIE = await ensureTitleId(titleEl.value.trim());
+        const payload={
+          site_id:+site.value, debit:parseAmount(amtEl.value), credit:0,
+          ...(idIE ? {income_expense_id:idIE} : {title:titleEl.value.trim()}),
+          remark:document.getElementById("expenseRemark").value?.trim()||"",
+          date:dateEl.value,
+        };
+
+        try{
+          const r=await fetch(`${API_BASE}/finance`,{method:"POST",headers:AUTH,body:JSON.stringify(payload)});
+          if(!r.ok) throw new Error(await r.text());
+
+          // FIX: handle {data:{...}} AND bare object
+          const obj = await r.json();
+          const created = obj?.data || obj;
+          if(created?.id){
+            AMT_SCRIPT_PREF[created.id] = hasNepDigit(amtEl.value) ? "np" : "en"; // FIX
+            saveAmtPref();
+          }
+
+          bootstrap.Modal.getInstance(document.getElementById("expenseModal")).hide();
+          showToast("खर्च सफलतापूर्वक थपियो","success");
+          await refresh();
+        }catch(e){ showToast("खर्च थप्न समस्या","error"); }
+      }
+
+      /* ===== Open record for edit ===== */
+      async function openRecordModal(id,isIncome){
+        try{
+          const r=await fetch(`${API_BASE}/finance/${id}`,{headers:AUTH});
+          if(!r.ok) throw new Error(await r.text());
+          const data=await r.json();
+
+          const siteName=data?.site?.name||"";
+          const titleTxt=data?.income_expense?.title||data?.incomeExpense?.title||data?.title||"";
+
+          document.getElementById("recId").value=id;
+          document.getElementById("recIsIncome").value=isIncome?"1":"0";
+          document.getElementById("recModalTitle").textContent=isIncome?"आम्दानी":"खर्च";
+          document.getElementById("recSite").value=siteName;
+          document.getElementById("recTitle").value=titleTxt;
+          document.getElementById("recOrigTitle").value=titleTxt;
+          document.getElementById("recTitleId").value=data?.income_expense_id||data?.incomeExpenseId||"";
+
+          const amtVal=isIncome?(data.credit??0):(data.debit??0);
+          const pref = AMT_SCRIPT_PREF[id] || DEFAULT_SCRIPT;
+          const amtStringEN = String(amtVal);
+          document.getElementById("recAmount").value = (pref==="np") ? enToNep(amtStringEN) : amtStringEN;
+
+          document.getElementById("recDate").value=(data.date||"").slice(0,10);
+          document.getElementById("recRemark").value=data.remark||"";
+
+          new bootstrap.Modal(document.getElementById("recordModal")).show();
+        }catch(e){ showToast("रेकर्ड खोल्न समस्या","error"); }
+      }
+
+      /* ===== Update record ===== */
+      async function updateRecord(ev){
+        ev.preventDefault();
+        const id=document.getElementById("recId").value;
+        const isIncome=document.getElementById("recIsIncome").value==="1";
+
+        const titleEl=document.getElementById("recTitle");
+        const amtEl=document.getElementById("recAmount");
+        const dateEl=document.getElementById("recDate");
+
+        let ok=true;
+        if(!titleEl.value.trim()){ showError(titleEl,"शिर्षक आवश्यक छ।"); ok=false; }
+        const amt = parseAmount(amtEl.value);
+        if(!(amt>0)){ showError(amtEl,"केवल 0-9 वा ०-९ अंक मात्र।"); ok=false; }
+        if(!dateEl.value){ showError(dateEl,"मिति छान्नुहोस्।"); ok=false; }
+        if(!ok) return;
+
+        const origTitle=document.getElementById("recOrigTitle").value;
+        let titleId=(document.getElementById("recTitleId").value||"") || null;
+        const newTitle=titleEl.value.trim();
+
+        let titlePayload={};
+        if(!sameCI(origTitle,newTitle)){
+          const maybeId=await ensureTitleId(newTitle);
+          titleId = maybeId ?? null;
+          if(titleId) titlePayload.income_expense_id=titleId;
+          else titlePayload.title=newTitle;
+        }else{
+          if(titleId) titlePayload.income_expense_id=titleId;
+          else titlePayload.title=newTitle;
+        }
+
+        const payload={
+          date:dateEl.value,
+          remark:document.getElementById("recRemark").value?.trim()||"",
+          debit:isIncome?0:amt,
+          credit:isIncome?amt:0,
+          ...titlePayload,
+        };
+
+        try{
+          const r=await fetch(`${API_BASE}/finance/${id}`,{method:"PATCH",headers:AUTH,body:JSON.stringify(payload)});
+          if(!r.ok) throw new Error(await r.text());
+
+          // FIX: store numeral preference based on what user typed now
+          AMT_SCRIPT_PREF[id] = hasNepDigit(document.getElementById("recAmount").value) ? "np" : "en";
+          saveAmtPref();
+
+          bootstrap.Modal.getInstance(document.getElementById("recordModal")).hide();
+          showToast("रेकर्ड सफलतापूर्वक अपडेट भयो","success");
+          await refresh();
+        }catch(e){ showToast("अपडेट असफल","error"); }
+      }
+    </script>
+  </body>
+</html>

@@ -2,212 +2,515 @@
 <html lang="ne">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Edge-to-edge & notches/home-indicator safe -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>OTP Verification</title>
-    <!-- Bootstrap CSS -->
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- OTP Page Specific CSS -->
-    <link rel="stylesheet" href="CSS/style.css" />
-    <!-- Google Fonts & Font Awesome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
+
+    <style>
+      :root {
+        --brand-green: #13a87d;
+        --text-900: #0f172a;
+        --text-800: #1f2937;
+        --text-700: #374151;
+        --text-600: #4b5563;
+        --stroke: #e7ebf0;
+        --panel: #ffffff;
+
+        --r-lg: 28px;
+        --r-sm: 14px;
+
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f3f5f7;
+        min-height: 100dvh;
+      }
+
+      .mobile-container {
+        width: 100vw;
+        max-width: none;
+        min-height: 100dvh;
+        background: var(--panel);
+        border-radius: 0;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        padding-top: var(--safe-top);
+        padding-bottom: var(--safe-bottom);
+      }
+
+      .top-space {
+        height: 22px;
+      }
+
+      header.otp-header {
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+      }
+      .back {
+        color: var(--text-800);
+        text-decoration: none;
+        font-size: 50px;
+        font-weight: 500;
+        transform: scaleX(0.72);
+        line-height: 1;
+        display: inline-flex;
+        width: 44px;
+        height: 44px;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 24px;
+      }
+
+      .otp-logo {
+        width: 330px;
+        max-width: 85%;
+        height: auto;
+        display: block;
+        margin-top: -70px;
+        margin-bottom: 1px;
+      }
+
+      .title {
+        font-size: 19px;
+        font-weight: 600;
+        color: var(--brand-green);
+        margin: -10 0 10px;
+        line-height: 1.2;
+        text-align: center;
+        text-decoration-thickness: 2px;
+      }
+      .subtitle {
+        font-size: 13px;
+        color: var(--text-700);
+        margin: 0 0 20px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .otp-inputs {
+        display: flex;
+        gap: 16px;
+        margin: 0 0 14px;
+      }
+      .otp-digit {
+        width: 60px;
+        height: 60px;
+        border: 1px solid var(--stroke);
+        border-radius: var(--r-sm);
+        background: #fbfcfd;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--text-800);
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+      }
+      .otp-digit:focus {
+        border-color: var(--brand-green);
+        box-shadow: 0 0 0 3px rgba(19, 168, 125, 0.18);
+      }
+
+      .timer {
+        font-size: 13px;
+        color: var(--text-600);
+        margin: 4px 0 10px;
+        text-align: center;
+      }
+
+      .actions {
+        padding: 0 24px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .btn-primary-otp {
+        height: 52px;
+        border: none;
+        border-radius: 16px;
+        background: var(--brand-green);
+        color: #fff;
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .btn-primary-otp:hover,
+      .btn-primary-otp:focus,
+      .btn-primary-otp:active {
+        background: var(--brand-green) !important;
+        color: #fff !important;
+      }
+      .btn-outline-otp {
+        height: 52px;
+        border-radius: 16px;
+        background: #fff;
+        border: 2px solid var(--brand-green);
+        color: #0b2238;
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .btn-outline-otp:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      @media (max-height: 750px) {
+        .otp-logo {
+          width: 300px;
+          margin: 6px 0 14px;
+        }
+        .title {
+          font-size: 26px;
+          margin-bottom: 8px;
+        }
+        .subtitle {
+          margin-bottom: 16px;
+        }
+        .otp-inputs {
+          gap: 14px;
+        }
+      }
+
+      .error-text {
+        font-size: 13px;
+        color: #dc3545;
+        text-align: center;
+        margin-top: 6px;
+      }
+      .info-text {
+        font-size: 13px;
+        color: #0b5db8;
+        text-align: center;
+        margin-top: 6px;
+      }
+    </style>
   </head>
   <body>
-    <div class="mobile-container otp-page-container">
-      <header class="otp-page-header">
-        <a href="login.html" class="back-arrow"
-          ><i class="fas fa-chevron-left"></i
-        ></a>
+    <div class="mobile-container">
+      <div class="top-space"></div>
+
+      <header class="otp-header">
+        <a href="login.html" class="back">‹</a>
       </header>
 
-      <main class="otp-content-wrapper">
-        <div class="text-center">
-          <div class="lock-illustration">
-            <div class="lock-container">
-              <div class="background-circle"></div>
-              <div class="lock-shackle"></div>
-              <div class="lock-body">
-                <div class="keyhole"></div>
-              </div>
-              <div class="question-mark-circle">?</div>
-            </div>
-          </div>
+      <div class="content">
+        <img
+          src="otp-removebg-preview.png"
+          alt="OTP Illustration"
+          class="otp-logo"
+        />
 
-          <h1 class="otp-title">OTP प्रमाणीकरण</h1>
-          <p class="otp-subtitle" id="phoneDisplay">
-            हामीले पठाएको कोड प्रविष्ट गर्नुहोस्
-          </p>
+        <h1 class="title">OTP प्रमाणीकरण</h1>
+        <p class="subtitle" id="phoneDisplay">
+          हामीले पठाएको कोड प्रविष्ट गर्नुहोस्
+        </p>
 
-          <!-- OTP Feedback Message (Initially empty) -->
-          <div id="otpFeedback" class="mb-2"></div>
+        <form
+          id="otpForm"
+          class="otp-inputs"
+          autocomplete="one-time-code"
+          novalidate
+        >
+          <input
+            type="tel"
+            maxlength="1"
+            class="otp-digit"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="tel"
+            maxlength="1"
+            class="otp-digit"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="tel"
+            maxlength="1"
+            class="otp-digit"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="tel"
+            maxlength="1"
+            class="otp-digit"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+        </form>
 
-          <!-- OTP Input Boxes -->
-          <form id="otpForm" class="otp-input-group">
-            <input
-              type="tel"
-              class="form-control otp-digit"
-              maxlength="1"
-              required
-              pattern="[0-9]"
-              inputmode="numeric"
-            />
-            <input
-              type="tel"
-              class="form-control otp-digit"
-              maxlength="1"
-              required
-              pattern="[0-9]"
-              inputmode="numeric"
-            />
-            <input
-              type="tel"
-              class="form-control otp-digit"
-              maxlength="1"
-              required
-              pattern="[0-9]"
-              inputmode="numeric"
-            />
-            <input
-              type="tel"
-              class="form-control otp-digit"
-              maxlength="1"
-              required
-              pattern="[0-9]"
-              inputmode="numeric"
-            />
+        <div id="otpFeedback"></div>
+        <p class="timer">
+          <span id="timer">६०</span> सेकेन्डमा कोड पुनः पठाउनुहोस्
+        </p>
+      </div>
 
-            <div id="otpFeedback" class="mb-2"></div>
-          </form>
-          <button type="submit" class="btn btn-submit-otp w-100 mt-3">
-            पेश गर्नुहोस्
-          </button>
-          <p class="resend-timer mt-3">६० सेकेन्डमा कोड पुनः पठाउनुहोस्</p>
-          <button type="button" class="btn btn-resend-otp w-100">
-            कोड पुनः पठाउनुहोस्
-          </button>
-        </div>
-      </main>
+      <div class="actions">
+        <button class="btn-primary-otp" id="btnSubmit">पेश गर्नुहोस्</button>
+        <button class="btn-outline-otp" id="btnResend" disabled>
+          कोड पुनः पठाउनुहोस्
+        </button>
+      </div>
     </div>
 
-   <script>
-  // Autofocus move and backspace handling
-  const otpInputs = document.querySelectorAll(".otp-digit");
-  otpInputs.forEach((input, index) => {
-    input.addEventListener("input", () => {
-      if (input.value.length === 1 && index < otpInputs.length - 1) {
-        otpInputs[index + 1].focus();
-      }
-    });
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && input.value.length === 0 && index > 0) {
-        otpInputs[index - 1].focus();
-      }
-    });
-  });
+    <script>
+      // ==== Params & phone display ====
+      const params = new URLSearchParams(location.search);
+      const userId = params.get("user_id");
+      const phone = params.get("phone");
+      const API_BASE = "http://192.168.1.209:8000/api";
 
-  // Read user_id and phone from URL query params
-  const urlParams = new URLSearchParams(window.location.search);
-  const userId = urlParams.get("user_id");
-  const phoneFromLogin = urlParams.get("phone");
-
-  if (phoneFromLogin) {
-    document.getElementById(
-      "phoneDisplay"
-    ).textContent = `हामीले पठाएको कोड प्रविष्ट गर्नुहोस्: ${phoneFromLogin}`;
-  }
-
-  document
-    .getElementById("otpForm")
-    .addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const otpFeedback = document.getElementById("otpFeedback");
-      otpFeedback.textContent = "";
-      otpFeedback.classList.remove("text-danger", "text-success");
-
-      // Collect OTP digits
-      let otp = "";
-      otpInputs.forEach((input) => (otp += input.value));
-
-      if (otp.length !== 4) {
-        otpFeedback.textContent = "कृपया ४ अंकको OTP प्रविष्ट गर्नुहोस्।";
-        otpFeedback.classList.add("text-danger");
-        return;
+      if (phone) {
+        document.getElementById(
+          "phoneDisplay"
+        ).textContent = `हामीले पठाएको कोड प्रविष्ट गर्नुहोस्: ${phone}`;
       }
 
-      if (!userId) {
-        otpFeedback.textContent =
-          "User ID आवश्यक छ। कृपया पुनः लगइन गर्नुहोस्।";
-        otpFeedback.classList.add("text-danger");
-        return;
+      // ==== Elements ====
+      const digits = document.querySelectorAll(".otp-digit");
+      const form = document.getElementById("otpForm");
+      const feedback = document.getElementById("otpFeedback");
+      const btnSubmit = document.getElementById("btnSubmit");
+      const btnResend = document.getElementById("btnResend");
+      const timerEl = document.getElementById("timer");
+
+      // ==== Input UX: auto-advance, backspace to previous, digits only ====
+      setTimeout(() => digits[0].focus(), 150);
+      digits.forEach((el, i) => {
+        el.addEventListener("input", () => {
+          el.value = el.value.replace(/\D/g, "").slice(0, 1);
+          if (el.value && i < digits.length - 1) digits[i + 1].focus();
+          if (feedback.textContent) clearFeedback();
+        });
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !el.value && i > 0)
+            digits[i - 1].focus();
+          if (e.key === "Enter") {
+            e.preventDefault();
+            verifyOTP();
+          }
+        });
+      });
+
+      function getOTP() {
+        return Array.from(digits)
+          .map((d) => d.value)
+          .join("");
+      }
+      function clearInputs() {
+        digits.forEach((d) => (d.value = ""));
+        digits[0].focus();
+      }
+      function showError(msg) {
+        feedback.textContent = msg;
+        feedback.className = "error-text";
+      }
+      function showInfo(msg) {
+        feedback.textContent = msg;
+        feedback.className = "info-text";
+      }
+      function clearFeedback() {
+        feedback.textContent = "";
+        feedback.className = "";
       }
 
-      const payload = {
-        user_id: userId,
-        otp: otp,
-      };
+      // ==== Verify flow ====
+      async function verifyOTP() {
+        const otp = getOTP();
+        clearFeedback();
 
-      try {
-        const response = await fetch(
-          "http://192.168.1.209:8000/api/verify-otp",
-          {
+        if (otp.length !== 4) {
+          showError("कृपया ४ अंकको OTP प्रविष्ट गर्नुहोस्।");
+          return;
+        }
+        if (!userId) {
+          showError("User ID आवश्यक छ।");
+          return;
+        }
+
+        btnSubmit.disabled = true;
+        try {
+          const res = await fetch(`${API_BASE}/verify-otp`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ user_id: userId, otp }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            if (data.token) localStorage.setItem("auth_token", data.token);
+            if (data.user)
+              localStorage.setItem("user", JSON.stringify(data.user));
+            // 👉 No success message here — go straight to home
+            sessionStorage.setItem("show_otp_toast", "1");
+            // optional custom text:
+            // localStorage.setItem('flash_msg','OTP सफलतापूर्वक प्रमाणित भयो');
+            location.href = "home.html";
+          } else {
+            showError(data.message || "OTP मिलेन।");
           }
-        );
-
-        const data = await response.json();
-
-        if (response.ok) {
-          otpFeedback.textContent = data.message || "OTP सत्यापित भयो!";
-          otpFeedback.classList.remove("text-danger");
-          otpFeedback.classList.add("text-success");
-
-          // ✅ Save token under the same key as login page
-          if (data.token) {
-            localStorage.setItem("auth_token", data.token);
-          }
-
-          setTimeout(() => {
-            window.location.href = "home.html";
-          }, 2000);
-        } else {
-          otpFeedback.textContent =
-            data.message || "OTP मिलेन। कृपया पुनः प्रयास गर्नुहोस्।";
-          otpFeedback.classList.remove("text-success");
-          otpFeedback.classList.add("text-danger");
+        } catch (e) {
+          showError("सर्भरमा समस्या भयो।");
+        } finally {
+          btnSubmit.disabled = false;
         }
-      } catch (err) {
-        console.error("OTP verify error:", err);
-        otpFeedback.textContent =
-          "सर्भरमा समस्या भयो। कृपया पछि प्रयास गर्नुहोस्।";
-        otpFeedback.classList.add("text-danger");
       }
-    });
 
-  document
-    .querySelector(".btn-submit-otp")
-    .addEventListener("click", function () {
-      document
-        .getElementById("otpForm")
-        .dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
-    });
-</script>
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        verifyOTP();
+      });
+      btnSubmit.addEventListener("click", verifyOTP);
 
+      // ==== Timer & Resend flow (with cooldown persistence) ====
+      const STORAGE_KEY = userId
+        ? `otp_resend_ready_at:${userId}`
+        : `otp_resend_ready_at`;
+
+      function toNepali(n) {
+        const map = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+        return String(n)
+          .split("")
+          .map((ch) => (/\d/.test(ch) ? map[+ch] : ch))
+          .join("");
+      }
+
+      // Persist helpers
+      function setResendReadyAfter(seconds) {
+        const readyAt = Date.now() + seconds * 1000;
+        localStorage.setItem(STORAGE_KEY, String(readyAt));
+        return readyAt;
+      }
+      function getResendReadyAt() {
+        const v = localStorage.getItem(STORAGE_KEY);
+        const n = v ? Number(v) : NaN;
+        return Number.isFinite(n) ? n : null;
+      }
+
+      let remaining = 60;
+      let timerHandle = null;
+
+      function startTimer(initialRemaining) {
+        if (timerHandle) clearInterval(timerHandle);
+
+        remaining =
+          typeof initialRemaining === "number" ? initialRemaining : 60;
+
+        if (remaining <= 0) {
+          timerEl.textContent = "०";
+          btnResend.disabled = false;
+          return;
+        }
+
+        btnResend.disabled = true;
+        timerEl.textContent = toNepali(remaining);
+
+        timerHandle = setInterval(() => {
+          remaining--;
+          if (remaining <= 0) {
+            clearInterval(timerHandle);
+            timerHandle = null;
+            timerEl.textContent = "०";
+            btnResend.disabled = false;
+          } else {
+            timerEl.textContent = toNepali(remaining);
+          }
+        }, 1000);
+      }
+
+      // Initialize timer from storage so refresh can't bypass cooldown
+      (function initCooldownFromStorage() {
+        const readyAt = getResendReadyAt();
+        if (!readyAt) {
+          // First time on page after login: start and persist 60s
+          setResendReadyAfter(60);
+          startTimer(60);
+          return;
+        }
+        const remain = Math.ceil((readyAt - Date.now()) / 1000);
+        if (remain > 0) {
+          startTimer(remain);
+        } else {
+          timerEl.textContent = "०";
+          btnResend.disabled = false;
+        }
+      })();
+
+      async function resendOTP() {
+        btnResend.disabled = true;
+        clearFeedback();
+        try {
+          const res = await fetch(`${API_BASE}/resend-otp`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ user_id: userId, phone }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            showInfo(data.message || "OTP पुनः पठाइयो।");
+            clearInputs();
+
+            const seconds = Number(data.expires_in_seconds) || 60;
+            setResendReadyAfter(seconds);
+            startTimer(seconds);
+          } else {
+            showError(data.message || "OTP पुनः पठाउन सकेन।");
+
+            // Reflect real server-side cooldown if it exists in storage
+            const readyAt = getResendReadyAt();
+            const remain = readyAt
+              ? Math.ceil((readyAt - Date.now()) / 1000)
+              : 0;
+            if (remain > 0) startTimer(remain);
+            else btnResend.disabled = false;
+          }
+        } catch (e) {
+          showError("सर्भरमा समस्या भयो।");
+          const readyAt = getResendReadyAt();
+          const remain = readyAt ? Math.ceil((readyAt - Date.now()) / 1000) : 0;
+          if (remain > 0) startTimer(remain);
+          else btnResend.disabled = false;
+        }
+      }
+
+      btnResend.addEventListener("click", resendOTP);
+    </script>
   </body>
 </html>

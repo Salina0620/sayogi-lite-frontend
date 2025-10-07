@@ -5,281 +5,479 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Owner List</title>
 
-    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="CSS/style.css" />
 
-    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+
+    <style>
+      :root {
+        --brand-green: #1ab189;
+        --cta-blue: #186b97;
+        --alert-red: #dc3545;
+        --bg: #f3f5f7;
+        --surface: #ffffff;
+        --text-900: #0f172a;
+        --text-700: #344054;
+        --text-600: #667085;
+        --text-500: #98a2b3;
+        --border: #e6e9ed;
+        --shadow-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; min-height: 100dvh; background: var(--bg);
+        font-family: "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; color: var(--text-900);
+      }
+
+      .mobile-container { width: 100%; min-height: 100dvh; background: var(--surface); display: flex; flex-direction: column; }
+
+      /* success banner (legacy) */
+      #successBanner {
+        position: fixed; top: 12px; left: 12px; right: 12px; z-index: 1000;
+        padding: 10px 14px; border-radius: 12px; font-size: 14px; display: none;
+      }
+
+      .page-header {
+        position: sticky; top: 0; z-index: 50; background: var(--brand-green); color: #fff; padding: 12px 16px 22px;
+      }
+      .header-content { display: flex; align-items: center; justify-content: space-between; }
+      .back-arrow { color: #fff; font-size: 20px; text-decoration: none; }
+      .page-title { margin: 0; font-size: 18px; font-weight: 700; text-align: center; flex: 1; }
+
+      /* Overlapping “नयाँ” */
+      .add-new-cta{
+        position:absolute; right:16px; bottom:-18px; background:var(--cta-blue); color:#fff!important;
+        padding:6px 14px; border-radius:999px; font-weight:700; font-size:13px; text-decoration:none; box-shadow:none;
+        display:inline-flex; align-items:center; gap:8px;
+      }
+      .add-new-cta i{ font-size:14px; line-height:0; }
+
+      .page-content{ flex:1 1 auto; background:#f8fafb; padding:28px 16px 20px; }
+
+      .search-bar-wrapper{
+        position:relative; background:#fff; border:1px solid #b8e1d3; border-radius:20px; padding:8px 12px 8px 40px;
+        box-shadow:0 1px 2px rgba(16,24,40,.04);
+      }
+      .search-icon{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#6bb89c; }
+      .search-input{ border:0; outline:0; background:transparent; width:100%; font-size:14px; color:var(--text-900); }
+      .search-input::placeholder{ color:#888; }
+
+      .owner-list{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+      .owner-item{
+        background:#fff; border:1px solid var(--border); border-radius:14px; padding:12px;
+        display:flex; justify-content:space-between; align-items:center; box-shadow:var(--shadow-card);
+      }
+      .owner-name{ font-size:16px; font-weight:700; color:var(--text-900); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .owner-phone{ font-size:13px; color:var(--text-700); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .owner-address{ font-size:12px; color:var(--text-600); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+      .action-icons a{ font-size:16px; margin-left:12px; text-decoration:none; }
+      .action-icons a.edit-icon{ color:var(--cta-blue); }
+      .action-icons a.delete-icon{ color:var(--alert-red); }
+
+      /* Empty */
+      .empty-wrap{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; margin:10vh auto 0; max-width:420px; padding:0 8px; }
+      .empty-ill{ width:38vw; max-width:124px; height:auto; image-rendering:-webkit-optimize-contrast; image-rendering:crisp-edges; filter:drop-shadow(0 4px 14px rgba(16,24,40,.12)); }
+      .empty-title{ font-size:28px; font-weight:700; color:#2e3a46; margin:10px 0 2px; }
+      .empty-sub{ color:#667085; font-size:14px; margin:0 0 10px; }
+      .empty-cta{ background:var(--brand-green); color:#fff; border:none; padding:10px 18px; border-radius:14px; font-weight:700; font-size:14px; text-decoration:none; box-shadow:none; }
+
+      .add-new-cta, .empty-cta, .add-new-cta:hover, .add-new-cta:focus, .add-new-cta:active, .empty-cta:hover, .empty-cta:focus, .empty-cta:active{
+        box-shadow:none!important; filter:none!important; --bs-btn-focus-box-shadow:none!important;
+      }
+
+      /* Flash toast (top-right) */
+      .flash-toast{
+        position:fixed; top:12px; right:12px; z-index:1055; background:#fff; border:1px solid #e9eef3; border-radius:12px;
+        box-shadow:0 8px 24px rgba(0,0,0,.12); padding:10px 12px; display:flex; align-items:center; gap:10px;
+      }
+      .flash-icon{ width:28px; height:28px; border-radius:999px; background:#e6f4ea; display:grid; place-items:center; color:#13a87d; font-size:16px; line-height:1; }
+      .flash-text{ font-size:16px; color:#0f172a; white-space:nowrap; }
+      .flash-close{ background:transparent; border:0; font-size:18px; line-height:1; color:#667085; margin-left:6px; padding:0; }
+
+      /* Centered modals + delete look */
+      .modal-dialog-centered{ display:flex; align-items:center; min-height:calc(100% - 1rem); }
+      @media (min-width:576px){ .modal-dialog-centered{ min-height:calc(100% - 3.5rem); } }
+
+      .modal-delete .modal-content{ border-radius:18px; padding:12px 12px 16px; }
+      .del-icon{ width:36px; height:36px; border-radius:10px; background:#ffeceb; color:#dc3545; display:grid; place-items:center; font-size:16px; margin-bottom:8px; }
+      .del-title{ font-weight:700; font-size:18px; margin:0 0 4px; }
+      .del-sub{ color:#667085; margin:0 0 12px; }
+      .del-actions{ display:flex; align-items:center; justify-content:flex-end; gap:12px; }
+      .btn-del-cancel{ background:transparent; border:0; color:#344054; font-weight:700; }
+      .btn-del-go{ background:#dc3545; color:#fff; border:0; padding:6px 14px; border-radius:10px; font-weight:700; }
+
+      /* Hide scrollbars but keep scrolling */
+      html, body { -ms-overflow-style:none; scrollbar-width:none; }
+      html::-webkit-scrollbar, body::-webkit-scrollbar { width:0!important; height:0!important; }
+      .page-content{ -ms-overflow-style:none; scrollbar-width:none; }
+      .page-content::-webkit-scrollbar{ width:0!important; height:0!important; }
+
+      /* ---- EDIT MODAL: text-only validation (no red/green borders) ---- */
+      #editOwnerForm .invalid-feedback{ font-size:12px; }
+      #editOwnerForm.was-validated .form-control:invalid,
+      #editOwnerForm .form-control.is-invalid,
+      #editOwnerForm.was-validated .form-control:valid,
+      #editOwnerForm .form-control.is-valid{
+        box-shadow:none!important; background-image:none!important; border-color:#ced4da!important;
+      }
+    </style>
   </head>
 
   <body>
     <div class="mobile-container">
-      <div id="successBanner" class="alert alert-success text-center m-3" style="display: none">
-        ✔️ घरधनी सफलतापूर्वक थपियो!
-      </div>
+      <div id="successBanner" class="alert alert-success text-center">✔️ घरधनी सफलतापूर्वक थपियो!</div>
 
       <header class="page-header">
-        <div class="header-content mb-3 pt-3">
+        <div class="header-content">
           <a href="home.html" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
-          <h1><a href="ownerlist.html" class="text-decoration-none text-dark">घरधनी</a></h1>
-          <div class="header-placeholder"></div>
+          <h1 class="page-title">घरधनी</h1>
+          <span style="width: 20px"></span>
         </div>
+        <a href="addowner.html" class="add-new-cta" id="btnAddNew"><i class="fas fa-plus"></i> नयाँ</a>
       </header>
 
-      <main class="content-area page-content">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <a href="addowner.html" class="btn btn-add-new">
-            <i class="fas fa-plus"></i> नयाँ
-          </a>
-        </div>
-
-        <div class="search-bar-wrapper mb-4">
+      <main class="page-content">
+        <div class="search-bar-wrapper mb-3">
           <i class="fas fa-search search-icon"></i>
-          <input
-            type="text"
-            class="form-control search-input"
-            placeholder="खोज्नुहोस्..."
-            oninput="filterOwners()"
-          />
+          <input type="text" class="form-control search-input" placeholder="खोज्नुहोस्..." oninput="filterOwners()" />
         </div>
 
-        <div class="owner-list"></div>
+        <div class="owner-list" id="ownerList"></div>
       </main>
     </div>
 
-    <!-- ✅ Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    let ownerToDelete = null;
-    let ownerElementToDelete = null;
-
-    const editOwnerModal = new bootstrap.Modal(document.getElementById("editOwnerModal"));
-    const editOwnerForm = document.getElementById("editOwnerForm");
-    const deleteModal = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("added") === "1") {
-      showSuccessBanner("✔️ घरधनी सफलतापूर्वक थपियो!");
-      history.replaceState(null, "", window.location.pathname);
-    }
-
-    loadOwners();
-
-    async function loadOwners() {
-      const token = localStorage.getItem("auth_token");
-      if (!token) {
-        alert("⚠️ कृपया पहिले लगइन गर्नुहोस्।");
-        window.location.href = "login.html";
-        return;
+    <script>
+      // -------- digit helpers & preferences ----------
+      const DIGIT_PREF_KEY = "digit_pref_by_phone";
+      function toLatinDigits(str){
+        if (!str) return "";
+        return str.replace(/[०-९]/g, (ch) => "०१२३४५६७८९".indexOf(ch));
+      }
+      function toNepaliDigits(str){
+        if (!str) return "";
+        return String(str).replace(/\d/g, (d) => "०१२३४५६७८९"[+d]);
+      }
+      function readDigitPrefMap(){
+        try{ return JSON.parse(localStorage.getItem(DIGIT_PREF_KEY) || "{}"); }catch{ return {}; }
+      }
+      function writeDigitPref(phoneLatin, pref){
+        const m = readDigitPrefMap(); m[phoneLatin] = pref; localStorage.setItem(DIGIT_PREF_KEY, JSON.stringify(m));
+      }
+      function displayPhoneByPref(apiPhone){
+        if (!apiPhone) return "";
+        const latinDigits = toLatinDigits(apiPhone).replace(/[^\d]/g, "");
+        const pref = readDigitPrefMap()[latinDigits];
+        if (pref === "ne") return toNepaliDigits(latinDigits);
+        if (pref === "lat") return latinDigits;
+        // fallback: show as returned by API (usually Latin)
+        return apiPhone;
       }
 
-      const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
+      // -------- flash toast ----------
+      function showFlashToast(message, ms = 2500) {
+        const el = document.createElement("div");
+        el.className = "flash-toast";
+        el.innerHTML = `
+          <div class="flash-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="flash-text">${message}</div>
+          <button class="flash-close" aria-label="Close">×</button>
+        `;
+        document.body.appendChild(el);
+        const close = () => el.remove();
+        el.querySelector(".flash-close").addEventListener("click", close);
+        setTimeout(close, ms);
+      }
 
-      try {
-        const res = await fetch("http://192.168.1.209:8000/api/owners", {
-          headers: {
-            Authorization: `Bearer ${REAL_TOKEN}`,
-            Accept: "application/json",
-          },
-        });
+      // show toast if coming from create page
+      (function bootFlashFromStorage() {
+        const msg = localStorage.getItem("flash_msg");
+        if (msg) { localStorage.removeItem("flash_msg"); showFlashToast(msg); }
+      })();
 
-        const owners = await res.json();
-        if (!res.ok) return console.error("Failed to load owners", owners);
+      document.addEventListener("DOMContentLoaded", () => {
+        let ownerToDelete = null;
+        let ownerElementToDelete = null;
 
-        const ownerList = document.querySelector(".owner-list");
-        ownerList.innerHTML = "";
+        const editOwnerModal = new bootstrap.Modal(document.getElementById("editOwnerModal"));
+        const editOwnerForm  = document.getElementById("editOwnerForm");
+        const deleteModal    = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
 
-        if (owners.length === 0) {
-          ownerList.innerHTML = `<p class="text-center">कोई घरधनी फेला परेन</p>`;
-          return;
+        loadOwners();
+
+        async function loadOwners() {
+          const token = localStorage.getItem("auth_token");
+          if (!token) { alert("⚠️ कृपया पहिले लगइन गर्नुहोस्।"); window.location.href = "login.html"; return; }
+          const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
+
+          try {
+            const res = await fetch("http://192.168.1.209:8000/api/owners", {
+              headers: { Authorization: `Bearer ${REAL_TOKEN}`, Accept: "application/json" },
+            });
+            const owners = await res.json();
+            const ownerList = document.getElementById("ownerList");
+
+            if (!res.ok) { ownerList.innerHTML = renderEmptyState(); return; }
+
+            // Latest first
+            owners.sort((a,b) => {
+              if (a.created_at && b.created_at) return new Date(b.created_at) - new Date(a.created_at);
+              return (b.id||0) - (a.id||0);
+            });
+
+            if (!owners.length) { ownerList.innerHTML = renderEmptyState(); return; }
+
+            ownerList.innerHTML = "";
+            owners.forEach((owner) => ownerList.appendChild(ownerRow(owner)));
+
+            addEditListeners();
+            addDeleteListeners();
+          } catch (e) {
+            console.error(e);
+            document.getElementById("ownerList").innerHTML = renderEmptyState();
+          }
         }
 
-        owners.forEach((owner) => {
-          const ownerItem = document.createElement("div");
-          ownerItem.className = "owner-item";
-          ownerItem.setAttribute("data-owner-id", owner.id);
-          ownerItem.innerHTML = `
+        function ownerRow(owner){
+          const el = document.createElement("div");
+          el.className = "owner-item";
+          el.setAttribute("data-owner-id", owner.id);
+          el.innerHTML = `
             <div class="owner-info">
-              <div class="owner-name">${owner.name}</div>
-              <div class="owner-phone">${owner.phone_no}</div>
-              <div class="owner-address">${owner.address}</div>
+              <div class="owner-name">${owner.name ?? ""}</div>
+              <div class="owner-phone">${displayPhoneByPref(owner.phone_no ?? "")}</div>
+              <div class="owner-address">${owner.address ?? ""}</div>
             </div>
             <div class="action-icons">
-              <a href="#" class="edit-icon"><i class="fas fa-pencil-alt"></i></a>
-              <a href="#" class="delete-icon"><i class="fas fa-trash-alt"></i></a>
-            </div>
-          `;
-          ownerList.appendChild(ownerItem);
-        });
-
-        addEditListeners();
-        addDeleteListeners();
-      } catch (err) {
-        console.error("Error loading owners:", err);
-      }
-    }
-
-    function addDeleteListeners() {
-      document.querySelectorAll(".delete-icon").forEach((icon) => {
-        icon.addEventListener("click", (e) => {
-          e.preventDefault();
-          ownerElementToDelete = icon.closest(".owner-item");
-          ownerToDelete = ownerElementToDelete.getAttribute("data-owner-id");
-          if (ownerToDelete) deleteModal.show();
-        });
-      });
-    }
-
-    document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
-      const token = localStorage.getItem("auth_token");
-      if (!token || !ownerToDelete || !ownerElementToDelete) return;
-
-      const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
-
-      try {
-        const res = await fetch(`http://192.168.1.209:8000/api/owners/${ownerToDelete}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${REAL_TOKEN}`,
-            Accept: "application/json",
-          },
-        });
-
-        if (res.ok) {
-          deleteModal.hide();
-          ownerElementToDelete.remove();
-          showSuccessBanner("घरधनी सफलतापूर्वक हटाइयो।");
-        } else {
-          const err = await res.json();
-          alert("हटाउन असफल भयो: " + (err.message || "Unknown error"));
+              <a href="#" class="edit-icon" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+              <a href="#" class="delete-icon" title="Delete"><i class="fas fa-trash-alt"></i></a>
+            </div>`;
+          return el;
         }
-      } catch (err) {
-        alert("नेटवर्क त्रुटि भयो।");
-        console.error("Delete error:", err);
-      }
-    });
 
-    function addEditListeners() {
-      document.querySelectorAll(".edit-icon").forEach((icon) => {
-        icon.addEventListener("click", async (e) => {
+        function renderEmptyState() {
+          return `
+            <div class="empty-wrap">
+              <img src="illustration.png" alt="Empty Illustration" class="empty-ill" />
+              <h2 class="empty-title">यो खाली छ,</h2>
+              <p class="empty-sub">तपाईंको कुनै पनि घरधनी छैन जस्तो देखिन्छ।</p>
+              <a href="addowner.html" class="empty-cta">सुरु गर्नुहोस्</a>
+            </div>`;
+        }
+
+        // ----- Delete -----
+        function addDeleteListeners() {
+          document.querySelectorAll(".delete-icon").forEach((icon) => {
+            icon.addEventListener("click", (e) => {
+              e.preventDefault();
+              ownerElementToDelete = icon.closest(".owner-item");
+              ownerToDelete = ownerElementToDelete?.getAttribute("data-owner-id");
+              if (ownerToDelete) deleteModal.show();
+            });
+          });
+        }
+
+        document.getElementById("confirmDeleteBtn")?.addEventListener("click", async () => {
+          const token = localStorage.getItem("auth_token");
+          if (!token || !ownerToDelete || !ownerElementToDelete) return;
+          const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
+
+          try {
+            const res = await fetch(`http://192.168.1.209:8000/api/owners/${ownerToDelete}`, {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${REAL_TOKEN}`, Accept: "application/json" },
+            });
+
+            if (res.ok) {
+              deleteModal.hide();
+              ownerElementToDelete.remove();
+              if (!document.querySelector(".owner-item")) {
+                document.getElementById("ownerList").innerHTML = renderEmptyState();
+              }
+              showFlashToast("घरधनी सफलतापूर्वक हटाइयो।");
+            } else {
+              const err = await res.json();
+              alert("हटाउन असफल भयो: " + (err.message || "Unknown error"));
+            }
+          } catch (err) {
+            alert("नेटवर्क त्रुटि भयो।");
+            console.error("Delete error:", err);
+          }
+        });
+
+        // ----- Edit / Update -----
+        function addEditListeners() {
+          document.querySelectorAll(".edit-icon").forEach((icon) => {
+            icon.addEventListener("click", async (e) => {
+              e.preventDefault();
+              const row = icon.closest(".owner-item");
+              const ownerId = row.getAttribute("data-owner-id");
+
+              const token = localStorage.getItem("auth_token");
+              if (!token) return alert("⚠️ कृपया पहिले लगइन गर्नुहोस्।");
+              const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
+
+              try {
+                const res = await fetch(`http://192.168.1.209:8000/api/owners/${ownerId}`, {
+                  headers: { Authorization: `Bearer ${REAL_TOKEN}`, Accept: "application/json" },
+                });
+                if (!res.ok) return alert("Failed to fetch owner details.");
+                const owner = await res.json();
+
+                document.getElementById("editOwnerId").value = owner.id;
+                document.getElementById("editOwnerName").value = owner.name ?? "";
+
+                // Respect saved preference for display
+                const latin = toLatinDigits(owner.phone_no || "").replace(/[^\d]/g,"");
+                const pref = readDigitPrefMap()[latin];
+                document.getElementById("editOwnerPhone").value = pref === "ne" ? toNepaliDigits(latin) : (latin || "");
+                document.getElementById("editOwnerAddress").value = owner.address ?? "";
+
+                editOwnerModal.show();
+              } catch (err) {
+                alert("Error loading owner data.");
+                console.error("Fetch error:", err);
+              }
+            });
+          });
+        }
+
+        // EDIT FORM VALIDATION & SUBMIT (no input-time coercion; validate on submit)
+        const editOwnerFormEl = document.getElementById("editOwnerForm");
+        const editNameEl  = document.getElementById("editOwnerName");
+        const editPhoneEl = document.getElementById("editOwnerPhone");
+        const editAddrEl  = document.getElementById("editOwnerAddress");
+
+        editOwnerFormEl?.addEventListener("submit", async (e) => {
           e.preventDefault();
-          const ownerItem = icon.closest(".owner-item");
-          const ownerId = ownerItem.getAttribute("data-owner-id");
+
+          // clear old custom errors
+          editNameEl.setCustomValidity("");
+          editPhoneEl.setCustomValidity("");
+          editAddrEl.setCustomValidity("");
+
+          // validate using Latin 10 digits
+          if (!editNameEl.value.trim())
+            editNameEl.setCustomValidity("कृपया नाम लेख्नुहोस्।");
+
+          const phoneLatin = toLatinDigits(editPhoneEl.value).replace(/[^\d]/g,"");
+          if (!phoneLatin) {
+            editPhoneEl.setCustomValidity("कृपया फोन नम्बर लेख्नुहोस्।");
+          } else if (phoneLatin.length !== 10) {
+            editPhoneEl.setCustomValidity("फोन नम्बर १० अङ्कको हुनुपर्छ।");
+          }
+
+          if (!editAddrEl.value.trim())
+            editAddrEl.setCustomValidity("कृपया ठेगाना लेख्नुहोस्।");
+
+          if (!editOwnerFormEl.checkValidity()) {
+            editOwnerFormEl.classList.add("was-validated");
+            (editOwnerFormEl.querySelector(":invalid") || editNameEl).focus();
+            return;
+          }
+
+          const ownerId = document.getElementById("editOwnerId").value;
+          const name     = editNameEl.value.trim();
+          const phone_no = phoneLatin; // send Latin to API
+          const address  = editAddrEl.value.trim();
+
           const token = localStorage.getItem("auth_token");
           if (!token) return alert("⚠️ कृपया पहिले लगइन गर्नुहोस्।");
-
           const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
 
           try {
             const res = await fetch(`http://192.168.1.209:8000/api/owners/${ownerId}`, {
+              method: "PUT",
               headers: {
                 Authorization: `Bearer ${REAL_TOKEN}`,
+                "Content-Type": "application/json",
                 Accept: "application/json",
               },
+              body: JSON.stringify({ name, phone_no, address }),
             });
 
-            if (!res.ok) return alert("Failed to fetch owner details.");
-            const owner = await res.json();
+            const data = await res.json();
+            if (res.ok) {
+              // remember how the user typed for this phone (on this device)
+              const typedPref = /[०-९]/.test(editPhoneEl.value) ? "ne" : "lat";
+              writeDigitPref(phoneLatin, typedPref);
 
-            document.getElementById("editOwnerId").value = owner.id;
-            document.getElementById("editOwnerName").value = owner.name;
-            document.getElementById("editOwnerPhone").value = owner.phone_no;
-            document.getElementById("editOwnerAddress").value = owner.address;
-
-            editOwnerModal.show();
+              // Update the row in place (respect pref)
+              const row = document.querySelector(`.owner-item[data-owner-id="${ownerId}"]`);
+              if (row) {
+                row.querySelector(".owner-name").textContent = data.owner?.name ?? name;
+                const toShow = typedPref === "ne" ? toNepaliDigits(phoneLatin) : phoneLatin;
+                row.querySelector(".owner-phone").textContent = toShow;
+                row.querySelector(".owner-address").textContent = data.owner?.address ?? address;
+              }
+              editOwnerModal.hide();
+              showFlashToast("घरधनी सफलतापूर्वक अपडेट भयो");
+            } else {
+              alert(data.message || "Failed to update owner.");
+            }
           } catch (err) {
-            alert("Error loading owner data.");
-            console.error("Fetch error:", err);
+            alert("नेटवर्क त्रुटि भयो।");
+            console.error("Update error:", err);
           }
         });
+
+        // Search filter — works with Nepali/English digits
+        window.filterOwners = function () {
+          const qEl = document.querySelector(".search-input");
+          const query = (qEl.value || "").toLowerCase();
+          const queryLatin = toLatinDigits(query).toLowerCase();
+
+          const items = document.querySelectorAll(".owner-item");
+          let visible = 0;
+
+          items.forEach((owner) => {
+            const name = owner.querySelector(".owner-name").textContent;
+            const phone = owner.querySelector(".owner-phone").textContent;
+            const address = owner.querySelector(".owner-address").textContent;
+
+            const hay = (name + " " + phone + " " + address).toLowerCase();
+            const hayLatin = toLatinDigits(hay).toLowerCase();
+
+            const show = hay.includes(query) || hayLatin.includes(queryLatin);
+            owner.style.display = show ? "" : "none";
+            if (show) visible++;
+          });
+
+          if (items.length && !visible) {
+            if (!document.getElementById("noMatchHint")) {
+              const hint = document.createElement("div");
+              hint.id = "noMatchHint";
+              hint.className = "text-center text-muted mt-2";
+              hint.textContent = "मिल्ने परिणाम भेटिएन";
+              document.getElementById("ownerList").appendChild(hint);
+            }
+          } else {
+            document.getElementById("noMatchHint")?.remove();
+          }
+        };
       });
-    }
+    </script>
 
-    editOwnerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const ownerId = document.getElementById("editOwnerId").value;
-      const name = document.getElementById("editOwnerName").value.trim();
-      const phone_no = document.getElementById("editOwnerPhone").value.trim();
-      const address = document.getElementById("editOwnerAddress").value.trim();
-
-      const token = localStorage.getItem("auth_token");
-      if (!token) return alert("⚠️ कृपया पहिले लगइन गर्नुहोस्।");
-
-      const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
-
-      try {
-        const res = await fetch(`http://192.168.1.209:8000/api/owners/${ownerId}`, {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${REAL_TOKEN}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ name, phone_no, address }),
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          const ownerItem = document.querySelector(`.owner-item[data-owner-id="${ownerId}"]`);
-          ownerItem.querySelector(".owner-name").textContent = data.owner.name;
-          ownerItem.querySelector(".owner-phone").textContent = data.owner.phone_no;
-          ownerItem.querySelector(".owner-address").textContent = data.owner.address;
-
-          editOwnerModal.hide();
-          showSuccessBanner("✔️ सफलतापूर्वक अपडेट भयो");
-        } else {
-          alert(data.message || "Failed to update owner.");
-        }
-      } catch (err) {
-        console.error("Update error:", err);
-        alert("नेटवर्क त्रुटि भयो। कृपया पुन: प्रयास गर्नुहोस्।");
-      }
-    });
-
-    window.filterOwners = function () {
-      const query = document.querySelector(".search-input").value.toLowerCase();
-      document.querySelectorAll(".owner-item").forEach((owner) => {
-        const name = owner.querySelector(".owner-name").textContent.toLowerCase();
-        const phone = owner.querySelector(".owner-phone").textContent.toLowerCase();
-        const address = owner.querySelector(".owner-address").textContent.toLowerCase();
-
-        owner.style.display =
-          name.includes(query) || phone.includes(query) || address.includes(query)
-            ? ""
-            : "none";
-      });
-    };
-
-    function showSuccessBanner(msg) {
-      const banner = document.getElementById("successBanner");
-      banner.textContent = msg;
-      banner.style.display = "block";
-      setTimeout(() => (banner.style.display = "none"), 3000);
-    }
-  });
-</script>
-
-
-    <!-- Edit Owner Modal -->
+    <!-- Edit Owner Modal (centered) -->
     <div class="modal fade" id="editOwnerModal" tabindex="-1" aria-labelledby="editOwnerLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <form id="editOwnerForm" class="modal-content">
+      <div class="modal-dialog modal-dialog-centered">
+        <form id="editOwnerForm" class="modal-content" novalidate autocomplete="off">
           <div class="modal-header">
             <h5 class="modal-title" id="editOwnerLabel">घरधनी सम्पादन गर्नुहोस्</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -288,15 +486,22 @@
             <input type="hidden" id="editOwnerId" name="id" />
             <div class="mb-3">
               <label for="editOwnerName" class="form-label">नाम</label>
-              <input type="text" class="form-control" id="editOwnerName" name="name" required />
+              <input type="text" class="form-control" id="editOwnerName" name="name" required
+                     autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+              <div class="invalid-feedback">कृपया नाम लेख्नुहोस्।</div>
             </div>
             <div class="mb-3">
               <label for="editOwnerPhone" class="form-label">फोन नम्बर</label>
-              <input type="text" class="form-control" id="editOwnerPhone" name="phone_no" required />
+              <input type="tel" class="form-control" id="editOwnerPhone" name="phone_no" required
+                     autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+                     inputmode="numeric" maxlength="10" />
+              <div class="invalid-feedback">फोन नम्बर १० अङ्कको हुनुपर्छ।</div>
             </div>
             <div class="mb-3">
               <label for="editOwnerAddress" class="form-label">ठेगाना</label>
-              <input type="text" class="form-control" id="editOwnerAddress" name="address" required />
+              <input type="text" class="form-control" id="editOwnerAddress" name="address" required
+                     autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+              <div class="invalid-feedback">कृपया ठेगाना लेख्नुहोस्।</div>
             </div>
           </div>
           <div class="modal-footer">
@@ -308,23 +513,17 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div
-      class="modal fade"
-      id="deleteConfirmModal"
-      tabindex="-1"
-      aria-labelledby="deleteConfirmLabel"
-      aria-hidden="true"
-    >
+    <div class="modal fade modal-delete" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteConfirmLabel">पुष्टि गर्नुहोस्</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">के तपाईं साँच्चिकै यो घरधनी हटाउन चाहनुहुन्छ?</div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">रद्द गर्नुहोस्</button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">हटाउनुहोस्</button>
+          <div class="modal-body">
+            <div class="del-icon"><i class="fa-solid fa-trash"></i></div>
+            <h5 class="del-title">घरधनी हटाउने?</h5>
+            <p class="del-sub">के तपाईं यो घरधनी हटाउन निश्चित हुनुभएको छ?</p>
+            <div class="del-actions">
+              <button type="button" class="btn-del-cancel" data-bs-dismiss="modal">होइन, राख्नुस्</button>
+              <button type="button" class="btn-del-go" id="confirmDeleteBtn">हटाउनुहोस्</button>
+            </div>
           </div>
         </div>
       </div>

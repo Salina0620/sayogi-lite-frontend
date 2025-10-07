@@ -1,113 +1,229 @@
 <!DOCTYPE html>
 <html lang="ne">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नोट सम्पादन गर्नुहोस्</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>नोट सम्पादन गर्नुहोस्</title>
+
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; height:100%; width:100%; }
+
+    :root{
+      --brand:#1AB189;
+      --text:#344054;
+      --text-strong:#0f172a;
+      --muted:#6b7280;
+
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+
+      --error:#e74c3c;
+      --error-soft:rgba(231,76,60,.15);
+    }
+
+    body::before{
+      content:""; position:fixed; inset:0 0 auto 0; height:var(--safe-top);
+      background:var(--brand); z-index:1000; pointer-events:none;
+    }
+    body{
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      -webkit-tap-highlight-color:transparent;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans Devanagari",sans-serif;
+      color:var(--text); background:#fff; overflow:hidden;
+    }
+
+    .page{ position:fixed; inset:0; display:flex; flex-direction:column; overflow:hidden; }
+    @supports (-webkit-touch-callout:none){ .page{ height:-webkit-fill-available; } }
+
+    .header{
+      background:var(--brand); color:#fff; display:flex; align-items:center; gap:10px;
+      padding:calc(14px + var(--safe-top)) calc(16px + var(--safe-right)) 14px calc(16px + var(--safe-left));
+    }
+    .back{ color:#fff; text-decoration:none; font-size:22px; line-height:1; padding:10px 12px; border-radius:12px; flex:0 0 auto; }
+    .title{ margin:6px 0 0; flex:1; text-align:center; color:#fff; font-weight:700; font-size:18px; line-height:1.2; transform:translateX(-12px); }
+
+    .content{ flex:1 1 auto; min-height:0; overflow:auto; background:#fff; padding:50px calc(18px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(18px + var(--safe-left)); }
+
+    .field{ margin-bottom:14px; }
+    .label{ display:block; font-size:13px; color:#667085; margin:0 0 6px; }
+
+    .input,.textarea{
+      width:100%; font-size:16px; border:2px solid var(--brand); border-radius:12px;
+      background:#fff; color:var(--text-strong); padding:12px 14px; outline:none;
+    }
+    .textarea{ min-height:200px; resize:vertical; line-height:1.4; }
+    .input::placeholder,.textarea::placeholder{ color:#9AA3AF; }
+
+    .err{ color:var(--error); font-size:12px; margin:6px 2px 0; min-height:14px; }
+    .is-invalid{ border-color:var(--error)!important; box-shadow:0 0 0 2px var(--error-soft); }
+
+    .check-row{ display:flex; align-items:center; gap:12px; margin:18px 0 0; color:var(--text-strong); }
+
+    .custom-checkbox{
+      -webkit-appearance:none; appearance:none; width:28px; height:28px; margin:0;
+      border:2px solid #C9CDD4; border-radius:8px; background:#fff; display:inline-grid; place-items:center; cursor:pointer;
+    }
+    .custom-checkbox:checked::after{ content:"✓"; font-size:20px; font-weight:800; color:#111; }
+
+    .actions{ display:flex; gap:16px; margin-top:22px; }
+    .btn{ flex:1 1 0; height:52px; border:none; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer; }
+    .btn-primary{ background:var(--brand); color:#fff; }
+    .btn-secondary{ background:#E5E7EB; color:var(--muted); }
+
+    @media (max-width:360px){ .title{ font-size:16px; } .btn{ height:50px; font-size:15px; } }
+
+    /* Toast (for inline errors only on this page) */
+    #toast{
+      position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); right:calc(12px + env(safe-area-inset-right,0px));
+      background:#fff; border:0; border-radius:12px; padding:10px 14px 10px 10px;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+      display:grid; grid-template-columns:32px 1fr 20px; align-items:center; gap:12px;
+      width:max-content; max-width:92vw; color:#111827;
+      opacity:0; transform:translateY(-8px); pointer-events:none;
+      transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+    .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#74c69d; }
+    .toast-badge.error{ background:#ef4444; }
+    .toast-badge svg{ width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .toast-msg{ font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#111827; }
+    .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
+  </style>
 </head>
 <body>
-    <div class="page-container">
-        <header class="header">
-            <a href="notelist.html" class="back-arrow">&#8592;</a>
-            <h1 class="page-title">नोट सम्पादन गर्नुहोस्</h1>
-        </header>
-        <main class="content">
-            <div class="input-group">
-                <input type="text" id="note-title" class="note-input" placeholder="शीर्षक लेख्नुहोस्...">
-            </div>
+  <div class="page">
+    <header class="header">
+      <a class="back" href="notelist.html" aria-label="अघाडि फर्कनुहोस्">&#8592;</a>
+      <h1 class="title">नोट सम्पादन गर्नुहोस्</h1>
+    </header>
 
-            <div class="note-card green-border">
-                <textarea id="note-description" class="note-content-textarea" placeholder="नोटको विवरण लेख्नुहोस्..."></textarea>
-            </div>
+    <main class="content">
+      <form id="noteForm" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" novalidate>
+        <div class="field">
+          <label class="label" for="note-title">शीर्षक</label>
+          <input id="note-title" name="title" class="input" type="text" placeholder="शीर्षक लेख्नुहोस्..." />
+          <div class="err" id="err-title"></div>
+        </div>
 
-            <div class="priority-checkbox-group">
-                <input type="checkbox" id="highPriority" class="custom-checkbox">
-                <label for="highPriority" class="checkbox-label">उच्च प्राथमिकता</label>
-            </div>
-        </main>
-        <footer class="footer">
-            <div class="action-buttons">
-                <button id="save-note" class="save-button">सेभ गर्नुहोस्</button>
-                <button id="cancel" class="cancel-button">रद्द गर्नुहोस्</button>
-            </div>
-        </footer>
-    </div>
+        <div class="field">
+          <label class="label" for="note-description">विवरण</label>
+          <textarea id="note-description" name="description" class="textarea" placeholder="नोटको विवरण लेख्नुहोस्..."></textarea>
+          <div class="err" id="err-description"></div>
+        </div>
 
-    <script>
+        <label class="check-row">
+          <input id="highPriority" type="checkbox" class="custom-checkbox" />
+          <span>उच्च प्राथमिकता</span>
+        </label>
+
+        <div class="actions">
+          <button id="save-note" class="btn btn-primary" type="submit">सेभ गर्नुहोस्</button>
+          <button id="cancel" class="btn btn-secondary" type="button">रद्द गर्नुहोस्</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <!-- Toast (errors only) -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    /* Toast */
+    function toast(msg, kind="error"){
+      const t=document.getElementById("toast");
+      const icon = kind==="error"
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+      t.innerHTML = `
+        <span class="toast-badge ${kind==="error"?"error":""}">${icon}</span>
+        <span class="toast-msg">${msg||""}</span>
+        <span class="toast-x" aria-label="Close">×</span>`;
+      t.classList.add("show");
+      t.querySelector(".toast-x").onclick = ()=> t.classList.remove("show");
+      clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove("show"), 2000);
+    }
+
+    /* Inline error helpers */
+    function setErr(id,msg){
+      const e=document.getElementById("err-"+id);
+      const f=document.getElementById(id==="title"?"note-title":"note-description");
+      if(e) e.textContent=msg||"";
+      if(f) f.classList.add("is-invalid");
+    }
+    function clearErr(id){
+      const e=document.getElementById("err-"+id);
+      const f=document.getElementById(id==="title"?"note-title":"note-description");
+      if(e) e.textContent="";
+      if(f) f.classList.remove("is-invalid");
+    }
+
     const API_BASE = "http://192.168.1.209:8000/api";
-const NOTE_ID = new URLSearchParams(window.location.search).get("id");
-const token = localStorage.getItem("auth_token");
+    const NOTE_ID = new URLSearchParams(location.search).get("id");
+    const token = localStorage.getItem("auth_token");
+    if (!token){ location.replace("login.html"); }
 
-if (!token) {
-    alert("You are not logged in!");
-    window.location.href = "login.html";
-}
-
-async function loadNote() {
-    if (!NOTE_ID) return; // skip if creating
-    try {
+    async function loadNote(){
+      if(!NOTE_ID) return;
+      try{
         const res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/json"
-            }
+          headers:{ "Authorization": `Bearer ${token}`, "Accept":"application/json" }
         });
-
-        if (!res.ok) throw new Error("Failed to load note");
+        if(!res.ok) throw new Error("नोट लोड हुन सकेन");
         const note = await res.json();
         document.getElementById("note-title").value = note.title || "";
         document.getElementById("note-description").value = note.description || "";
-        document.getElementById("highPriority").checked = note.high_priority ?? false;
-    } catch (err) {
-        alert(err.message);
-    }
-}
-
-document.getElementById("save-note").addEventListener("click", async () => {
-    const title = document.getElementById("note-title").value.trim();
-    const description = document.getElementById("note-description").value.trim();
-    const highPriority = document.getElementById("highPriority").checked;
-
-    if (!title) {
-        alert("शीर्षक आवश्यक छ!");
-        return;
+        document.getElementById("highPriority").checked = !!note.high_priority;
+      }catch(e){ toast(e.message || "लोड त्रुटि","error"); }
     }
 
-    try {
-        const res = await fetch(
-            NOTE_ID ? `${API_BASE}/notes/${NOTE_ID}` : `${API_BASE}/notes`,
-            {
-                method: NOTE_ID ? "PUT" : "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({ title, description, high_priority: highPriority })
-            }
-        );
+    document.getElementById("note-title").addEventListener("input", ()=> clearErr("title"));
+    document.getElementById("note-description").addEventListener("input", ()=> clearErr("description"));
 
-        if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.message || "Failed to save note");
+    document.getElementById("noteForm").addEventListener("submit", async (ev)=>{
+      ev.preventDefault();
+      clearErr("title"); clearErr("description");
+
+      const title = document.getElementById("note-title").value.trim();
+      const description = document.getElementById("note-description").value.trim();
+      const highPriority = document.getElementById("highPriority").checked;
+
+      let ok=true;
+      if(!title){ setErr("title","शीर्षक आवश्यक छ।"); ok=false; }
+      if(description.length>2000){ setErr("description","विवरण धेरै लामो छ।"); ok=false; }
+      if(!ok) return;
+
+      try{
+        const res = await fetch(NOTE_ID ? `${API_BASE}/notes/${NOTE_ID}` : `${API_BASE}/notes`, {
+          method: NOTE_ID ? "PUT" : "POST",
+          headers:{ "Content-Type":"application/json", "Authorization": `Bearer ${token}`, "Accept":"application/json" },
+          body: JSON.stringify({ title, description, high_priority: highPriority })
+        });
+        const data = await res.json().catch(()=> ({}));
+
+        if(!res.ok){
+          if(res.status===422 && data.errors){
+            if(data.errors.title) setErr("title", Array.isArray(data.errors.title)?data.errors.title[0]:data.errors.title);
+            if(data.errors.description) setErr("description", Array.isArray(data.errors.description)?data.errors.description[0]:data.errors.description);
+            return;
+          }
+          throw new Error(data.message || "सेभ असफल भयो");
         }
 
-        const note = await res.json();
-        alert(NOTE_ID ? "नोट अपडेट गरियो!" : "नोट बन्यो!");
-        window.location.href = `notelist.html?id=${note.id}`;
-    } catch (err) {
-        alert(err.message);
-    }
-});
+        // Success: NO toast here. Redirect and show on list.
+        const msg = NOTE_ID ? "नोट सफलतापूर्वक अपडेट भयो" : "नोट सफलतापूर्वक बन्यो";
+        sessionStorage.setItem("toast_msg", msg);
+        sessionStorage.setItem("toast_kind", "success");
+        location.replace("notelist.html");
+      }catch(e){ toast(e.message || "सेभ असफल भयो","error"); }
+    });
 
-document.getElementById("cancel").addEventListener("click", () => {
-    window.location.href = "notelist.html";
-});
+    document.getElementById("cancel").addEventListener("click", ()=>{ location.replace("notelist.html"); });
 
-loadNote();
-
-
-    </script>
+    loadNote();
+  </script>
 </body>
 </html>

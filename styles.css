@@ -77,7 +77,7 @@ body {
 
 /* Page 2 Specific Header Buttons */
 .new-button {
-    background-color: #4CAF50; /* A slightly brighter green for the new button */
+    background-color: #186B97; /* A slightly brighter green for the new button */
     border: none;
     color: #ffffff;
     font-size: 14px;
@@ -527,7 +527,7 @@ body {
     justify-content: flex-start; /* Align items to the start */
     align-items: center;
     padding: 15px 20px;
-    background-color: #006F4D; /* Dark green */
+    background-color: #1AB189; /* Dark green */
     color: #ffffff;
     position: sticky;
     top: 0;

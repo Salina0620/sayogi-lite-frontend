@@ -2,154 +2,270 @@
 <html lang="ne">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Add Owner</title>
-    <!-- Bootstrap CSS -->
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="CSS/style.css" />
-    <!-- Google Fonts & Font Awesome -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+
+    <style>
+      :root {
+        --brand-green: #13a87d;
+        --cta-blue: #186b97;
+        --alert-red: #e74c3c;
+        --bg: #f3f5f7;
+        --surface: #fff;
+        --text-900: #0f172a;
+        --text-600: #667085;
+        --shadow-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+        --input-green: #76d1bb;
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; min-height: 100dvh; background: var(--bg);
+        font-family: "Noto Sans Devanagari", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; color: var(--text-900);
+      }
+
+      /* edge to edge */
+      .mobile-container { width: 100%; min-height: 100dvh; background: var(--surface); display: flex; flex-direction: column; }
+
+      /* header */
+      .page-header {
+        position: sticky; top: 0; z-index: 100;
+        background: var(--brand-green); color: #fff; padding: calc(12px + var(--safe-top)) 16px 0;
+      }
+      .header-content {
+        display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; position: relative; z-index: 1;
+      }
+      .back-arrow{
+        color:#fff; text-decoration:none; display:inline-flex; align-items:center; justify-content:center;
+        width:44px; height:44px; margin-left:-6px; cursor:pointer; -webkit-tap-highlight-color:transparent; position:relative; z-index:5;
+      }
+      .back-arrow i{ pointer-events:none; }
+      .page-header h1 { margin: 0; font-size: 22px; font-weight: 700; text-align: center; flex: 1; transform: translateX(-10px); }
+      .header-divider { background: #fff; height: 0; }
+
+      /* content */
+      .page-content {
+        flex: 1 1 auto; min-height: 0; overflow: auto; overflow-x: hidden;
+        background: #f8fafb; padding: 16px 18px calc(18px + var(--safe-bottom));
+      }
+      .profile-icon-lg-wrapper { display: flex; justify-content: center; margin: 6px 0 14px; }
+      .profile-icon-lg {
+        width: 96px; height: 96px; border-radius: 999px; background: #e6f4ea; color: #0e8d6a;
+        display: grid; place-items: center; font-size: 40px; box-shadow: var(--shadow-card);
+      }
+
+      /* inputs */
+      .form-control {
+        border: 2px solid var(--input-green); border-radius: 12px; padding: 8px 12px; height: 46px; font-size: 15px; background: #fff; color: var(--text-900);
+      }
+      .form-control::placeholder { color: #98a2b3; }
+      .form-control:focus { border-color: var(--brand-green); box-shadow: 0 0 0 2px rgba(19, 168, 125, 0.18); }
+      .invalid-feedback { font-size: 12px; }
+
+      /* keep same look even when invalid/valid (no ticks/green/red borders) */
+      .was-validated .form-control:invalid,
+      .form-control.is-invalid,
+      .was-validated .form-control:valid,
+      .form-control.is-valid {
+        border-color: var(--input-green) !important; box-shadow: none !important; background-image: none !important;
+      }
+
+      /* buttons — lock colors across states */
+      .action-buttons { display: flex; flex-direction: column; gap: 10px; }
+      .btn-save-owner, .btn-cancel-owner {
+        color: #fff; border: none; height: 46px; border-radius: 12px; font-size: 16px; font-weight: 700;
+        box-shadow: none !important; --bs-btn-focus-box-shadow: none; -webkit-tap-highlight-color: transparent;
+      }
+      .btn-save-owner { background: var(--cta-blue); border-color: var(--cta-blue); }
+      .btn-cancel-owner { background: var(--alert-red); border-color: var(--alert-red); }
+
+      .btn-save-owner:hover, .btn-save-owner:focus, .btn-save-owner:active, .btn-save-owner:disabled {
+        background: var(--cta-blue) !important; border-color: var(--cta-blue) !important; color: #fff !important; opacity: 1 !important; box-shadow: none !important; outline: none !important;
+      }
+      .btn-cancel-owner:hover, .btn-cancel-owner:focus, .btn-cancel-owner:active, .btn-cancel-owner:disabled {
+        background: var(--alert-red) !important; border-color: var(--alert-red) !important; color: #fff !important; opacity: 1 !important; box-shadow: none !important; outline: none !important;
+      }
+
+      @media (max-height: 640px) {
+        .page-header h1 { font-size: 20px; }
+        .profile-icon-lg { width: 80px; height: 80px; font-size: 34px; }
+        .page-content { padding-top: 12px; }
+      }
+    </style>
   </head>
+
   <body>
     <div class="mobile-container">
-      <!-- Page Header -->
       <header class="page-header">
-        <div class="header-content mb-3 pt-3">
-          <a href="owner-list.html" class="back-arrow"
-            ><i class="fas fa-chevron-left"></i
-          ></a>
+        <div class="header-content">
+          <a href="ownerlist.html" class="back-arrow"><i class="fas fa-chevron-left"></i></a>
           <h1>घरधनी थप्नुहोस्</h1>
-          <div class="header-placeholder"></div>
+          <span style="width: 20px"></span>
         </div>
+        <div class="header-divider"></div>
       </header>
 
-      <!-- Main Content -->
       <main class="content-area page-content">
-        <!-- Profile Icon -->
         <div class="profile-icon-lg-wrapper">
-          <div class="profile-icon-lg">
-            <i class="fas fa-user"></i>
-          </div>
+          <div class="profile-icon-lg"><i class="fas fa-user"></i></div>
         </div>
 
-        <!-- Add Owner Form -->
-        <form id="ownerForm">
-          <div class="form-group mb-3">
+        <!-- autocomplete disabled; validate on submit -->
+        <form id="ownerForm" novalidate autocomplete="off">
+          <div class="mb-3">
             <input
               type="text"
               class="form-control"
               id="owner-name"
-              placeholder="घरधनी नाम"
+              placeholder="घरधनी  नाम"
               required
+              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
             />
+            <div class="invalid-feedback">कृपया नाम लेख्नुहोस्।</div>
           </div>
-          <div class="form-group mb-3">
+
+          <div class="mb-3">
             <input
               type="tel"
               class="form-control"
               id="owner-phone"
               placeholder="फोन नम्बर"
               required
+              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+              inputmode="numeric" maxlength="10"
             />
+            <div class="invalid-feedback">फोन नम्बर १० अङ्कको हुनुपर्छ।</div>
           </div>
-          <div class="form-group mb-4">
+
+          <div class="mb-4">
             <input
               type="text"
               class="form-control"
               id="owner-address"
               placeholder="ठेगाना लेख्नुहोस्"
               required
+              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
             />
+            <div class="invalid-feedback">कृपया ठेगाना लेख्नुहोस्।</div>
           </div>
 
           <div class="action-buttons">
-            <button type="submit" class="btn btn-save-owner w-100">
-              जानकारी बचत गर्नुहोस्
-            </button>
-            <button type="button" class="btn btn-cancel-owner w-100">
-              रद्द गर्नुहोस्
-            </button>
+            <button type="submit" class="btn btn-save-owner w-100">जानकारी बचत गर्नुहोस्</button>
+            <button type="button" class="btn btn-cancel-owner w-100" onclick="history.back()">रद्द गर्नुहोस्</button>
           </div>
         </form>
       </main>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-document.getElementById('ownerForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+    <script>
+      // Back arrow safety (in case any overlay blocks it)
+      (function ensureBackWorks(){
+        const back = document.querySelector('.back-arrow');
+        if (!back) return;
+        const go = (e) => { e.preventDefault(); window.location.href = 'ownerlist.html'; };
+        back.addEventListener('click', go);
+        back.addEventListener('touchend', go, { passive: false });
+        back.addEventListener('pointerup', go);
+      })();
 
-  const name = document.getElementById('owner-name').value.trim();
-  const phone_no = document.getElementById('owner-phone').value.trim();
-  const address = document.getElementById('owner-address').value.trim();
+      // Digit helpers
+      const DIGIT_PREF_KEY = "digit_pref_by_phone";
+      function toLatinDigits(str){
+        if (!str) return "";
+        return str.replace(/[०-९]/g, (ch) => "०१२३४५६७८९".indexOf(ch)).replace(/[^\d]/g,"");
+      }
+      function typedScriptIsNepali(str){ return /[०-९]/.test(str || ""); }
+      function readDigitPrefMap(){
+        try{ return JSON.parse(localStorage.getItem(DIGIT_PREF_KEY) || "{}"); }catch{ return {}; }
+      }
+      function writeDigitPref(phoneLatin, pref){
+        const m = readDigitPrefMap(); m[phoneLatin] = pref; localStorage.setItem(DIGIT_PREF_KEY, JSON.stringify(m));
+      }
 
-  if (!name || !phone_no || !address) {
-    alert('⚠️ कृपया सबै विवरणहरू भर्नुहोस्।');
-    return;
-  }
+      const form = document.getElementById("ownerForm");
+      const nameEl = document.getElementById("owner-name");
+      const phoneEl = document.getElementById("owner-phone");
+      const addressEl = document.getElementById("owner-address");
 
-  let token = localStorage.getItem('auth_token');
-  if (!token) {
-    alert('⚠️ कृपया पहिले लगइन गर्नुहोस्।');
-    window.location.href = 'login.html';
-    return;
-  }
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-  // Handle token with prefix like "user_id|token"
-  const REAL_TOKEN = token.includes('|') ? token.split('|')[1] : token;
+        // clear previous custom errors
+        nameEl.setCustomValidity("");
+        phoneEl.setCustomValidity("");
+        addressEl.setCustomValidity("");
 
-  try {
-    const response = await fetch('http://192.168.1.209:8000/api/owners', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${REAL_TOKEN}`
-      },
-      body: JSON.stringify({ name, phone_no, address })
-    });
+        // validate on submit (Latin 10-digit)
+        if (!nameEl.value.trim()) nameEl.setCustomValidity("कृपया नाम लेख्नुहोस्।");
 
-    let data;
-    try {
-      data = await response.json();
-    } catch (err) {
-      const text = await response.text();
-      console.error("Non-JSON response:", text);
-      alert("सर्भरबाट JSON प्रतिक्रिया आएन। Console मा जाँच गर्नुहोस्।");
-      return;
-    }
+        const phoneLatin = toLatinDigits(phoneEl.value);
+        if (!phoneLatin) {
+          phoneEl.setCustomValidity("कृपया फोन नम्बर लेख्नुहोस्।");
+        } else if (phoneLatin.length !== 10) {
+          phoneEl.setCustomValidity("फोन नम्बर १० अङ्कको हुनुपर्छ।");
+        }
 
-    if (response.ok) {
-      alert('✅ मालिक सफलतापूर्वक थपियो।');
-      window.location.href = 'ownerlist.html';
-    } else {
-      const msg = data.errors ? Object.values(data.errors).flat().join("\n") : data.message || '❌ थप्न सकेन';
-      alert(msg);
-      console.error(data);
-    }
-  } catch (err) {
-    console.error(err);
-    alert('📡 सर्भरमा पहुँच भएन। कृपया पुन: प्रयास गर्नुहोस्।');
-  }
-});
-</script>
+        if (!addressEl.value.trim()) addressEl.setCustomValidity("कृपया ठेगाना लेख्नुहोस्।");
 
+        if (!form.checkValidity()) {
+          form.classList.add("was-validated");
+          (form.querySelector(":invalid") || nameEl).focus();
+          return;
+        }
 
+        const payload = {
+          name: nameEl.value.trim(),
+          phone_no: phoneLatin,                 // send Latin to API
+          address: addressEl.value.trim(),
+        };
 
+        let token = localStorage.getItem("auth_token");
+        if (!token) { alert("⚠️ कृपया पहिले लगइन गर्नुहोस्।"); window.location.href = "login.html"; return; }
+        const REAL_TOKEN = token.includes("|") ? token.split("|")[1] : token;
+
+        try {
+          const response = await fetch("http://192.168.1.209:8000/api/owners", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json", Authorization: `Bearer ${REAL_TOKEN}` },
+            body: JSON.stringify(payload),
+          });
+
+          let data; try { data = await response.json(); } catch { data = {}; }
+
+          if (response.ok) {
+            // remember how the user typed (per phone) for display later on this device
+            writeDigitPref(phoneLatin, typedScriptIsNepali(phoneEl.value) ? "ne" : "lat");
+            localStorage.setItem("flash_msg", "घरधनी  सफलतापूर्वक थपियो");
+            window.location.href = "ownerlist.html";
+          } else {
+            const msg = data?.errors ? Object.values(data.errors).flat().join("\n") : data?.message || "❌ थप्न सकेन";
+            alert(msg);
+          }
+        } catch (err) {
+          alert("📡 सर्भरमा पहुँच भएन।");
+          console.error(err);
+        }
+      });
+    </script>
   </body>
 </html>

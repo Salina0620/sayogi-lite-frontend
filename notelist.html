@@ -1,73 +1,178 @@
 <!DOCTYPE html>
 <html lang="ne">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नोटहरु</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>नोटहरु</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0!important; padding:0!important; width:100%!important; height:100%!important; }
+    :root{
+      --brand-green:#13a87d; --cta-blue:#186b97; --surface:#fff;
+      --text-900:#0f172a; --text-700:#344054; --border:#e9eef3; --shadow:0 8px 24px rgba(16,24,40,.06);
+      --empty-ill-w:150px;
+      --safe-top:env(safe-area-inset-top,0px); --safe-right:env(safe-area-inset-right,0px); --safe-bottom:env(safe-area-inset-bottom,0px); --safe-left:env(safe-area-inset-left,0px);
+    }
+    body::before{ content:""; position:fixed; inset:0 0 auto 0; height:var(--safe-top); background:var(--brand-green); z-index:1000; pointer-events:none; }
+    html,body{
+      background:#fff; color:var(--text-700);
+      font-family:"Poppins","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; -webkit-tap-highlight-color:transparent;
+      overflow:hidden;
+    }
+
+    .page-container{ position:fixed; inset:0; width:100vw; height:100dvh; min-height:100svh; background:var(--surface); display:flex; flex-direction:column; padding-bottom:var(--safe-bottom); overflow:hidden; }
+    @supports (-webkit-touch-callout:none){ .page-container{ height:-webkit-fill-available; } }
+
+    .header{
+      position:relative; display:flex; align-items:center; gap:8px; background:var(--brand-green); color:#fff;
+      padding:calc(10px + var(--safe-top)) calc(14px + var(--safe-right)) 44px calc(14px + var(--safe-left));
+    }
+    .back-arrow{ text-decoration:none; color:#fff; font-size:22px; line-height:1; padding:10px 12px; border-radius:12px; }
+    .page-title{ flex:1; text-align:center; margin:0; font-size:18px; font-weight:700; line-height:1.2; transform:translateX(-8px); }
+    .new-button{ position:absolute; right:calc(16px + var(--safe-right)); bottom:-15px; z-index:5; background:var(--cta-blue); color:#fff; text-decoration:none; height:36px; padding:0 12px; border-radius:18px; font-size:13px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; line-height:1; cursor:pointer; max-width:calc(100% - 32px); white-space:nowrap; }
+
+    .content{ flex:1 1 auto; min-height:0; overflow:auto; background:#f8fafb; padding:28px calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left)); overscroll-behavior:contain; }
+
+    .note-list{ display:grid; gap:10px; }
+    .list-item{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:#fff; border:1px solid var(--border); border-radius:16px; padding:12px 14px; box-shadow:var(--shadow); min-height:56px; cursor:pointer; }
+    .list-item:active{ transform:translateY(1px); }
+    .list-item.important{ background:#fdebec; border-color:#f5c2c7; border-radius:20px; }
+    .item-details{ display:flex; align-items:center; gap:10px; min-width:0; text-align:left; }
+    .item-text{ display:flex; flex-direction:column; min-width:0; }
+    .item-title{ margin:0; color:var(--text-900); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .item-date{ margin:2px 0 0; color:#667085; font-size:12px; }
+    .alert-icon{ display:inline-grid; place-items:center; width:24px; height:24px; border-radius:999px; background:#f04438; color:#fff; font-weight:700; font-size:14px; line-height:1; flex:0 0 auto; }
+    .arrow-right{ color:#98a2b3; font-size:18px; line-height:1; flex:0 0 auto; }
+
+    .empty-state{ text-align:center; color:#667085; padding:40px 12px 24px; }
+    .empty-ill{ width:min(var(--empty-ill-w),48vw); height:auto; margin:4vh auto 10px; display:block; opacity:.98; }
+    .empty-title{ margin:0 0 6px; font-weight:700; color:#3b4151; font-size:22px; }
+    .empty-sub{ margin:0 0 18px; font-size:14px; }
+    .empty-cta{ display:inline-block; background:var(--brand-green); color:#fff; text-decoration:none; padding:12px 22px; border-radius:16px; font-weight:700; font-size:14px; }
+
+    @media (max-width:340px){ .page-title{ font-size:16px; } .new-button{ bottom:-18px; height:34px; font-size:12.5px; padding:0 10px; } .list-item{ padding:10px 12px; } .empty-title{ font-size:20px; } }
+
+    /* Toast (same as form page) */
+    #toast{
+      position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); right:calc(12px + env(safe-area-inset-right,0px));
+      background:#fff; border:0; border-radius:12px; padding:10px 14px 10px 10px;
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+      display:grid; grid-template-columns:32px 1fr 20px; align-items:center; gap:12px;
+      width:max-content; max-width:92vw; color:#111827;
+      opacity:0; transform:translateY(-8px); pointer-events:none;
+      transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2;
+      font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+    #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+    .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#74c69d; }
+    .toast-badge.error{ background:#ef4444; }
+    .toast-badge svg{ width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .toast-msg{ font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#111827; }
+    .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
+  </style>
 </head>
 <body>
-<div class="page-container">
+  <div class="page-container">
     <header class="header">
-        <a href="home.html" class="back-arrow">&#8592;</a>
-        <h1 class="page-title">नोटहरु</h1>
-        <a href="createnote.html">
-            <button class="new-button">+ नयाँ</button>
-        </a>
+      <a href="home.html" class="back-arrow" aria-label="अघाडि फर्कनुहोस्">&lt;</a>
+      <h1 class="page-title">नोटहरु</h1>
+      <a href="createnote.html" class="new-button">+ नयाँ</a>
     </header>
+
     <main class="content">
-        <div class="note-list" id="note-list">
-            <!-- Notes will be dynamically added here -->
-        </div>
+      <div class="note-list" id="note-list"></div>
     </main>
-</div>
+  </div>
 
-<script>
-const API_BASE = "http://192.168.1.209:8000/api";
-const token = localStorage.getItem("auth_token");
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite"></div>
 
-if (!token) {
-    alert("You are not logged in!");
-    window.location.href = "login.html";
-}
-
-// Fetch all notes
-async function loadNotes() {
-    try {
-        const res = await fetch(`${API_BASE}/notes`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error("नोटहरू लोड गर्न असफल");
-
-        const notes = await res.json();
-        const listContainer = document.getElementById("note-list");
-        listContainer.innerHTML = "";
-
-        notes.forEach(note => {
-            const div = document.createElement("div");
-            div.className = "list-item";
-            div.innerHTML = `
-                <div class="item-details">
-                    ${note.high_priority ? '<span class="alert-icon">!</span>' : ''}
-                    <div>
-                        <p class="item-title">${note.title}</p>
-                        <p class="item-date">मिति ${new Date(note.created_at).toLocaleDateString('ne-NP')}</p>
-                    </div>
-                </div>
-                <span class="arrow-right">&#8594;</span>
-            `;
-            // Clicking opens the note detail page
-            div.addEventListener("click", () => {
-                window.location.href = `note.html?id=${note.id}`;
-            });
-            listContainer.appendChild(div);
-        });
-    } catch (err) {
-        alert(err.message);
+  <script>
+    function toast(msg, kind="success"){
+      const t=document.getElementById("toast");
+      const icon = kind==="error"
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+      t.innerHTML = `
+        <span class="toast-badge ${kind==="error"?"error":""}">${icon}</span>
+        <span class="toast-msg">${msg||""}</span>
+        <span class="toast-x" aria-label="Close">×</span>`;
+      t.classList.add("show");
+      t.querySelector(".toast-x").onclick = ()=> t.classList.remove("show");
+      clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove("show"), 2000);
     }
-}
 
-loadNotes();
-</script>
+    // show cross-page toast (create/update/delete)
+    (function(){
+      const msg = sessionStorage.getItem("toast_msg");
+      const kind = sessionStorage.getItem("toast_kind") || "success";
+      if(msg){ toast(msg, kind); sessionStorage.removeItem("toast_msg"); sessionStorage.removeItem("toast_kind"); }
+    })();
+
+    const API_BASE = "http://192.168.1.209:8000/api";
+    const token = localStorage.getItem("auth_token");
+    if(!token){ location.replace("login.html"); }
+
+    function fmtNepDate(iso){ try{ return new Date(iso).toLocaleDateString("ne-NP"); }catch{ return ""; } }
+    function esc(s){ s = s==null ? "" : String(s); return s.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function renderEmptyNotes(){
+      const list = document.getElementById("note-list");
+      list.innerHTML = `
+        <div class="empty-state" role="status" aria-live="polite">
+          <img class="empty-ill" alt="" src="illustration.png"
+               onerror="this.outerHTML=\`
+                 <svg class='empty-ill' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg' aria-hidden='true'>
+                   <rect x='12' y='16' width='96' height='88' rx='10' fill='#E6F4EA'/>
+                   <rect x='24' y='30' width='72' height='10' rx='5' fill='#B7E3D3'/>
+                   <rect x='24' y='48' width='72' height='10' rx='5' fill='#B7E3D3'/>
+                   <rect x='24' y='66' width='48' height='10' rx='5' fill='#B7E3D3'/>
+                 </svg>\`" />
+          <h2 class="empty-title">यो खाली छ,</h2>
+          <p class="empty-sub">तपाईंको कुनै पनि नोट छैन जस्तो देखिन्छ।</p>
+          <a class="empty-cta" href="createnote.html">सुरु गर्नुहोस्</a>
+        </div>`;
+    }
+
+    async function loadNotes(){
+      const list = document.getElementById("note-list");
+      try{
+        const res = await fetch(API_BASE + "/notes", { headers:{ Authorization:"Bearer " + token } });
+        if(!res.ok) throw new Error("नोटहरू लोड गर्न असफल");
+        const notes = await res.json();
+
+        if(!Array.isArray(notes) || notes.length===0){ renderEmptyNotes(); return; }
+
+        list.innerHTML = "";
+        notes.forEach(note=>{
+          const div = document.createElement("div");
+          div.className = note.high_priority ? "list-item important" : "list-item";
+          const badge = note.high_priority ? '<span class="alert-icon">!</span>' : "";
+          div.innerHTML =
+            '<div class="item-details">' + badge +
+              '<div class="item-text">' +
+                '<p class="item-title">' + esc(note.title) + '</p>' +
+                '<p class="item-date">मिति ' + esc(fmtNepDate(note.created_at)) + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<span class="arrow-right">&gt;</span>';
+          div.addEventListener("click", ()=>{ location.href = "note.html?id=" + encodeURIComponent(note.id); });
+          list.appendChild(div);
+        });
+      }catch(err){
+        console.warn(err);
+        renderEmptyNotes();
+        toast("नोटहरू लोड हुन सकेन","error");
+      }
+    }
+
+    loadNotes();
+  </script>
 </body>
 </html>

@@ -1,176 +1,207 @@
 <!DOCTYPE html>
 <html lang="ne">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नोट विवरण / सम्पादन</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>नोट</title>
+  <style>
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; height:100%; width:100%; }
+
+    :root{
+      --brand:#1AB189; --text:#344054; --text-strong:#0f172a;
+      --blue:#186b97; --danger:#e24a3a;
+      --safe-top:env(safe-area-inset-top,0px); --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px); --safe-left:env(safe-area-inset-left,0px);
+      --border:#d2e9df; --error:#e74c3c; --error-soft:rgba(231,76,60,.15);
+      --shadow:0 8px 24px rgba(16,24,40,.06);
+    }
+
+    body::before{ content:""; position:fixed; inset:0 0 auto 0; height:var(--safe-top); background:var(--brand); z-index:1000; pointer-events:none; }
+    body{ font-family:"Poppins","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; color:var(--text); background:#fff; -webkit-font-smoothing:antialiased; overflow:hidden; }
+
+    .page{ position:fixed; inset:0; display:flex; flex-direction:column; overflow:hidden; }
+    @supports (-webkit-touch-callout:none){ .page{ height:-webkit-fill-available; } }
+
+    .header{ background:var(--brand); color:#fff; display:flex; align-items:center; gap:10px; padding:calc(14px + var(--safe-top)) calc(16px + var(--safe-right)) 14px calc(16px + var(--safe-left)); }
+    .back{ color:#fff; text-decoration:none; font-size:22px; line-height:1; padding:10px 12px; border-radius:12px; flex:0 0 auto; }
+    .title{ margin:6px 0 0; flex:1; text-align:center; color:#fff; font-weight:700; font-size:18px; line-height:1.2; transform:translateX(-12px); }
+
+    .content{ flex:1 1 auto; min-height:0; overflow:auto; background:#f7f9fb; padding:18px calc(16px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(16px + var(--safe-left)); }
+
+    .toolbar{ display:flex; justify-content:flex-end; margin:4px 0 10px; }
+    .pill-danger{ display:inline-flex; align-items:center; gap:8px; height:34px; padding:0 14px; border-radius:999px; background:var(--danger); color:#fff; border:0; cursor:pointer; font-weight:700; }
+    .pill-danger svg{ width:16px; height:16px; fill:none; stroke:#fff; stroke-width:2; }
+
+    .note-box{ background:#fff; border:2px solid var(--border); border-radius:12px; margin:0 0 12px; }
+    .textarea{ width:100%; min-height:220px; resize:vertical; border:0; outline:none; background:transparent; padding:14px; font-size:16px; color:var(--text-strong); line-height:1.5; }
+
+    .err{ color:var(--error); font-size:12px; margin:6px 2px 6px; min-height:14px; }
+    .is-invalid{ box-shadow:0 0 0 2px var(--error-soft) inset; }
+
+    .check-row{ display:flex; align-items:center; gap:14px; margin:14px 0 28px; color:#6b7280; }
+    .custom-checkbox{ -webkit-appearance:none; appearance:none; width:38px; height:38px; border:2px solid #C9CDD4; background:#fff; border-radius:10px; display:inline-grid; place-items:center; cursor:pointer; }
+    .custom-checkbox:checked::after{ content:"✓"; font-size:22px; font-weight:800; color:#111; }
+
+    .primary-btn{ display:block; width:100%; height:54px; border:0; border-radius:12px; background:var(--blue); color:#fff; font-weight:700; font-size:16px; cursor:pointer; }
+
+    /* Toast (for errors only on this page) */
+    #toast{ position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); right:calc(12px + env(safe-area-inset-right,0px)); background:#fff; border:0; border-radius:12px; padding:10px 14px 10px 10px; box-shadow:0 10px 24px rgba(0,0,0,.18); display:grid; grid-template-columns:32px 1fr 20px; align-items:center; gap:12px; width:max-content; max-width:92vw; color:#111827; opacity:0; transform:translateY(-8px); pointer-events:none; transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2; }
+    #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+    .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#74c69d; }
+    .toast-badge.error{ background:#ef4444; }
+    .toast-badge svg{ width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+    .toast-msg{ font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#111827; }
+    .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
+
+    /* Delete modal */
+    .modal{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; padding:16px; z-index:9999; }
+    .modal.show{ display:flex; }
+    .modal-card{ width:calc(100% - 32px); max-width:420px; background:#fff; border-radius:14px; padding:18px; box-shadow:var(--shadow); }
+    .modal-card h3{ margin:0 0 8px; font-size:18px; font-weight:700; color:#0f172a; }
+    .modal-card p{ margin:0 0 14px; font-size:14px; color:#475467; }
+    .modal-actions{ display:flex; gap:10px; }
+    .btn{ height:46px; border:0; border-radius:12px; font-weight:700; cursor:pointer; flex:1; }
+    .btn-outline{ background:#eef2f6; color:#475467; }
+    .btn-danger{ background:var(--danger); color:#fff; }
+  </style>
 </head>
 <body>
-<div class="page-container">
+  <div class="page">
     <header class="header">
-        <a href="notelist.html" class="back-arrow">&#8592;</a>
-        <h1 class="page-title" id="note-title">नोट</h1>
-        <button id="delete-note" class="delete-button">
-            <span class="delete-icon">🗑️</span> मेटाउनु
-        </button>
+      <a href="notelist.html" class="back" aria-label="अघाडि फर्कनुहोस्">&#8592;</a>
+      <h1 class="title" id="page-title">नोट</h1>
     </header>
+
     <main class="content">
-        <div class="input-group">
-            <input type="text" id="note-title-input" class="note-input" placeholder="शीर्षक लेख्नुहोस्...">
-        </div>
+      <div class="toolbar">
+        <button class="pill-danger" id="btn-open-del">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2M6 6l1 14a2 2 0 002 2h6a2 2 0 002-2l1-14"/></svg>
+          डिलिट
+        </button>
+      </div>
 
-        <div class="note-card green-border">
-            <textarea id="note-description" class="note-content-textarea" placeholder="नोटको विवरण लेख्नुहोस्..."></textarea>
-        </div>
+      <div class="note-box" id="note-box">
+        <textarea id="n-desc" class="textarea" placeholder="यहाँ नोट लेख्नुहोस्..."></textarea>
+      </div>
+      <div class="err" id="err-desc"></div>
 
-        <p id="note-date" class="note-date"></p>
+      <label class="check-row">
+        <input id="highPriority" type="checkbox" class="custom-checkbox" />
+        <span>उच्च प्राथमिकता</span>
+      </label>
 
-        <div class="priority-checkbox-group">
-            <input type="checkbox" id="highPriority" class="custom-checkbox">
-            <label for="highPriority" class="checkbox-label">उच्च प्राथमिकता</label>
-        </div>
+      <button class="primary-btn" id="btn-update">अपडेट गर्नुहोस्</button>
     </main>
-    <footer class="footer">
-        <div class="action-buttons">
-            <button id="save-note" class="save-button">सेभ गर्नुहोस्</button>
-            <button id="cancel" class="cancel-button">रद्द गर्नुहोस्</button>
-        </div>
-    </footer>
-</div>
+  </div>
 
-<!-- Delete Confirmation Modal -->
-<div id="delete-modal" class="modal">
-  <div class="modal-content">
-    <p>नोट मेटाउन चाहनुहुन्छ?</p>
-    <div class="modal-actions">
-      <button id="confirm-delete" class="delete-button-modal">मेटाउनुहोस्</button>
-      <button id="cancel-delete" class="cancel-button-modal">रद्द गर्नुहोस्</button>
+  <!-- Toast (only for inline errors on this page) -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Delete confirm modal -->
+  <div class="modal" id="del-modal" aria-hidden="true">
+    <div class="modal-card">
+      <h3>मेटाउने हो?</h3>
+      <p>के तपाईं यो नोट मेट्न पक्का हुनुहुन्छ?</p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="del-cancel">रद्द</button>
+        <button class="btn btn-danger" id="del-confirm">मेटाउनुहोस्</button>
+      </div>
     </div>
   </div>
-</div>
 
+  <script>
+    /* Toast (error/info only here) */
+    function toast(msg, kind="error"){
+      const t=document.getElementById("toast");
+      const icon = kind==="error"
+        ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+        : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+      t.innerHTML = `
+        <span class="toast-badge ${kind==="error"?"error":""}">${icon}</span>
+        <span class="toast-msg">${msg||""}</span>
+        <span class="toast-x" aria-label="Close">×</span>`;
+      t.classList.add("show");
+      t.querySelector(".toast-x").onclick = ()=> t.classList.remove("show");
+      clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove("show"), 2000);
+    }
 
-<script>
-const API_BASE = "http://192.168.1.209:8000/api";
-const NOTE_ID = new URLSearchParams(window.location.search).get("id");
-const token = localStorage.getItem("auth_token");
+    const API_BASE = "http://192.168.1.209:8000/api";
+    const token = localStorage.getItem("auth_token");
+    if(!token){ location.replace("login.html"); }
 
-if (!token) {
-    alert("You are not logged in!");
-    window.location.href = "login.html";
-}
+    const NOTE_ID = new URLSearchParams(location.search).get("id");
+    if(!NOTE_ID){
+      sessionStorage.setItem("toast_msg","नोट भेटिएन");
+      sessionStorage.setItem("toast_kind","error");
+      location.replace("notelist.html");
+    }
 
-// Load note data
-async function loadNote() {
-    if (!NOTE_ID) return; // new note
-    try {
+    let originalTitle = "";
+
+    async function loadNote(){
+      try{
+        const res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, { headers:{ Authorization:`Bearer ${token}`, Accept:"application/json" }});
+        if(!res.ok) throw new Error("लोड हुन सकेन");
+        const n = await res.json();
+        document.getElementById("page-title").textContent = n.site_name || n.project_name || n.road_name || n.title || "नोट";
+        originalTitle = n.title || "";
+        document.getElementById("n-desc").value = n.description || "";
+        document.getElementById("highPriority").checked = !!n.high_priority;
+      }catch(e){ toast(e.message || "लोड त्रुटि","error"); }
+    }
+
+    // Inline validation
+    function setErr(msg){ document.getElementById("err-desc").textContent = msg||""; document.getElementById("note-box").classList.add("is-invalid"); }
+    function clearErr(){ document.getElementById("err-desc").textContent = ""; document.getElementById("note-box").classList.remove("is-invalid"); }
+    document.getElementById("n-desc").addEventListener("input", clearErr);
+
+    // Update -> redirect immediately, show toast ONLY on list page
+    document.getElementById("btn-update").addEventListener("click", async ()=>{
+      clearErr();
+      const description = document.getElementById("n-desc").value.trim();
+      const highPriority = document.getElementById("highPriority").checked;
+
+      if(description.length===0){ setErr("कृपया केही नोट लेख्नुहोस्।"); return; }
+      if(description.length>5000){ setErr("विवरण धेरै लामो छ।"); return; }
+
+      try{
         const res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, {
-            headers: { "Authorization": `Bearer ${token}`, "Accept": "application/json" }
+          method:"PUT",
+          headers:{ "Content-Type":"application/json", Authorization:`Bearer ${token}`, Accept:"application/json" },
+          body: JSON.stringify({ title: originalTitle, description, high_priority: highPriority })
         });
-        if (!res.ok) throw new Error("नोट लोड गर्न असफल");
+        const data = await res.json().catch(()=> ({}));
+        if(!res.ok) throw new Error(data.message || "अपडेट असफल भयो");
 
-        const note = await res.json();
-
-        document.getElementById("note-title").textContent = note.title || "शीर्षक छैन";
-        document.getElementById("note-title-input").value = note.title || "";
-        document.getElementById("note-description").value = note.description || "";
-        document.getElementById("highPriority").checked = note.high_priority ?? false;
-
-        document.getElementById("note-date").textContent = note.created_at
-            ? `मिति: ${new Date(note.created_at).toLocaleDateString('ne-NP')}`
-            : "";
-    } catch (err) {
-        alert(err.message);
-    }
-}
-// Save note
-document.getElementById("save-note").addEventListener("click", async () => {
-    const title = document.getElementById("note-title-input").value.trim();
-    const description = document.getElementById("note-description").value.trim();
-    const highPriority = document.getElementById("highPriority").checked;
-
-    if (!title) {
-        alert("शीर्षक आवश्यक छ!");
-        return;
-    }
-
-    try {
-        const res = await fetch(
-            NOTE_ID ? `${API_BASE}/notes/${NOTE_ID}` : `${API_BASE}/notes`,
-            {
-                method: NOTE_ID ? "PUT" : "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({ title, description, high_priority: highPriority })
-            }
-        );
-
-        if (!res.ok) {
-            const errData = await res.json().catch(() => ({}));
-            throw new Error(errData.message || "नोट बचाउन असफल");
-        }
-
-        alert(NOTE_ID ? "नोट अपडेट गरियो!" : "नोट बन्यो!");
-        // Redirect to notelist.html after save
-        window.location.href = "notelist.html";
-
-    } catch (err) {
-        alert(err.message);
-    }
-});
-
-
-// Cancel → back to list
-document.getElementById("cancel").addEventListener("click", () => {
-    window.location.href = "notelist.html";
-});
-
-// Delete note
-// Show modal when clicking delete
-const deleteBtn = document.getElementById("delete-note");
-const deleteModal = document.getElementById("delete-modal");
-const confirmDelete = document.getElementById("confirm-delete");
-const cancelDelete = document.getElementById("cancel-delete");
-
-deleteBtn.addEventListener("click", () => {
-    deleteModal.style.display = "block";
-});
-
-// Cancel delete
-cancelDelete.addEventListener("click", () => {
-    deleteModal.style.display = "none";
-});
-
-// Confirm delete
-confirmDelete.addEventListener("click", async () => {
-    if (!NOTE_ID) return;
-
-    const res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, {
-        method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
+        // Only set cross-page toast and redirect now
+        sessionStorage.setItem("toast_msg","नोट सफलतापूर्वक अपडेट भयो");
+        sessionStorage.setItem("toast_kind","success");
+        location.replace("notelist.html");
+      }catch(e){ toast(e.message || "अपडेट असफल भयो","error"); }
     });
 
-    if (res.ok) {
-        alert("नोट मेटाइयो!");
-        window.location.href = "notelist.html";
-    } else {
-        alert("नोट मेटाउन असफल");
-    }
-});
+    // Delete modal wiring
+    const modal = document.getElementById("del-modal");
+    document.getElementById("btn-open-del").addEventListener("click", ()=> modal.classList.add("show"));
+    document.getElementById("del-cancel").addEventListener("click", ()=> modal.classList.remove("show"));
+    modal.addEventListener("click", (e)=>{ if(e.target===modal) modal.classList.remove("show"); });
 
-// Close modal if clicking outside modal content
-window.addEventListener("click", (e) => {
-    if (e.target === deleteModal) {
-        deleteModal.style.display = "none";
-    }
-});
+    // Confirm delete -> redirect + show toast on list
+    document.getElementById("del-confirm").addEventListener("click", async ()=>{
+      try{
+        let res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, { method:"DELETE", headers:{ Authorization:`Bearer ${token}`, Accept:"application/json" }});
+        if(!res.ok){
+          res = await fetch(`${API_BASE}/notes/${NOTE_ID}`, { method:"POST", headers:{ "Content-Type":"application/json", Authorization:`Bearer ${token}`, Accept:"application/json" }, body:JSON.stringify({_method:"DELETE"}) });
+          if(!res.ok) throw new Error("हटाउन असफल");
+        }
+        sessionStorage.setItem("toast_msg","नोट सफलतापूर्वक हटाइयो");
+        sessionStorage.setItem("toast_kind","success");
+        location.replace("notelist.html");
+      }catch(e){ modal.classList.remove("show"); toast(e.message || "हटाउन असफल","error"); }
+    });
 
-
-loadNote();
-</script>
+    loadNote();
+  </script>
 </body>
 </html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>एप सेटिङ्</title>
+
+    <!-- Poppins + Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* brand + colors (light by default) */
+        --brand: #13a87d;
+        --bg: #f8fafb;
+        --surface: #ffffff;
+        --t900: #0f172a;
+        --t700: #344054;
+        --t600: #667085;
+        --t500: #98a2b3;
+        --border: #e5e7eb;
+        --cardBorder: #e5e7eb;
+        --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+
+        /* layout */
+        --header-h: 56px;
+        --nav-h: 56px;
+        --radius: 14px;
+
+        /* typography scale (controlled by settings) */
+        --fs-base: 14px;
+      }
+
+      /* Dark theme tokens (toggled via [data-theme="dark"]) */
+      [data-theme="dark"] {
+        --bg: #0b1118;
+        --surface: #0f1621;
+        --t900: #e5e7eb;
+        --t700: #d0d5dd;
+        --t600: #98a2b3;
+        --t500: #6b7280;
+        --border: #233044;
+        --cardBorder: #1e2838;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--bg);
+        color: var(--t900);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body {
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Arial, sans-serif;
+        font-size: var(--fs-base);
+        line-height: 1.35;
+      }
+
+      /* App shell - edge-to-edge */
+      .app {
+        min-height: 100svh; /* modern viewport unit */
+        min-height: 100dvh; /* fallback */
+        display: flex;
+        flex-direction: column;
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        background: var(--bg);
+      }
+
+      /* Header */
+      .header {
+        height: calc(var(--header-h) + env(safe-area-inset-top));
+        padding-top: env(safe-area-inset-top);
+        background: var(--brand);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .back {
+        position: absolute;
+        left: 12px;
+        top: calc(env(safe-area-inset-top) + 50% - 18px);
+        translate: 0 -50%;
+        color: #fff;
+        text-decoration: none;
+        font-size: 20px;
+        padding: 8px;
+        border-radius: 10px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      /* Content */
+      .content {
+        flex: 1 1 auto;
+        overflow: auto;
+        background: var(--bg);
+        padding: 14px;
+        padding-bottom: calc(14px + var(--nav-h) + env(safe-area-inset-bottom));
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--cardBorder);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        max-width: 840px;
+        margin-inline: auto;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+      }
+      .row + .row {
+        border-top: 1px solid var(--border);
+      }
+      .icon {
+        width: 22px;
+        text-align: center;
+        color: var(--t600);
+      }
+      .label {
+        flex: 1 1 auto;
+        color: var(--t700);
+        font-size: 1rem;
+        font-weight: 400;
+      }
+      .value {
+        color: var(--t600);
+        font-size: 0.95rem;
+        margin-right: 10px;
+        white-space: nowrap;
+      }
+      .chev {
+        color: var(--t500);
+        font-size: 0.9rem;
+      }
+      .row.clickable {
+        cursor: pointer;
+        background: transparent;
+      }
+      .row.clickable:active {
+        background: rgba(19, 168, 125, 0.06);
+      }
+      [data-theme="dark"] .row.clickable:active {
+        background: rgba(19, 168, 125, 0.12);
+      }
+
+      /* segmented (BS/AD) */
+      .seg {
+        margin-left: auto;
+        display: flex;
+        gap: 6px;
+        background: rgba(148, 163, 184, 0.15);
+        padding: 3px;
+        border-radius: 999px;
+        align-items: center;
+      }
+      .seg button {
+        min-width: 54px;
+        height: 28px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--t700);
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+      .seg button.active {
+        background: var(--brand);
+        color: #fff;
+      }
+
+      /* bottom nav */
+      .bottom {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: env(safe-area-inset-bottom);
+        z-index: 5;
+      }
+      .bottom a {
+        color: var(--t500);
+        text-decoration: none;
+        font-size: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+      }
+      .bottom a i {
+        font-size: 18px;
+      }
+      .bottom a.active {
+        color: var(--brand);
+      }
+
+      /* bottom sheet selector */
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 12px;
+        z-index: 10;
+      }
+      .ov.show {
+        display: flex;
+      }
+      .sheet {
+        width: min(680px, 100%);
+        background: var(--surface);
+        border-radius: 16px 16px calc(12px + env(safe-area-inset-bottom))
+          calc(12px + env(safe-area-inset-bottom));
+        padding: 10px 8px 8px;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+        border: 1px solid var(--cardBorder);
+        max-height: 80svh;
+        overflow: auto;
+      }
+      .sheet h3 {
+        margin: 6px 10px 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--t700);
+      }
+      .opt {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 12px;
+        cursor: pointer;
+        border-radius: 10px;
+        margin: 0 6px;
+      }
+      .opt:hover {
+        background: rgba(148, 163, 184, 0.15);
+      }
+      [data-theme="dark"] .opt:hover {
+        background: rgba(148, 163, 184, 0.12);
+      }
+      .opt .dot {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #cbd5e1;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      [data-theme="dark"] .opt .dot {
+        border-color: #475569;
+      }
+      .opt .dot i {
+        font-size: 10px;
+        opacity: 0;
+      }
+      .opt.active .dot {
+        border-color: var(--brand);
+        background: #eaf8f3;
+      }
+      [data-theme="dark"] .opt.active .dot {
+        background: #163f33;
+      }
+      .opt.active .dot i {
+        opacity: 1;
+        color: var(--brand);
+      }
+      .opt span {
+        font-size: 0.95rem;
+        color: var(--t700);
+      }
+      .sheet .actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 8px 10px 4px;
+      }
+      .btn {
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: var(--t700);
+      }
+      .btn.brand {
+        background: var(--brand);
+        color: #fff;
+        border-color: var(--brand);
+      }
+
+      /* responsive tweaks */
+      @media (min-width: 480px) {
+        :root {
+          --fs-base: 15px;
+        }
+        .header h1 {
+          font-size: 18px;
+        }
+      }
+      @media (min-width: 768px) {
+        :root {
+          --fs-base: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <!-- Header -->
+      <header class="header" role="banner">
+        <a
+          class="back"
+          href="javascript:history.back()"
+          aria-label="पछि फर्कनुहोस्"
+          ><i class="fa-solid fa-angle-left"></i
+        ></a>
+        <h1>एप सेटिङ्</h1>
+      </header>
+
+      <!-- Content -->
+      <main class="content" role="main">
+        <div class="card" id="settingsCard" aria-label="सेटिङ् सूची">
+          <!-- Theme -->
+          <div
+            class="row clickable"
+            data-key="theme"
+            data-title="थिम"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"><i class="fa-regular fa-moon"></i></span>
+            <span class="label">थिम</span>
+            <span class="value" id="val-theme">Light मोड</span>
+            <i class="fa-solid fa-angle-down chev" aria-hidden="true"></i>
+          </div>
+          <!-- Font Size -->
+          <div
+            class="row clickable"
+            data-key="font"
+            data-title="ฟन्ट साइज"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"><i class="fa-solid fa-text-height"></i></span>
+            <span class="label">फन्ट साइज</span>
+            <span class="value" id="val-font">सामान्य</span>
+            <i class="fa-solid fa-angle-down chev" aria-hidden="true"></i>
+          </div>
+          <!-- Language -->
+          <div
+            class="row clickable"
+            data-key="lang"
+            data-title="भाषा"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"><i class="fa-solid fa-language"></i></span>
+            <span class="label">भाषा</span>
+            <span class="value" id="val-lang">नेपाली</span>
+            <i class="fa-solid fa-angle-down chev" aria-hidden="true"></i>
+          </div>
+          <!-- Currency -->
+          <div
+            class="row clickable"
+            data-key="curr"
+            data-title="मुद्रा"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"><i class="fa-solid fa-globe"></i></span>
+            <span class="label">मुद्रा</span>
+            <span class="value" id="val-curr">Rs</span>
+            <i class="fa-solid fa-angle-down chev" aria-hidden="true"></i>
+          </div>
+          <!-- Currency position -->
+          <div
+            class="row clickable"
+            data-key="curpos"
+            data-title="मुद्राको स्थान"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"><i class="fa-solid fa-globe"></i></span>
+            <span class="label">मुद्राको स्थान</span>
+            <span class="value" id="val-curpos">सुरुमा</span>
+            <i class="fa-solid fa-angle-down chev" aria-hidden="true"></i>
+          </div>
+          <!-- Calendar -->
+          <div class="row" role="group" aria-label="क्यालेन्डर">
+            <span class="icon"><i class="fa-regular fa-calendar"></i></span>
+            <span class="label">पात्रो</span>
+            <div class="seg">
+              <button id="btnBS" type="button" aria-pressed="false">BS</button>
+              <button
+                id="btnAD"
+                type="button"
+                class="active"
+                aria-pressed="true"
+              >
+                AD
+              </button>
+            </div>
+          </div>
+          <!-- Date format -->
+          <div
+            class="row clickable"
+            data-key="datefmt"
+            data-title="मितेको ढाँचा"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"
+              ><i class="fa-regular fa-calendar-days"></i
+            ></span>
+            <span class="label">मितेको ढाँचा</span>
+            <span class="value" id="val-datefmt">2025 Jul 20</span>
+            <i class="fa-solid fa-angle-right chev" aria-hidden="true"></i>
+          </div>
+          <!-- Time format -->
+          <div
+            class="row clickable"
+            data-key="timefmt"
+            data-title="टाइमको ढाँचा"
+            role="button"
+            tabindex="0"
+          >
+            <span class="icon"><i class="fa-regular fa-clock"></i></span>
+            <span class="label">टाइमको ढाँचा</span>
+            <span class="value" id="val-timefmt">6:00 PM</span>
+            <i class="fa-solid fa-angle-right chev" aria-hidden="true"></i>
+          </div>
+        </div>
+      </main>
+
+      <!-- Bottom Nav -->
+      <nav class="bottom" aria-label="मुख्य नेभिगेसन">
+        <a href="home.html"
+          ><i class="fa-solid fa-house"></i><span>होम</span></a
+        >
+        <a href="c-site-list.html"
+          ><i class="fa-solid fa-trowel-bricks"></i><span>साइट</span></a
+        >
+        <a href="karobar.html"
+          ><i class="fa-solid fa-chart-line"></i><span>कारोबारहरू</span></a
+        >
+        <a href="party.html"
+          ><i class="fa-solid fa-user-group"></i><span>पार्टीहरू</span></a
+        >
+        <a href="more.html" class="active"
+          ><i class="fa-solid fa-grip"></i><span>अरू</span></a
+        >
+      </nav>
+
+      <!-- Bottom Sheet -->
+      <div
+        class="ov"
+        id="ov"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sheetTitle"
+      >
+        <div class="sheet">
+          <h3 id="sheetTitle">छान्नुहोस्</h3>
+          <div id="opts" role="listbox" aria-label="विकल्पहरू"></div>
+          <div class="actions">
+            <button class="btn" id="cancel" type="button">रद्द</button>
+            <button class="btn brand" id="apply" type="button">ठिक छ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ---------- Config / options ---------- */
+      const OPTIONS = {
+        theme: {
+          def: "light",
+          items: [
+            ["system", "System"],
+            ["light", "Light मोड"],
+            ["dark", "Dark मोड"],
+          ],
+        },
+        font: {
+          def: "normal",
+          items: [
+            ["small", "सानो"],
+            ["normal", "सामान्य"],
+            ["large", "ठूलो"],
+          ],
+        },
+        lang: {
+          def: "ne",
+          items: [
+            ["ne", "नेपाली"],
+            ["en", "English"],
+          ],
+        },
+        curr: {
+          def: "Rs",
+          items: [
+            ["Rs", "Rs"],
+            ["$", "$"],
+            ["₹", "₹"],
+            ["€", "€"],
+          ],
+        },
+        curpos: {
+          def: "prefix",
+          items: [
+            ["prefix", "सुरुमा"],
+            ["suffix", "अन्त्य"],
+          ],
+        },
+        datefmt: {
+          def: "YYYY MMM DD",
+          items: [
+            ["YYYY MMM DD", "2025 Jul 20"],
+            ["DD/MM/YYYY", "20/07/2025"],
+            ["YYYY-MM-DD", "2025-07-20"],
+          ],
+        },
+        timefmt: {
+          def: "12h",
+          items: [
+            ["12h", "6:00 PM"],
+            ["24h", "18:00"],
+          ],
+        },
+        cal: { def: "AD" }, // handled via buttons
+      };
+
+      const LSKEY = "app_settings_v1";
+      const $ = (sel) => document.querySelector(sel);
+
+      /* ---------- State ---------- */
+      let state = loadState();
+
+      function loadState() {
+        try {
+          return JSON.parse(localStorage.getItem(LSKEY)) || {};
+        } catch {
+          return {};
+        }
+      }
+      function saveState() {
+        localStorage.setItem(LSKEY, JSON.stringify(state));
+      }
+
+      /* ---------- Apply theme + font scale live ---------- */
+      function applyThemeAndFont() {
+        const root = document.documentElement;
+
+        // Theme
+        let theme = state.theme || OPTIONS.theme.def;
+        if (theme === "system") {
+          const prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          theme = prefersDark ? "dark" : "light";
+        }
+        root.setAttribute("data-theme", theme);
+
+        // Font size scale
+        const size = state.font || OPTIONS.font.def;
+        if (size === "small") root.style.setProperty("--fs-base", "13px");
+        else if (size === "large") root.style.setProperty("--fs-base", "17px");
+        else root.style.setProperty("--fs-base", "14px");
+      }
+
+      /* ---------- UI fill ---------- */
+      function fill() {
+        // Apply defaults once
+        for (const k of [
+          "theme",
+          "font",
+          "lang",
+          "curr",
+          "curpos",
+          "datefmt",
+          "timefmt",
+          "cal",
+        ]) {
+          if (state[k] == null) {
+            state[k] = k === "cal" ? OPTIONS.cal.def : OPTIONS[k].def;
+          }
+        }
+
+        // Live appearance
+        applyThemeAndFont();
+
+        // Previews
+        $("#val-theme").textContent = labelOf("theme", state.theme);
+        $("#val-font").textContent = labelOf("font", state.font);
+        $("#val-lang").textContent = labelOf("lang", state.lang);
+        $("#val-curr").textContent = state.curr;
+        $("#val-curpos").textContent =
+          state.curpos === "prefix" ? "सुरुमा" : "अन्त्य";
+        $("#val-datefmt").textContent = labelOf("datefmt", state.datefmt);
+        $("#val-timefmt").textContent = labelOf("timefmt", state.timefmt);
+
+        // Calendar toggle
+        $("#btnBS").classList.toggle("active", state.cal === "BS");
+        $("#btnAD").classList.toggle("active", state.cal !== "BS");
+        $("#btnBS").setAttribute(
+          "aria-pressed",
+          state.cal === "BS" ? "true" : "false"
+        );
+        $("#btnAD").setAttribute(
+          "aria-pressed",
+          state.cal === "BS" ? "false" : "true"
+        );
+      }
+      function labelOf(key, val) {
+        const kv = (OPTIONS[key]?.items || []).find(([v]) => v === val);
+        return kv ? kv[1] : val;
+      }
+
+      /* ---------- Bottom sheet logic ---------- */
+      const ov = $("#ov"),
+        optsBox = $("#opts"),
+        sheetTitle = $("#sheetTitle");
+      let openKey = null,
+        tempVal = null;
+
+      // Open by click or Enter/Space (accessibility)
+      document
+        .getElementById("settingsCard")
+        .addEventListener("click", onRowActivate);
+      document
+        .getElementById("settingsCard")
+        .addEventListener("keydown", (e) => {
+          if (
+            (e.key === "Enter" || e.key === " ") &&
+            e.target.classList.contains("clickable")
+          ) {
+            e.preventDefault();
+            onRowActivate(e);
+          }
+        });
+
+      function onRowActivate(e) {
+        const row = e.target.closest(".row.clickable");
+        if (!row) return;
+        openKey = row.dataset.key;
+        const title = row.dataset.title || "छान्नुहोस्";
+        openSheet(openKey, title);
+      }
+
+      function openSheet(key, title) {
+        sheetTitle.textContent = title;
+        optsBox.innerHTML = "";
+        const items = OPTIONS[key].items;
+        tempVal = state[key];
+
+        items.forEach(([value, label]) => {
+          const div = document.createElement("div");
+          div.className = "opt" + (value === tempVal ? " active" : "");
+          div.setAttribute("role", "option");
+          div.setAttribute(
+            "aria-selected",
+            value === tempVal ? "true" : "false"
+          );
+          div.innerHTML = `<span class="dot"><i class="fa-solid fa-check"></i></span><span>${label}</span>`;
+          div.addEventListener("click", () => {
+            [...optsBox.children].forEach((el) => {
+              el.classList.remove("active");
+              el.setAttribute("aria-selected", "false");
+            });
+            div.classList.add("active");
+            div.setAttribute("aria-selected", "true");
+            tempVal = value;
+          });
+          optsBox.appendChild(div);
+        });
+
+        ov.classList.add("show");
+      }
+
+      $("#cancel").addEventListener("click", () => ov.classList.remove("show"));
+      $("#apply").addEventListener("click", () => {
+        if (openKey && tempVal != null) {
+          state[openKey] = tempVal;
+          saveState();
+          fill();
+        }
+        ov.classList.remove("show");
+      });
+
+      // Close on overlay click (but not when clicking inside sheet)
+      ov.addEventListener("click", (e) => {
+        if (e.target === ov) ov.classList.remove("show");
+      });
+
+      /* ---------- Calendar toggle ---------- */
+      $("#btnBS").addEventListener("click", () => {
+        state.cal = "BS";
+        saveState();
+        fill();
+      });
+      $("#btnAD").addEventListener("click", () => {
+        state.cal = "AD";
+        saveState();
+        fill();
+      });
+
+      /* ---------- React to system theme changes when "system" is selected ---------- */
+      if (window.matchMedia) {
+        const mq = window.matchMedia("(prefers-color-scheme: dark)");
+        mq.addEventListener?.("change", () => {
+          if (state.theme === "system") {
+            applyThemeAndFont();
+          }
+        });
+      }
+
+      /* ---------- Init ---------- */
+      fill();
+    </script>
+  </body>
+</html>
