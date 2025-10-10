@@ -8,179 +8,226 @@
     <!-- Fonts / Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <!-- AD ⇄ BS -->
     <script src="https://cdn.jsdelivr.net/npm/ad-bs-converter@2/dist/index.umd.js"></script>
 
     <style>
-      :root{
-        --brand-green:#13a87d;
-        --cta-blue:#0b5db8;
-        --red:#dc3545;
-        --bg:#f3f5f7;
-        --surface:#ffffff;
-        --text-900:#0f172a;
-        --text-700:#344054;
-        --border:#e9eef3;
-        --shadow:0 8px 24px rgba(16,24,40,.06);
+      :root {
+        --brand-green: #13a87d;
+        --cta-blue: #0b5db8;
+        --red: #dc3545;
+        --bg: #f3f5f7;
+        --surface: #ffffff;
+        --text-900: #0f172a;
+        --text-700: #344054;
+        --border: #e9eef3;
+        --shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
       }
-      *{ box-sizing:border-box; }
-      html,body{
-        margin:0;
-        height:100%;
-        background:var(--bg);
-        color:var(--text-700);
-        font-family:"Poppins","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0; height: 100%;
+        background: var(--bg); color: var(--text-700);
+        font-family: "Poppins","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      /* Edge-to-edge container */
-      .mobile-container{
-        width:100vw;
-        height:100dvh; min-height:100svh; min-height:-webkit-fill-available;
-        background:var(--surface);
-        display:flex; flex-direction:column; overflow:hidden;
-        padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
-        position:relative;
+      .mobile-container {
+        width: 100vw; height: 100dvh; min-height: 100svh; min-height: -webkit-fill-available;
+        background: var(--surface); display: flex; flex-direction: column; overflow: hidden;
+        padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+        position: relative;
       }
 
       /* Header */
-      .app-header{
-        background:var(--brand-green); color:#fff;
-        display:flex; align-items:center; gap:8px;
-        padding:12px 14px 12px; /* tight bottom to avoid top gap feeling */
+      .app-header {
+        background: var(--brand-green); color: #fff;
+        display: flex; align-items: center; gap: 8px; padding: 12px 14px 12px;
       }
-      .back{ color:#fff; text-decoration:none; font-size:18px; padding:6px 8px; }
-      .header-title{ flex:1; text-align:center; line-height:1.1; min-width:0; }
-      .header-title h1{ margin:0; font-size:18px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-      .header-title p{ margin:0; font-size:12px; opacity:.9; }
-      .ghost{ width:28px; visibility:hidden; }
+      .back { color: #fff; text-decoration: none; font-size: 18px; padding: 6px 8px; }
+      .header-title { flex: 1; text-align: center; line-height: 1.1; min-width: 0; }
+      .header-title h1 { margin: 0; font-size: 18px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .header-title p { margin: 0; font-size: 12px; opacity: 0.9; }
+      .ghost { width: 28px; visibility: hidden; }
 
       /* Content */
-      .content{
-        flex:1 1 auto;
-        padding:10px 16px 16px; /* smaller top padding kills any apparent gap */
-        background:#f8fafb;
-        overflow:hidden;
-      }
-      .section-head{
-        display:flex; align-items:center; justify-content:space-between;
-        margin:0 0 8px;
-      }
-      .section-head h2{ margin:0; font-size:16px; font-weight:700; }
-      .btn-filter{
-        background:var(--brand-green); color:#fff; border:none; height:36px; padding:0 14px; border-radius:12px;
-        font-weight:600; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 8px rgba(19,168,125,.25); cursor:pointer;
+      .content { flex: 1 1 auto; padding: 10px 16px 16px; background: #f8fafb; overflow: hidden; }
+      .section-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 8px; }
+      .section-head h2 { margin: 0; font-size: 18px; font-weight: 700; }
+      .btn-filter {
+        background: var(--brand-green); color: #fff; border: none; height: 40px; padding: 0 16px; border-radius: 12px;
+        font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 8px rgba(19,168,125,.25);
+        cursor: pointer; font-size: 16px;
       }
 
-      .panel{
-        background:#fff; border:1px solid var(--border); border-radius:18px; box-shadow:var(--shadow);
-        padding:14px; height:100%; display:flex; flex-direction:column; min-width:0;
+      .panel {
+        background: #fff; border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow);
+        padding: 14px; height: 100%; display: none; /* ⛔ stay hidden until JS renders rows */
+        flex-direction: column; min-width: 0;
       }
 
-      /* Table */
-      .table-wrap{ border:1px solid #eef2f6; border-radius:12px; background:#fff; flex:1 1 auto; overflow:auto; }
-      table{ border-collapse:collapse; table-layout:auto; min-width:900px; width:auto; }
-      thead th{
-        position:sticky; top:0; background:#f7f9fb; z-index:2; color:#475467; font-weight:600; font-size:13px;
-        text-align:left; padding:10px 12px; border-bottom:1px solid #e7ecf1; white-space:nowrap;
+      /* ===== Full-bleed, never-hide-columns table ===== */
+      .table-wrap {
+        margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+        margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+        border-top: 1px solid #eef2f6; border-bottom: 1px solid #eef2f6;
+        background: #fff; flex: 1 1 auto; -webkit-overflow-scrolling: touch;
+        border-left: 0; border-right: 0; border-radius: 0;
+        overflow-x: auto; overflow-y: auto; /* 👈 allow horizontal scroll; no column removed */
       }
-      tbody td{ padding:12px; border-bottom:1px solid #eff2f6; font-size:14px; color:var(--text-900); white-space:nowrap; }
-      tbody tr:last-child td{ border-bottom:0; }
-      td.col-amt{ color:var(--red); font-weight:400; }
-      td.col-act{ white-space:nowrap; width:96px; }
-      .act-btn{
-        display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px;
-        border:1px solid #e7ecf1; margin-left:6px; background:#f8fafb; cursor:pointer;
+      table {
+        width: 100%; table-layout: fixed; border-collapse: collapse;
+        font-size: clamp(16px, 3.8vw, 18px);
+        min-width: 860px; /* 👈 guarantees room for all 7 columns */
       }
-      .act-btn.edit{ color:#0b5db8; background:#f2f7ff; border-color:#e3eeff; }
-      .act-btn.del{ color:var(--red); background:#fff5f5; border-color:#ffe4e6; }
-      .act-btn i{ font-size:16px; line-height:1; }
+      thead th {
+        position: sticky; top: 0; z-index: 2; background: #f7f9fb; color: #475467;
+        font-weight: 800; padding: 10px 10px; border-bottom: 1px solid #e7ecf1; white-space: nowrap;
+      }
+      tbody td {
+        padding: 10px 10px; border-bottom: 1px solid #eff2f6; color: var(--text-900);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      tbody tr:last-child td { border-bottom: 0; }
 
-      /* Edge-to-edge floating add button */
-      .add-fixed{
-        position:fixed; left:16px; right:16px;
-        bottom:calc(70px + env(safe-area-inset-bottom) + 8px);
-        height:48px; border:none; border-radius:12px; font-weight:700;
-        background:var(--cta-blue); color:#fff; box-shadow:0 2px 6px rgba(11,93,184,.22);
-        z-index:100; cursor:pointer;
+      /* Column widths + min-widths so nothing collapses */
+      thead th:nth-child(1), tbody td:nth-child(1) { width: 12ch; min-width: 12ch; }
+      tbody td:nth-child(1) { overflow: visible; text-overflow: clip; }
+
+      thead th:nth-child(2), tbody td:nth-child(2) { width: auto; }
+      tbody td:nth-child(2) { white-space: normal; word-break: break-word; max-width: 46vw; min-width: 12ch; }
+
+      thead th:nth-child(3), tbody td:nth-child(3) { width: 12ch; min-width: 12ch; }
+      thead th:nth-child(4), tbody td:nth-child(4) { width: 9ch;  min-width: 9ch; }
+      thead th:nth-child(5), tbody td:nth-child(5) { width: 11ch; min-width: 11ch; }
+      thead th:nth-child(6), tbody td:nth-child(6) { width: 18ch; min-width: 14ch; }
+      thead th:nth-child(7), tbody td:nth-child(7) { width: 6.2rem; min-width: 6.2rem; }
+
+      /* ✅ Force Devanagari font for amounts */
+      td.col-amt {
+        color: var(--red);
+        font-weight: 600;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        font-family: "Noto Sans Devanagari","Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      }
+      td.col-act { white-space: nowrap; overflow: visible; }
+
+      /* Touch-friendly actions */
+      .act-btn {
+        width: 36px; height: 36px; border-radius: 10px; margin-left: 6px;
+        border: 1px solid #e7ecf1; background: #f8fafb; cursor: pointer;
+      }
+      .act-btn.edit { color: #0b5db8; background: #f2f7ff; border-color: #e3eeff; }
+      .act-btn.del  { color: var(--red);  background: #fff5f5; border-color: #ffe4e6; }
+      .act-btn i { font-size: 15px; line-height: 1; }
+
+      @media (max-width: 380px) {
+        thead th:nth-child(6), tbody td:nth-child(6) { width: 14ch; min-width: 14ch; }
+        thead th:nth-child(7), tbody td:nth-child(7) { width: 6rem; min-width: 6rem; }
+        tbody td:nth-child(2) { max-width: 44vw; }
       }
 
-      /* Edge-to-edge bottom nav */
-      .bottom-nav{
-        position:fixed; left:0; right:0; bottom:0;
-        height:60px; background:#fff; border-top:1px solid #e5e7eb;
-        display:flex; justify-content:space-around; align-items:center; z-index:120;
-        padding-bottom:calc(env(safe-area-inset-bottom));
+      /* Add button */
+      .add-fixed {
+        position: fixed; left: 16px; right: 16px;
+        bottom: calc(70px + env(safe-area-inset-bottom) + 8px);
+        height: 52px; border: none; border-radius: 12px; font-weight: 800;
+        background: var(--cta-blue); color: #fff; box-shadow: 0 2px 6px rgba(11,93,184,.22);
+        z-index: 100; cursor: pointer; font-size: 16px;
       }
-      .bottom-nav .nav-item{ text-decoration:none; color:#98a2b3; display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; }
-      .bottom-nav .nav-item i{ font-size:18px; }
-      .bottom-nav .nav-item.active{ color:var(--brand-green); font-weight:700; }
 
-      /* Modals */
-      .modal{ position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.5); z-index:1000; padding:12px; }
-      .modal.show{ display:grid; }
-      .card{ width:min(92vw, 560px); max-width:92vw; max-height:88vh; background:#fff; border-radius:16px; box-shadow:var(--shadow); padding:16px; overflow:auto; }
-      .card-sm{ width:min(92vw, 480px); }
-      .filter-card{ width:min(92vw, 560px); }
-      .card h3{ margin:0 0 10px; font-size:16px; font-weight:700; text-align:center; }
-      .row{ margin-bottom:10px; }
-      label{ display:block; font-size:12px; color:#667085; margin-bottom:4px; }
-      input,select,textarea{
-        width:100%; height:40px; padding:8px 10px; border:1px solid #e7ecf1; border-radius:10px; font-family:inherit; font-size:14px; background:#fff;
+      /* Toast */
+      #toast {
+        position: fixed; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px));
+        background: #fff; border: 0; border-radius: 12px; padding: 12px 14px 12px 12px; box-shadow: var(--shadow);
+        display: grid; grid-template-columns: 32px 1fr 20px; align-items: center; gap: 12px;
+        width: max-content; max-width: 92vw; color: #111827; opacity: 0; transform: translateY(-8px);
+        pointer-events: none; transition: opacity .22s, transform .22s; z-index: 10000; line-height: 1.25;
+        font-family: "Poppins","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
       }
-      textarea{ height:90px; resize:vertical; }
-      .grid-2{ display:grid; grid-template-columns:1fr; gap:10px; }
-      @media (min-width:600px){ .grid-2{ grid-template-columns:1fr 1fr; } }
-      .actions{ display:flex; gap:10px; margin-top:8px; }
-      .btn{ height:40px; border:none; border-radius:10px; font-weight:600; cursor:pointer; }
-      .btn-cancel{ background:#eef2f6; color:#475467; flex:1; }
-      .btn-save{ background:var(--cta-blue); color:#fff; flex:1; }
-      .btn-danger{ background:var(--red); color:#fff; }
-      .delete-actions .btn{ height:44px; font-size:15px; }
-      .hint{ font-size:11px; color:#667085; margin-top:4px; }
+      #toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+      .toast-badge { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #74c69d; }
+      .toast-badge.error { background: #ef4444; }
+      .toast-badge svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .toast-msg { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #111827; line-height: 1.35; display: block; }
+      .toast-x { color: #6b7280; cursor: pointer; font-size: 18px; text-align: center; line-height: 1; }
 
-      /* Field inline errors */
-      .err{ color:#dc2626; font-size:12px; margin-top:4px; min-height:14px; }
-      .is-invalid{ border-color:#dc2626 !important; box-shadow:0 0 0 2px rgba(220,38,38,.12) !important; }
+      /* Empty state */
+      .empty-state { display: none; text-align: center; color: #475467; padding: 16px 8px; }
+      .empty-state.show { display: block; }
+      .empty-state img { width: clamp(90px, 20vw, 140px); height: auto; display: block; margin: 8px auto 6px; }
+      .empty-state h3 { margin: 0 0 4px; font-size: 16px; color: #0f172a; }
+      .empty-state p { margin: 0; font-size: 14px; }
 
-      /* Filter */
-      .range-grid{ display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:10px; }
-      .range-btn{ border:1px solid #e1f1ea; border-radius:12px; padding:12px; background:#fff; text-align:left; font-weight:600; color:#0f172a; cursor:pointer; }
-      .range-btn.active{ background:#effff7; border-color:#78d8be; position:relative; }
-      .range-btn.active::after{ content:""; position:absolute; right:14px; top:50%; transform:translateY(-50%); width:10px; height:10px; background:var(--brand-green); border-radius:50%; }
-
-      /* Toast (white, top-right, straight ✓) */
-      #toast{
-        position:fixed;
-        top:calc(12px + env(safe-area-inset-top,0px));
-        right:calc(12px + env(safe-area-inset-right,0px));
-        background:#fff; border:0; border-radius:12px;
-        padding:10px 14px 10px 10px;
-        box-shadow:0 10px 24px rgba(0,0,0,.18);
-        display:grid; grid-template-columns:32px 1fr 20px; align-items:center; gap:12px;
-        width:max-content; max-width:92vw; color:#111827;
-        opacity:0; transform:translateY(-8px); pointer-events:none;
-        transition:opacity .22s, transform .22s; z-index:10000; line-height:1.2;
-        font-family:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      .inline-flex { display: flex; gap: 8px; align-items: center; }
+      .btn-mini {
+        height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #e7ecf1;
+        background: #f8fafb; cursor: pointer; font-weight: 800; font-size: 16px;
       }
-      #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
-      .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#74c69d; }
-      .toast-badge.error{ background:#ef4444; }
-      .toast-badge svg{ width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
-      .toast-msg{ font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#111827; text-decoration:none; }
-      .toast-x{ color:#6b7280; cursor:pointer; font-size:18px; text-align:center; line-height:1; }
 
-      /* Empty state (image + text, no card) */
-      .empty-state{ display:none; text-align:center; color:#475467; padding:16px 8px; }
-      .empty-state.show{ display:block; }
-      .empty-state img{ width:clamp(90px,20vw,140px); height:auto; display:block; margin:8px auto 6px; }
-      .empty-state h3{ margin:0 0 4px; font-size:16px; color:#0f172a; }
-      .empty-state p{ margin:0; font-size:14px; }
+      /* ===== Centered Modals + Body Scroll Lock ===== */
+      .modal{
+        position:fixed; inset:0; display:none;
+        align-items:center; justify-content:center;
+        background:rgba(0,0,0,.5); z-index:1000; padding:12px;
+        padding-top:max(12px, env(safe-area-inset-top));
+        padding-bottom:max(12px, env(safe-area-inset-bottom));
+      }
+      .modal.show{ display:flex; }
+      .card{
+        width:min(92vw,560px); max-width:92vw; max-height:88dvh;
+        background:#fff; border-radius:16px; box-shadow:var(--shadow);
+        padding:16px; overflow:auto; animation:modal-pop .18s ease-out;
+      }
+      .card-sm { width:min(92vw,520px); }
+      .filter-card { width:min(92vw,560px); }
+      .card h3 { margin: 0 0 12px; font-size: 18px; font-weight: 800; text-align: center; }
+      .row { margin-bottom: 12px; }
+      label { display:block; font-size:14px; color:#667085; margin-bottom:6px; }
+      @keyframes modal-pop{ from{transform:translateY(8px);opacity:0} to{transform:translateY(0);opacity:1} }
+      body.modal-open{ overflow:hidden; touch-action:none; }
 
-      /* small helper to align party + button */
-      .inline-flex{ display:flex; gap:8px; align-items:center; }
-      .btn-mini{ height:40px; padding:0 10px; border-radius:10px; border:1px solid #e7ecf1; background:#f8fafb; cursor:pointer; font-weight:700; }
+      /* Inputs (>=16px prevents iOS zoom) */
+      input, select, textarea {
+        width: 100%; height: 44px; padding: 10px 12px;
+        border: 1px solid #e7ecf1; border-radius: 12px;
+        font-family: inherit; font-size: 16px; line-height: 1.4; background: #fff;
+      }
+      textarea { height: 110px; resize: vertical; }
+      .grid-2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+      @media (min-width: 600px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+      .actions { display: flex; gap: 12px; margin-top: 10px; flex-wrap: nowrap; }
+      .btn {
+        height: 52px; border: none; border-radius: 12px; font-weight: 800;
+        cursor: pointer; font-size: 16px; flex: 1 1 0;
+      }
+      .btn-cancel { background: #eef2f6; color: #475467; }
+      .btn-save { background: var(--cta-blue); color: #fff; }
+      .btn-danger { background: var(--red); color: #fff; }
+
+      .err { color: #dc2626; font-size: 13px; margin-top: 6px; min-height: 16px; }
+      .is-invalid { border-color: #dc2626 !important; box-shadow: 0 0 0 2px rgba(220,38,38,.12) !important; }
+
+      .range-grid { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:10px; }
+      .range-btn {
+        border: 1px solid #e1f1ea; border-radius: 12px; padding: 14px; background: #fff;
+        text-align: left; font-weight: 700; color: #0f172a; cursor: pointer; font-size: 16px;
+      }
+      .range-btn.active { background: #effff7; border-color: #78d8be; position: relative; }
+      .range-btn.active::after {
+        content: ""; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+        width: 10px; height: 10px; background: var(--brand-green); border-radius: 50%;
+      }
+
+      /* Ensure bottom.html nav sits above content if it defines .bottom-nav */
+      #bottomMount .bottom-nav { z-index: 120; position: fixed; left:0; right:0; bottom:0; }
     </style>
   </head>
 
@@ -195,7 +242,7 @@
         <span class="ghost"><i class="fa-solid fa-chevron-left"></i></span>
       </header>
 
-      <!-- Toast host -->
+      <!-- Toast -->
       <div id="toast" role="status" aria-live="polite"></div>
 
       <main class="content">
@@ -211,7 +258,7 @@
           <p>सुरु गर्न “रिसोर्स थप्नुहोस्” ट्याप गर्नुहोस्।</p>
         </section>
 
-        <!-- table panel (hidden when empty) -->
+        <!-- Table -->
         <section class="panel" id="panel">
           <div class="table-wrap" id="tableWrap">
             <table>
@@ -226,9 +273,7 @@
                   <th>कार्य</th>
                 </tr>
               </thead>
-              <tbody id="tbody">
-                <tr><td colspan="7" style="text-align:center;color:#667085;padding:14px;">लोड हुँदैछ…</td></tr>
-              </tbody>
+              <tbody id="tbody"></tbody>
             </table>
           </div>
         </section>
@@ -236,14 +281,8 @@
 
       <button class="add-fixed" id="addBtn">रिसोर्स थप्नुहोस्</button>
 
-      <!-- Bottom nav (edge-to-edge) -->
-      <nav class="bottom-nav">
-        <a href="home.html" class="nav-item"><i class="fa-solid fa-house"></i><span>होम</span></a>
-        <a href="c-site-list.html" class="nav-item active"><i class="fa-solid fa-trowel-bricks"></i><span>साइट</span></a>
-        <a href="karobar.html" class="nav-item"><i class="fa-solid fa-chart-line"></i><span>कारोबारहरू</span></a>
-        <a href="party.html" class="nav-item"><i class="fa-solid fa-user-group"></i><span>पार्टीहरू</span></a>
-        <a href="more.html" class="nav-item"><i class="fa-solid fa-grip"></i><span>अरू</span></a>
-      </nav>
+      <!-- Bottom nav from bottom.html -->
+      <div id="bottomMount" aria-hidden="true"></div>
     </div>
 
     <!-- Add/Edit Resource Modal -->
@@ -261,7 +300,7 @@
           <label>पार्टी</label>
           <div class="inline-flex">
             <select id="f_party"></select>
-            <button class="btn-mini" id="openParty">+ पार्टी</button>
+            <button type="button" class="btn-mini" id="openParty">+ पार्टी</button>
           </div>
           <div class="err" id="err-party"></div>
         </div>
@@ -293,8 +332,8 @@
         </div>
 
         <div class="actions">
-          <button class="btn btn-cancel" id="cancelEdit">रद्द</button>
-          <button class="btn btn-save" id="saveEdit">थप्नुहोस्</button>
+          <button type="button" class="btn btn-cancel" id="cancelEdit">रद्द</button>
+          <button type="button" class="btn btn-save" id="saveEdit">थप्नुहोस्</button>
         </div>
       </div>
     </div>
@@ -314,8 +353,8 @@
           <div class="err" id="err-pphone"></div>
         </div>
         <div class="actions">
-          <button class="btn btn-cancel" id="p_cancel">रद्द</button>
-          <button class="btn btn-save" id="p_save">थप्नुहोस्</button>
+          <button type="button" class="btn btn-cancel" id="p_cancel">रद्द</button>
+          <button type="button" class="btn btn-save" id="p_save">थप्नुहोस्</button>
         </div>
       </div>
     </div>
@@ -324,10 +363,10 @@
     <div class="modal" id="deleteModal" aria-hidden="true">
       <div class="card card-sm">
         <h3>मेटाउने हो?</h3>
-        <p style="margin:6px 0 12px;color:#475467;font-size:14px">के तपाईं यो रेकर्ड मेट्न पक्का हुनुहुन्छ?</p>
+        <p style="margin: 6px 0 12px; color: #475467; font-size: 16px">के तपाईं यो रेकर्ड मेट्न पक्का हुनुहुन्छ?</p>
         <div class="actions delete-actions">
-          <button class="btn btn-cancel" id="cancelDelete">रद्द</button>
-          <button class="btn btn-danger" id="confirmDelete">मेटाउनुहोस्</button>
+          <button type="button" class="btn btn-cancel" id="cancelDelete">रद्द</button>
+          <button type="button" class="btn btn-danger" id="confirmDelete">मेटाउनुहोस्</button>
         </div>
       </div>
     </div>
@@ -335,57 +374,110 @@
     <!-- Filter Modal -->
     <div class="modal" id="filterModal" aria-hidden="true">
       <div class="card filter-card">
-        <h3 style="text-align:left">समय अवधि छान्नुहोस्</h3>
+        <h3 style="text-align: left">समय अवधि छान्नुहोस्</h3>
         <div class="range-grid">
-          <button class="range-btn" data-range="7">७ दिन</button>
-          <button class="range-btn" data-range="15">१५ दिन</button>
-          <button class="range-btn" data-range="30">१ महिना</button>
-          <button class="range-btn" data-range="custom" id="rangeCustom">कस्टम</button>
+          <button type="button" class="range-btn" data-range="7">७ दिन</button>
+          <button type="button" class="range-btn" data-range="15">१५ दिन</button>
+          <button type="button" class="range-btn" data-range="30">१ महिना</button>
+          <button type="button" class="range-btn" data-range="custom" id="rangeCustom">कस्टम</button>
         </div>
-        <div id="customDates" style="display:none">
+        <div id="customDates" style="display: none">
           <div class="grid-2">
-            <div><label>सुरु मिति</label><input type="date" id="flt_from" /><div class="hint" id="flt_from_bs"></div></div>
-            <div><label>अन्त्य मिति</label><input type="date" id="flt_to" /><div class="hint" id="flt_to_bs"></div></div>
+            <div>
+              <label>सुरु मिति</label><input type="date" id="flt_from" />
+              <div class="hint" id="flt_from_bs"></div>
+            </div>
+            <div>
+              <label>अन्त्य मिति</label><input type="date" id="flt_to" />
+              <div class="hint" id="flt_to_bs"></div>
+            </div>
           </div>
         </div>
-        <div class="actions" style="margin-top:14px">
-          <button class="btn btn-save" id="applyFilter">लागू गर्नुहोस्</button>
-          <button class="btn btn-cancel" id="cancelFilter">रद्द गर्नुहोस्</button>
+        <div class="actions" style="margin-top: 14px">
+          <button type="button" class="btn btn-save" id="applyFilter">लागू गर्नुहोस्</button>
+          <button type="button" class="btn btn-cancel" id="cancelFilter">रद्द गर्नुहोस्</button>
         </div>
       </div>
     </div>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function(){
+      document.addEventListener("DOMContentLoaded", function () {
         /* ========= Auth / Config ========= */
         var API_BASE = "http://192.168.1.209:8000/api";
         var RAW = localStorage.getItem("auth_token");
-        if(!RAW){ alert("कृपया लगइन गर्नुहोस्।"); location.href="login.html"; return; }
-        var TOKEN = RAW.indexOf("|")>-1 ? RAW.split("|")[1] : RAW;
-        var H = { Authorization:"Bearer "+TOKEN, Accept:"application/json" };
-        var SITE_ID = new URLSearchParams(location.search).get("id") || localStorage.getItem("current_site_id");
-        if(!SITE_ID){ alert("साइट चयन गर्नुहोस्।"); location.href="c-site-list.html"; return; }
+        if (!RAW) { alert("कृपया लगइन गर्नुहोस्।"); location.href = "login.html"; return; }
+        var TOKEN = RAW.indexOf("|") > -1 ? RAW.split("|")[1] : RAW;
+        var H = { Authorization: "Bearer " + TOKEN, Accept: "application/json" };
+
+        var SITE_ID =
+          new URLSearchParams(location.search).get("id") ||
+          localStorage.getItem("current_site_id");
+        if (!SITE_ID) { alert("साइट चयन गर्नुहोस्।"); location.href = "c-site-list.html"; return; }
         localStorage.setItem("current_site_id", SITE_ID);
 
         /* ========= Helpers ========= */
-        var NP_DIG="०१२३४५६७८९", EN_DIG="0123456789";
-        function toNp(s){return String(s).replace(/[0-9]/g, d=>NP_DIG[d]);}
-        function toEn(s){return String(s).replace(/[०१२३४५६७८९]/g, d=>EN_DIG[NP_DIG.indexOf(d)]);}
-        function onlyDigits(s){return String(s).replace(/[^\d]/g,"");}
-        function hasAdbs(){return window.adbs && adbs.ad2bs && adbs.bs2ad;}
-        function iso(d){var x=d instanceof Date?d:new Date(d); if(isNaN(x)) return ""; return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");}
-        function asYmd(v){ if(!v) return ""; if(v instanceof Date) return iso(v); var s=String(v); if(/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10); return iso(s); }
+        var NP_DIG = "०१२३४५६७८९", EN_DIG = "0123456789";
+        function toNp(s){ return String(s).replace(/[0-9]/g, d => NP_DIG[d]); }
+        function toEn(s){ return String(s).replace(/[०१२३४५६७८९]/g, d => EN_DIG[NP_DIG.indexOf(d)]); }
+        function onlyDigitsDot(s){ return String(s).replace(/[^0-9.]/g,""); }
+        function hasAdbs(){ return window.adbs && adbs.ad2bs && adbs.bs2ad; }
+        function iso(d){
+          var x = d instanceof Date ? d : new Date(d);
+          if (isNaN(x)) return "";
+          return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0");
+        }
+        function asYmd(v){
+          if (!v) return "";
+          if (v instanceof Date) return iso(v);
+          if (typeof v === "object" && v !== null) {
+            if (v.date) { var s = String(v.date); if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10); }
+            return "";
+          }
+          var s = String(v);
+          if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+          var m = s.match(/^(\d{4}-\d{2}-\d{2})T/);
+          if (m) return m[1];
+          return iso(s);
+        }
+        function ymdCmp(a,b){ if(!a&&!b) return 0; if(!a) return -1; if(!b) return 1; return a<b?-1:a>b?1:0; }
         function fmtDate(ad){
-          var ymd=asYmd(ad); if(!ymd) return "-";
-          var p=ymd.split("-"), y=+p[0], m=+p[1], d=+p[2];
-          if(hasAdbs()){ try{ var bs=adbs.ad2bs({year:y,month:m,day:d});
-            return toNp(String(bs.day).padStart(2,"0"))+"/"+toNp(String(bs.month).padStart(2,"0"))+"/"+toNp(bs.year);
-          }catch(e){} }
+          var ymd = asYmd(ad); if (!ymd) return "-";
+          var p = ymd.split("-"), y = +p[0], m = +p[1], d = +p[2];
+          if (hasAdbs()) {
+            try {
+              var bs = adbs.ad2bs({year:y, month:m, day:d});
+              return toNp(String(bs.day).padStart(2,"0"))+"/"+toNp(String(bs.month).padStart(2,"0"))+"/"+toNp(bs.year);
+            } catch(e){}
+          }
           return toNp(String(d).padStart(2,"0"))+"/"+toNp(String(m).padStart(2,"0"))+"/"+toNp(y);
         }
+
+        /* ✅ Bullet-proof Nepali currency output */
         function nepAmount(n){
-          try{ return "रु "+new Intl.NumberFormat("ne-NP",{maximumFractionDigits:0}).format(+n||0); }
-          catch(e){ return "रु "+(+n||0); }
+          // Accept number or string (English/Nepali digits, may include commas/spaces)
+          let s = (n == null ? "" : String(n));
+          // Convert Nepali digits to English; keep digits, dot, minus; drop other chars (commas etc.)
+          s = toEn(s).replace(/[^\d.-]/g, "");
+          if (!s || s === "-" || s === "." || s === "-.") s = "0";
+          const num = Number(s);
+          const formatted = new Intl.NumberFormat("ne-NP", {
+            maximumFractionDigits: 0,
+            useGrouping: true
+          }).format(isNaN(num) ? 0 : num);
+          // Force Devanagari in case the UA ignores numberingSystem
+          return "रु " + toNp(formatted);
+        }
+
+        function normalizedNumber(v){
+          var s = onlyDigitsDot(toEn(v||"")); if(!s) return 0;
+          var parts = s.split("."); if (parts.length > 2) s = parts[0]+"."+s.slice(parts[0].length+1).replace(/\./g,"");
+          var num = parseFloat(s); return isNaN(num) ? 0 : num;
+        }
+        function sanitizeAmountKeepScript(s){
+          let v = String(s||"");
+          v = v.replace(/[^0-9\u0966-\u096F.]/g, "");
+          const i = v.indexOf("."); if (i !== -1) v = v.slice(0,i+1)+v.slice(i+1).replace(/\./g,"");
+          return v;
         }
 
         /* ========= Toast ========= */
@@ -393,11 +485,14 @@
           var t = document.getElementById("toast");
           var icon = kind==="error"
             ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
-            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>'; // straight check
-          t.innerHTML = '<span class="toast-badge '+(kind==="error"?"error":"")+'">'+icon+'</span><span class="toast-msg">'+(msg||"")+'</span><span class="toast-x" aria-label="Close">×</span>';
+            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+          t.innerHTML =
+            '<span class="toast-badge '+(kind==="error"?"error":"")+'">'+icon+'</span>'+
+            '<span class="toast-msg">'+(msg||"")+'</span>'+
+            '<span class="toast-x" aria-label="Close">×</span>';
           t.classList.add("show");
-          t.querySelector(".toast-x").onclick = ()=> t.classList.remove("show");
-          clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove("show"), 2000);
+          t.querySelector(".toast-x").onclick = ()=>t.classList.remove("show");
+          clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove("show"), 2000);
         }
 
         /* ========= Elements ========= */
@@ -449,298 +544,337 @@
             flt_from_bs = document.getElementById("flt_from_bs"),
             flt_to_bs = document.getElementById("flt_to_bs");
 
-        function show(el){ el.classList.add("show"); }
-        function hide(el){ el.classList.remove("show"); }
-        function setErr(el, msg, inputEl){
-          el.textContent = msg || ""; if(inputEl){ inputEl.classList.toggle("is-invalid", !!msg); }
+        function show(el){ el.classList.add("show"); document.body.classList.add("modal-open"); }
+        function hide(el){
+          el.classList.remove("show");
+          if (!document.querySelector(".modal.show")) document.body.classList.remove("modal-open");
         }
-        function clearAllFieldErrs(){
-          setErr(errItem,"",f_item); setErr(errParty,"",f_party); setErr(errDate,"",f_date);
-        }
+        function setErr(el,msg,inputEl){ el.textContent = msg || ""; if (inputEl) inputEl.classList.toggle("is-invalid", !!msg); }
+        function clearAllFieldErrs(){ setErr(errItem,"",f_item); setErr(errParty,"",f_party); setErr(errDate,"",f_date); }
 
         /* ========= State ========= */
-        var parties=[], dataAll=[], editId=null, deleteId=null;
-        var filterState={type:"30",from:null,to:null};
-        let saving=false;
+        var parties = [], dataAll = [], editId = null, deleteId = null;
+        var filterState = { type: "30", from: null, to: null };
+        let saving = false;
+        let reqCounter = 0;
 
         /* ========= Init ========= */
-        (async function init(){
-          try{
-            var r1=await fetch(API_BASE+"/sites/"+SITE_ID,{headers:H});
-            if(r1.ok){ var j1=await r1.json(); siteNameEl.textContent = (j1 && j1.name) || "साइट"; }
-          }catch(e){}
+        (async function init() {
+          try {
+            var r1 = await fetch(API_BASE + "/sites/" + SITE_ID, { headers: H });
+            if (r1.ok) { var j1 = await r1.json(); siteNameEl.textContent = (j1 && j1.name) || "साइट"; }
+          } catch (e) {}
 
           await loadParties();
 
-          setQuickRange("30"); // default last 30 days
-          await fetchResources();
-          renderTable();
+          setQuickRange("30");
+          await fetchResources();   // fetch first
+          renderTable();            // render after data
           sizeTable();
+
+          // load bottom nav html
+          loadBottomNav();
+
           window.addEventListener("resize", sizeTable);
+
+          function softRefresh(){ fetchResources().then(renderTable).catch(()=>{}); }
+          window.addEventListener("focus", softRefresh);
+          document.addEventListener("visibilitychange", function(){ if (!document.hidden) softRefresh(); });
         })();
 
-        async function loadParties(){
-          try{
-            var r2=await fetch(API_BASE+"/parties",{headers:H});
-            var j2=await r2.json();
-            parties = Array.isArray(j2) ? j2 : (j2 && j2.data ? j2.data : []);
-          }catch(e){ parties=[]; }
-          f_party.innerHTML = '<option value="">छान्नुहोस्</option>' + (parties||[]).map(p=>'<option value="'+p.id+'">'+(p.name||"")+'</option>').join("");
+        async function loadBottomNav() {
+          try {
+            const res = await fetch("bottom.html", { cache: "no-store" });
+            const html = await res.text();
+            const mount = document.getElementById("bottomMount");
+            mount.innerHTML = html;
+            mount.removeAttribute("aria-hidden");
+            const cur = mount.querySelector('[data-page="site"]');
+            if (cur) cur.classList.add("active");
+            sizeTable();
+          } catch (e) { /* silent */ }
         }
 
-        /* ========= Sizing (edge-to-edge aware) ========= */
+        async function loadParties(){
+          try {
+            var r2 = await fetch(API_BASE + "/parties", { headers: H });
+            var j2 = await r2.json();
+            parties = Array.isArray(j2) ? j2 : (j2 && j2.data ? j2.data : []);
+          } catch(e){ parties = []; }
+          f_party.innerHTML =
+            '<option value="">छान्नुहोस्</option>' +
+            (parties||[]).map((p)=>'<option value="'+p.id+'">'+(p.name||"")+'</option>').join("");
+        }
+
+        /* ========= Sizing ========= */
         function sizeTable(){
-          function h(sel){ var el=document.querySelector(sel); return el?el.offsetHeight:0; }
-          var headerH=h(".app-header"), headH=h(".section-head"), navH=h(".bottom-nav")||60, addH=addBtn?addBtn.offsetHeight:48, paddings=10+8+28;
+          function h(sel){ var el = document.querySelector(sel); return el ? el.offsetHeight : 0; }
+          var headerH = h(".app-header"),
+              headH   = h(".section-head"),
+              navH    = document.getElementById("bottomMount")?.offsetHeight || 60,
+              addH    = document.getElementById("addBtn")?.offsetHeight || 52,
+              paddings= 10+8+28;
           var hgt = window.innerHeight - headerH - headH - navH - addH - paddings;
-          tableWrap.style.maxHeight = Math.max(260, hgt) + "px";
+          var wrap = document.getElementById("tableWrap");
+          if (wrap) wrap.style.maxHeight = Math.max(300, hgt) + "px";
         }
 
         /* ========= Fetch ========= */
         async function fetchResources(){
-          tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:#667085;padding:14px;">लोड हुँदैछ…</td></tr>';
-          try{
-            var params={ site_id:SITE_ID, _:Date.now() };
-            if(filterState.from && filterState.to){ params.start_date=asYmd(filterState.from); params.end_date=asYmd(filterState.to); }
-            var q=new URLSearchParams(params);
-            var r=await fetch(API_BASE+"/site-resources?"+q,{ headers:Object.assign({},H,{"Cache-Control":"no-cache"}), cache:"no-store" });
-            var j=await r.json();
-            dataAll = Array.isArray(j)? j : (j && j.data ? j.data : []);
-            dataAll = dataAll.map(x => { x.date = asYmd(x.date); return x; });
-          }catch(e){ dataAll=[]; }
+          const myReq = ++reqCounter;
+          try {
+            const params = { site_id: SITE_ID, _: Date.now() };
+            const q = new URLSearchParams(params);
+            const r = await fetch(API_BASE + "/site-resources?" + q, {
+              headers: Object.assign({}, H, { "Cache-Control": "no-cache" }),
+              cache: "no-store",
+            });
+            const j = await r.json();
+            if (myReq !== reqCounter) return;
+
+            dataAll = Array.isArray(j?.data) ? j.data : Array.isArray(j) ? j : [];
+            dataAll = dataAll.map(x => Object.assign({}, x, {
+              date: asYmd(x.date || x.resource_date || x.entry_date || x.created_at),
+            }));
+          } catch(e){ if (myReq !== reqCounter) return; dataAll = []; }
         }
 
-        /* ========= Render ========= */
+        /* ========= Render & Filter ========= */
         function inRange(dStr){
-          var d=asYmd(dStr), from=asYmd(filterState.from), to=asYmd(filterState.to);
-          if(!from || !to) return true;
-          return d>=from && d<=to;
+          var d = asYmd(dStr), from = asYmd(filterState.from), to = asYmd(filterState.to);
+          if (!from || !to) return true;
+          return ymdCmp(d, from) >= 0 && ymdCmp(d, to) <= 0;
         }
 
         function renderTable(){
-          var rows = (dataAll||[]).filter(x=>inRange(x.date));
-          if(!rows.length){
-            panel.style.display="none";
+          var rows = (dataAll||[]).filter(x => inRange(x.date));
+          if (!rows.length){
+            panel.style.display = "none";
             emptyState.classList.add("show");
-            tbody.innerHTML="";
+            tbody.innerHTML = "";
             return;
           }
           emptyState.classList.remove("show");
-          panel.style.display="flex";
-          tbody.innerHTML="";
+          panel.style.display = "flex";
+
+          rows.sort(function(a,b){
+            var da = asYmd(a.date), db = asYmd(b.date);
+            if (db !== da) return ymdCmp(db, da);
+            return String(b.id).localeCompare(String(a.id));
+          });
+
+          tbody.innerHTML = "";
           rows.forEach(function(r){
-            var id=r.id||"", dateB=fmtDate(r.date), item=r.item_name||"-", party=r.party_name||"-", unit=r.unit||"-",
-                amt=r.amount==null?"-":nepAmount(r.amount), rem=r.remarks||"-";
-            tbody.insertAdjacentHTML("beforeend",
+            var id = r.id || "",
+                dateB = fmtDate(r.date),
+                item  = r.item_name || "-",
+                party = r.party_name || r.party || "-",
+                unit  = r.unit || "-",
+                amt   = r.amount == null ? "-" : nepAmount(r.amount),
+                rem   = r.remarks || "-";
+            tbody.insertAdjacentHTML(
+              "beforeend",
               '<tr data-id="'+id+'">'+
-                '<td>'+dateB+'</td>'+
-                '<td>'+item+'</td>'+
-                '<td>'+party+'</td>'+
-                '<td>'+unit+'</td>'+
-                '<td class="col-amt">'+amt+'</td>'+
-                '<td>'+rem+'</td>'+
+                '<td title="'+dateB+'">'+dateB+'</td>'+
+                '<td title="'+item+'">'+item+'</td>'+
+                '<td title="'+party+'">'+party+'</td>'+
+                '<td title="'+unit+'">'+unit+'</td>'+
+                '<td class="col-amt" title="'+amt+'">'+amt+'</td>'+
+                '<td title="'+rem+'">'+rem+'</td>'+
                 '<td class="col-act">'+
                   '<button class="act-btn edit" onclick="window.__editRow(\''+id+'\')" title="सम्पादन"><i class="fa-solid fa-pen"></i></button>'+
                   '<button class="act-btn del"  onclick="window.__askDelete(\''+id+'\')" title="हटाउनुहोस्"><i class="fa-solid fa-trash"></i></button>'+
                 '</td>'+
-              '</tr>');
+              '</tr>'
+            );
           });
           sizeTable();
         }
 
+        function ensureVisibleDate(ymd){
+          var d = asYmd(ymd); if (!d) return;
+          if (!filterState.from || !filterState.to || !inRange(d)) {
+            filterState.type = "custom"; filterState.from = d; filterState.to = d;
+            if (flt_from) flt_from.value = d; if (flt_to) flt_to.value = d;
+            if (flt_from_bs) flt_from_bs.textContent = fmtDate(d);
+            if (flt_to_bs) flt_to_bs.textContent = fmtDate(d);
+          }
+        }
+
         /* ========= Actions ========= */
-        window.__editRow = function(id){
+        window.__editRow = function (id) {
           editId = id || null;
-          var row = (dataAll||[]).find ? dataAll.find(x=>String(x.id)===String(id)) : null; row = row || {};
+          var row = (dataAll||[]).find ? dataAll.find(x => String(x.id)===String(id)) : null;
+          row = row || {};
           modalTitle.textContent = editId ? "रिसोर्स सम्पादन" : "रिसोर्स थप्नुहोस्";
           saveEditBtn.textContent = editId ? "सेभ" : "थप्नुहोस्";
-
           clearAllFieldErrs();
 
           f_item.value = row.item_name || "";
           f_party.value = row.party_id || "";
           f_unit.value = row.unit || "";
-          f_amount.value = row.amount!=null ? toNp(String(row.amount)) : "";
+          f_amount.value = row.amount != null ? toNp(String(row.amount)) : "";
           f_date.value = row.date ? asYmd(row.date) : "";
           f_date_bs.textContent = f_date.value ? fmtDate(f_date.value) : "";
           f_remarks.value = row.remarks || "";
 
           show(editModal);
         };
-        window.__askDelete = function(id){ deleteId=id; show(deleteModal); };
+        window.__askDelete = function (id) { deleteId = id; show(deleteModal); };
 
         function closeEdit(){ hide(editModal); }
         function closeDelete(){ hide(deleteModal); }
         function closeParty(){ hide(partyModal); }
 
-        addBtn.addEventListener("click", ()=>window.__editRow(null));
+        addBtn.addEventListener("click", () => window.__editRow(null));
         cancelEditBtn.addEventListener("click", closeEdit);
         cancelDeleteBtn.addEventListener("click", closeDelete);
 
-        f_date.addEventListener("change", ()=>{ f_date_bs.textContent = f_date.value ? fmtDate(f_date.value) : ""; });
-        f_amount.addEventListener("input", (e)=>{ var en = toEn(e.target.value); var digits = onlyDigits(en); e.target.value = toNp(digits); });
+        f_date.addEventListener("change", () => { f_date_bs.textContent = f_date.value ? fmtDate(f_date.value) : ""; });
+        f_amount.addEventListener("input", e => { e.target.value = sanitizeAmountKeepScript(e.target.value); });
 
-        /* + पार्टी flow */
-        var openPartyBtn = document.getElementById("openParty");
-        var p_name = document.getElementById("p_name"),
-            p_phone = document.getElementById("p_phone"),
-            partySaveBtn = document.getElementById("p_save"),
-            partyCancelBtn = document.getElementById("p_cancel"),
-            errPName = document.getElementById("err-pname"),
-            errPPhone = document.getElementById("err-pphone");
-
-        openPartyBtn.addEventListener("click", ()=>{
-          p_name.value=""; p_phone.value="";
-          setErr(errPName,"",p_name); setErr(errPPhone,"",p_phone);
-          show(partyModal); setTimeout(()=>p_name.focus(),100);
+        /* + Party */
+        openPartyBtn.addEventListener("click", () => {
+          p_name.value = ""; p_phone.value = "";
+          setErr(errPName, "", p_name); setErr(errPPhone, "", p_phone);
+          show(partyModal); setTimeout(()=>p_name.focus(), 100);
         });
         partyCancelBtn.addEventListener("click", closeParty);
-        p_phone.addEventListener("input", ()=>{ p_phone.value = p_phone.value.replace(/\D/g,"").slice(0,10); setErr(errPPhone,"",p_phone); });
-
-        partySaveBtn.addEventListener("click", async ()=>{
+        partySaveBtn.addEventListener("click", async () => {
           setErr(errPName,"",p_name); setErr(errPPhone,"",p_phone);
-          var name=(p_name.value||"").trim();
-          var phone=(p_phone.value||"").trim();
-          if(!name){ setErr(errPName,"पार्टीको नाम आवश्यक छ।",p_name); return; }
-          if(phone && !/^\d{10}$/.test(phone)){ setErr(errPPhone,"फोन नम्बर १० अंकको हुनुपर्छ।",p_phone); return; }
-          partySaveBtn.disabled=true; partySaveBtn.textContent="थप्दै…";
+          var name = (p_name.value||"").trim();
+          var phone = (p_phone.value||"").trim();
+          if (!name){ setErr(errPName,"पार्टीको नाम आवश्यक छ।",p_name); return; }
+          if (phone && !/^\d{10}$/.test(phone)){ setErr(errPPhone,"फोन नम्बर १० अंकको हुनुपर्छ।",p_phone); return; }
+          partySaveBtn.disabled = true; partySaveBtn.textContent = "थप्दै…";
           try{
-            var r=await fetch(API_BASE+"/parties",{method:"POST",headers:Object.assign({},H,{"Content-Type":"application/json"}),body:JSON.stringify({name, phone_no: phone || null})});
-            var j=await r.json().catch(()=>({}));
-            if(!r.ok) throw new Error(j?.message || "थप्न असफल");
+            var r = await fetch(API_BASE + "/parties", {
+              method: "POST", headers: Object.assign({}, H, { "Content-Type":"application/json" }),
+              body: JSON.stringify({ name, phone_no: phone || null })
+            });
+            var j = await r.json().catch(()=>({}));
+            if (!r.ok) throw new Error(j?.message || "थप्न असफल");
             await loadParties();
-            var newId=(j?.id)||(j?.data?.id)||(j?.party?.id)||"";
-            if(newId){ f_party.value=String(newId); }
-            toast("पार्टी थपियो","success");
-            closeParty();
-          }catch(err){ setErr(errPName, err.message || "त्रुटि भयो", p_name); }
-          finally{ partySaveBtn.disabled=false; partySaveBtn.textContent="थप्नुहोस्"; }
+            var newId = j?.id || j?.data?.id || j?.party?.id || "";
+            if (newId) f_party.value = String(newId);
+            toast("पार्टी थपियो","success"); closeParty();
+          } catch(err){ setErr(errPName, err.message || "त्रुटि भयो", p_name); }
+          finally { partySaveBtn.disabled = false; partySaveBtn.textContent = "थप्नुहोस्"; }
         });
 
-        // CREATE / UPDATE resource
+        // CREATE / UPDATE
         saveEditBtn.addEventListener("click", async function(){
-          if(saving) return; saving=true;
-          clearAllFieldErrs();
+          if (saving) return; saving = true; clearAllFieldErrs();
 
           var creating = !editId;
           var item = (f_item.value||"").trim();
           var partyId = (f_party.value||"").trim();
           var date = asYmd(f_date.value || new Date());
-          var amountNumber = parseFloat(onlyDigits(toEn(f_amount.value))) || 0;
+          var amountNumber = normalizedNumber(f_amount.value);
 
-          var ok=true;
-          if(!item){ setErr(errItem,"वस्तुको नाम आवश्यक छ।",f_item); ok=false; }
-          if(!partyId){ setErr(errParty,"पार्टी छान्नुहोस्।",f_party); ok=false; }
-          if(!f_date.value){ setErr(errDate,"मिति आवश्यक छ।",f_date); ok=false; }
-          if(!ok){ saving=false; return; }
+          var ok = true;
+          if (!item){ setErr(errItem,"वस्तुको नाम आवश्यक छ।",f_item); ok = false; }
+          if (!partyId){ setErr(errParty,"पार्टी छान्नुहोस्।",f_party); ok = false; }
+          if (!f_date.value){ setErr(errDate,"मिति आवश्यक छ।",f_date); ok = false; }
+          if (!ok){ saving = false; return; }
 
           var payload = {
-            site_id: SITE_ID,
-            item_name: item,
-            party_id: partyId,
-            unit: (f_unit.value||"").trim() || null,
-            amount: amountNumber || 0,
-            date,
-            remarks: (f_remarks.value||"").trim() || null,
+            site_id: SITE_ID, item_name: item, party_id: partyId,
+            unit: (f_unit.value||"").trim() || null, amount: amountNumber || 0,
+            date, remarks: (f_remarks.value||"").trim() || null,
           };
 
-          if(creating){
-            saveEditBtn.disabled=true; saveEditBtn.textContent="थप्दै…";
+          if (creating){
+            saveEditBtn.disabled = true; saveEditBtn.textContent = "थप्दै…";
             try{
-              var r=await fetch(API_BASE+"/site-resources",{method:"POST",headers:Object.assign({},H,{"Content-Type":"application/json"}),body:JSON.stringify(payload)});
-              var j=await r.json().catch(()=>({}));
-              if(!r.ok) throw new Error(j?.message || "सेभ असफल");
+              var r = await fetch(API_BASE + "/site-resources", {
+                method: "POST", headers: Object.assign({}, H, { "Content-Type":"application/json" }),
+                body: JSON.stringify(payload),
+              });
+              var j = await r.json().catch(()=>({}));
+              if (!r.ok) throw new Error(j?.message || "सेभ असफल");
               const created = j?.data || j;
-              if(created && created.id){
-                created.date = asYmd(created.date || payload.date);
-                if(String(created.site_id)===String(SITE_ID)){
-                  dataAll.unshift(created);
-                  dataAll.sort((a,b)=> asYmd(b.date) > asYmd(a.date) ? 1 : -1 );
-                  renderTable();
-                }
-              }
-              toast("रिसोर्स सफलतापूर्वक थपियो","success");
-              hide(editModal);
-              await fetchResources();
-              renderTable();
-            }catch(err){
-              toast(err?.message || "सेभ असफल","error");
-            }finally{
-              saveEditBtn.disabled=false; saveEditBtn.textContent="थप्नुहोस्"; saving=false;
-            }
+              const rec = Object.assign({}, created, { date: asYmd(created?.date || payload.date) });
+              if (String(rec.site_id || SITE_ID) === String(SITE_ID)) dataAll.push(rec);
+              ensureVisibleDate(rec.date); renderTable();
+              toast("रिसोर्स सफलतापूर्वक थपियो","success"); hide(editModal);
+            } catch(err){ toast(err?.message || "सेभ असफल","error"); }
+            finally { saveEditBtn.disabled = false; saveEditBtn.textContent = "थप्नुहोस्"; saving = false; }
             return;
           }
 
           // UPDATE
-          saveEditBtn.disabled=true; saveEditBtn.textContent="सेभ हुँदै…";
+          saveEditBtn.disabled = true; saveEditBtn.textContent = "सेभ हुँदै…";
           try{
-            var r2=await fetch(API_BASE+"/site-resources/"+editId,{method:"PUT",headers:Object.assign({},H,{"Content-Type":"application/json"}),body:JSON.stringify(payload)});
-            var j2=await r2.json().catch(()=>({}));
-            if(!r2.ok) throw new Error(j2?.message || "अपडेट असफल");
-            toast("रिसोर्स सम्पादन भयो","success");
-            hide(editModal);
-            await fetchResources();
-            renderTable();
-          }catch(err){
-            toast(err?.message || "अपडेट असफल","error");
-          }finally{
-            saveEditBtn.disabled=false; saveEditBtn.textContent="सेभ"; saving=false;
-          }
+            var r2 = await fetch(API_BASE + "/site-resources/" + editId, {
+              method: "PUT", headers: Object.assign({}, H, { "Content-Type":"application/json" }),
+              body: JSON.stringify(payload),
+            });
+            var j2 = await r2.json().catch(()=>({}));
+            if (!r2.ok) throw new Error(j2?.message || "अपडेट असफल");
+            var idx = dataAll.findIndex(x => String(x.id) === String(editId));
+            if (idx > -1){
+              dataAll[idx] = Object.assign({}, dataAll[idx], payload, { id: dataAll[idx].id, date: asYmd(payload.date) });
+            }
+            ensureVisibleDate(payload.date);
+            toast("रिसोर्स सम्पादन भयो","success"); hide(editModal); renderTable();
+          } catch(err){ toast(err?.message || "अपडेट असफल","error"); }
+          finally { saveEditBtn.disabled = false; saveEditBtn.textContent = "सेभ"; saving = false; }
         });
 
         // DELETE
         confirmDeleteBtn.addEventListener("click", async ()=>{
-          if(!deleteId) return;
-          confirmDeleteBtn.disabled=true; confirmDeleteBtn.textContent="मेटाउँदै…";
-          try{
-            var r=await fetch(API_BASE+"/site-resources/"+deleteId,{method:"DELETE",headers:H});
-            if(!r.ok){
-              var msg = r.status===401? "Unauthorized (401)" : r.status===403? "अनुमति छैन (403)" : "हटाउन असफल ("+r.status+")";
+          if (!deleteId) return;
+          confirmDeleteBtn.disabled = true; confirmDeleteBtn.textContent = "मेटाउँदै…";
+          try {
+            var r = await fetch(API_BASE + "/site-resources/" + deleteId, { method: "DELETE", headers: H });
+            if (!r.ok){
+              var msg = r.status===401 ? "Unauthorized (401)" : r.status===403 ? "अनुमति छैन (403)" : "हटाउन असफल ("+r.status+")";
               throw new Error(msg);
             }
-            toast("रिसोर्स मेटियो","success");
-            hide(deleteModal);
-            await fetchResources();
-            renderTable();
-          }catch(err){
-            toast(err?.message || "मेटाउन असफल","error");
-          }finally{
-            confirmDeleteBtn.disabled=false; confirmDeleteBtn.textContent="मेटाउनुहोस्";
-          }
+            dataAll = dataAll.filter(x => String(x.id) !== String(deleteId));
+            toast("रिसोर्स मेटियो","success"); hide(deleteModal); renderTable();
+          } catch(err){ toast(err?.message || "मेटाउन असफल","error"); }
+          finally { confirmDeleteBtn.disabled = false; confirmDeleteBtn.textContent = "मेटाउनुहोस्"; }
         });
 
         /* ========= Filter ========= */
         function setQuickRange(type){
-          filterState.type=type;
-          rangeBtns.forEach(b=>b.classList.toggle("active", b.getAttribute("data-range")===type));
-          if(type==="custom"){ customDatesBox.style.display="block"; }
-          else{
-            customDatesBox.style.display="none";
-            var today=new Date(), to=new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            var days=Number(type)||7; var from=new Date(to); from.setDate(to.getDate()-(days-1));
-            filterState.from=iso(from); filterState.to=iso(to);
-            flt_from.value=filterState.from; flt_to.value=filterState.to;
-            flt_from_bs.textContent=fmtDate(filterState.from); flt_to_bs.textContent=fmtDate(filterState.to);
+          filterState.type = type;
+          rangeBtns.forEach(b => b.classList.toggle("active", b.getAttribute("data-range") === type));
+          if (type === "custom"){
+            customDatesBox.style.display = "block";
+          } else {
+            customDatesBox.style.display = "none";
+            var today = new Date(), to = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            var days = Number(type) || 7;
+            var from = new Date(to); from.setDate(to.getDate() - (days - 1));
+            filterState.from = iso(from); filterState.to = iso(to);
+            flt_from.value = filterState.from; flt_to.value = filterState.to;
+            flt_from_bs.textContent = fmtDate(filterState.from); flt_to_bs.textContent = fmtDate(filterState.to);
             renderTable();
           }
         }
-        rangeBtns.forEach(btn=> btn.addEventListener("click", ()=> setQuickRange(btn.getAttribute("data-range")) ));
-        openFilterBtn.addEventListener("click", ()=> show(filterModal) );
-        cancelFilterBtn.addEventListener("click", ()=> hide(filterModal) );
-        flt_from.addEventListener("change", ()=>{ flt_from_bs.textContent = flt_from.value ? fmtDate(flt_from.value) : ""; });
-        flt_to.addEventListener("change", ()=>{ flt_to_bs.textContent = flt_to.value ? fmtDate(flt_to.value) : ""; });
+        rangeBtns.forEach(btn => btn.addEventListener("click", ()=> setQuickRange(btn.getAttribute("data-range"))));
+        openFilterBtn.addEventListener("click", ()=> show(filterModal));
+        cancelFilterBtn.addEventListener("click", ()=> hide(filterModal));
+        flt_from.addEventListener("change", ()=> { flt_from_bs.textContent = flt_from.value ? fmtDate(flt_from.value) : ""; });
+        flt_to.addEventListener("change", ()=> { flt_to_bs.textContent = flt_to.value ? fmtDate(flt_to.value) : ""; });
         applyFilterBtn.addEventListener("click", ()=>{
-          if(!flt_from.value || !flt_to.value){ alert("दुवै मिति छान्नुहोस्।"); return; }
-          filterState.from = asYmd(flt_from.value); filterState.to = asYmd(flt_to.value); filterState.type="custom";
+          if (!flt_from.value || !flt_to.value){ alert("दुवै मिति छान्नुहोस्।"); return; }
+          filterState.from = asYmd(flt_from.value); filterState.to = asYmd(flt_to.value); filterState.type = "custom";
           hide(filterModal); renderTable();
         });
 
         // close modals on backdrop tap
-        [editModal, deleteModal, filterModal, partyModal].forEach(m=>{
-          m.addEventListener("click", e=>{ if(e.target===m) m.classList.remove("show"); });
+        [editModal, deleteModal, filterModal, partyModal].forEach(m => {
+          m.addEventListener("click", (e)=>{
+            if (e.target === m) m.classList.remove("show");
+            if (!document.querySelector(".modal.show")) document.body.classList.remove("modal-open");
+          });
         });
 
-        // expose for inline handlers
+        // keep handlers exposed
         window.__editRow = window.__editRow;
         window.__askDelete = window.__askDelete;
       });

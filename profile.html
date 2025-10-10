@@ -38,6 +38,7 @@
         /* NEW: safe-area vars for iOS/Android cutouts */
         --safe-top: env(safe-area-inset-top, 0px);
         --safe-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-right: env(safe-area-inset-right, 0px);
       }
       * {
         box-sizing: border-box;
@@ -56,7 +57,6 @@
         min-height: 100dvh;
         font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
           Arial, sans-serif;
-        /* removed centering grid */
         display: block;
       }
 
@@ -86,16 +86,16 @@
 
       /* APP CONTAINER: now edge-to-edge */
       .phone {
-        width: 100vw; /* was var(--w) */
-        height: 100dvh; /* was var(--h) */
+        width: 100vw;
+        height: 100dvh;
         background: var(--surface);
-        border-radius: 0; /* remove phone frame */
+        border-radius: 0;
         overflow: hidden;
-        box-shadow: none; /* remove floating card shadow */
+        box-shadow: none;
         display: flex;
         flex-direction: column;
         position: relative;
-        padding-top: var(--safe-top); /* respect status/notch */
+        padding-top: var(--safe-top);
       }
 
       /* header */
@@ -130,7 +130,6 @@
         flex: 1 1 auto;
         overflow: auto;
         background: #f8fafb;
-        /* keep original side/top, make bottom clear of nav + home indicator */
         padding: 18px 16px calc(var(--nav-h) + var(--safe-bottom) + 24px);
       }
       .avatar-wrap {
@@ -216,7 +215,7 @@
         display: flex;
         justify-content: space-around;
         align-items: center;
-        padding-bottom: var(--safe-bottom); /* NEW: home indicator clearance */
+        padding-bottom: var(--safe-bottom);
       }
       .nav a {
         text-decoration: none;
@@ -235,25 +234,75 @@
         font-weight: 700;
       }
 
-      /* toast */
-      .toast {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: calc(var(--nav-h) + var(--safe-bottom) + 72px);
-        background: #111827;
-        color: #fff;
-        padding: 10px 14px;
-        border-radius: 10px;
-        font-size: 13px;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+      /* ---------------- Top-right toast (match other pages) ---------------- */
+      #toast {
+        position: fixed;
+        top: calc(12px + var(--safe-top));
+        right: calc(12px + var(--safe-right));
+        background: #fff;
+        border: 0;
+        border-radius: 12px;
+        padding: 10px 14px 10px 10px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        display: grid;
+        grid-template-columns: 32px 1fr 20px;
+        align-items: center;
+        gap: 12px;
+        width: max-content;
+        max-width: 92vw;
+        color: #111827;
         opacity: 0;
+        transform: translateY(-8px);
         pointer-events: none;
-        transition: opacity 0.2s ease;
+        transition: opacity 0.22s, transform 0.22s;
+        z-index: 10000;
+        line-height: 1.2;
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
       }
-      .toast.show {
+      #toast.show {
         opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
       }
+      #toast .toast-badge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #74c69d; /* success green */
+      }
+      #toast .toast-badge.error {
+        background: #ef4444;
+      }
+      #toast .toast-badge svg {
+        width: 18px;
+        height: 18px;
+        stroke: #fff;
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      #toast .toast-msg {
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #111827;
+        font-weight: 600;
+      }
+      #toast .toast-x {
+        color: #6b7280;
+        cursor: pointer;
+        font-size: 18px;
+        text-align: center;
+        line-height: 1;
+      }
+
+      /* keep any legacy .toast rules harmless by overriding with #toast above */
+      .toast { all: unset; }
 
       /* bottom sheet */
       .sheet-overlay {
@@ -273,7 +322,7 @@
         position: absolute;
         left: 16px;
         right: 16px;
-        bottom: calc(12px + var(--safe-bottom)); /* NEW: safe bottom */
+        bottom: calc(12px + var(--safe-bottom));
         background: #fff;
         border-radius: 16px;
         padding: 16px;
@@ -421,11 +470,8 @@
         </div>
       </main>
 
-      <!-- optional bottom nav (keep if needed) -->
-     
-
-      <!-- toast -->
-      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <!-- Top-right toast host -->
+      <div id="toast" role="status" aria-live="polite"></div>
 
       <!-- bottom sheet (name edit) -->
       <div id="sheetOverlay" class="sheet-overlay"></div>
@@ -463,13 +509,27 @@
       const npDigits = "०१२३४५६७८९";
       const toNP = (s) =>
         (s || "").toString().replace(/[0-9]/g, (d) => npDigits[+d]);
-      const toast = document.getElementById("toast");
-      const showToast = (msg, ms = 1500) => {
-        toast.textContent = msg;
-        toast.classList.add("show");
-        clearTimeout(showToast._t);
-        showToast._t = setTimeout(() => toast.classList.remove("show"), ms);
-      };
+
+      // unified top-right toast (same as other pages)
+      function flashToast(message, kind = "success", ms = 2000) {
+        const el = document.getElementById("toast");
+        const icon =
+          kind === "error"
+            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+
+        el.innerHTML = `
+          <span class="toast-badge ${kind === "error" ? "error" : ""}">${icon}</span>
+          <span class="toast-msg">${message || ""}</span>
+          <span class="toast-x" aria-label="Close">×</span>
+        `;
+        el.classList.add("show");
+        const closer = el.querySelector(".toast-x");
+        closer && (closer.onclick = () => el.classList.remove("show"));
+
+        clearTimeout(flashToast._t);
+        flashToast._t = setTimeout(() => el.classList.remove("show"), ms);
+      }
 
       // elements
       const nameVal = document.getElementById("nameValue");
@@ -534,10 +594,11 @@
           } catch {}
 
           closeSheet();
-          showToast("नाम अपडेट भयो ✅");
+          // ✅ top-right toast like other pages
+          flashToast("नाम अपडेट भयो", "success");
         } catch (e) {
           console.error(e);
-          showToast("नाम परिवर्तन असफल भयो");
+          flashToast("नाम परिवर्तन असफल भयो", "error");
         }
       });
 

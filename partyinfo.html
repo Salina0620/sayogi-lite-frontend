@@ -25,7 +25,6 @@
         --brand-green: #13a87d;
         --cta-blue: #186b97;
         --alert-red: #dc3545;
-        /* Make heights responsive */
         --header-h: clamp(84px, 14vh, 110px);
         --nav-h: clamp(48px, 7vh, 52px);
         --bg: #f3f5f7;
@@ -34,22 +33,25 @@
         --text-700: #344054;
         --text-600: #667085;
         --shadow-card: 0 8px 24px rgba(16, 24, 40, 0.06);
+        --card-border: #e5e7eb;
+        --rose-bg: #fff7f7;
+        --rose-border: #f2b4b8;
+        --rose-text: #e24a3a;
         --fab-gap: 88px;
       }
 
       html,
       body {
         margin: 0;
-        height: 100dvh; /* prefer dynamic viewport in webviews */
+        height: 100dvh;
         background: var(--bg);
         -webkit-text-size-adjust: 100%;
         text-size-adjust: 100%;
-        overflow: hidden; /* scroll is handled by .page-content */
+        overflow: hidden;
       }
       * {
         box-sizing: border-box;
       }
-      /* Prevent horizontal scroll anywhere */
       html,
       body,
       #party-page {
@@ -76,10 +78,10 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        /* guard against accidental bleed */
         overflow: clip;
       }
 
+      /* ===== Header ===== */
       .page-header {
         background: var(--brand-green);
         color: #fff;
@@ -107,9 +109,7 @@
       .title-wrap {
         flex: 1 1 auto;
         text-align: center;
-        /* avoid clipping on very narrow screens */
         max-width: 100%;
-        transform: none;
         padding: 0 4px;
         overflow: hidden;
       }
@@ -129,8 +129,10 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-family: "Noto Sans Devanagari", "Poppins", system-ui, sans-serif;
       }
 
+      /* ===== Content area ===== */
       .page-content {
         height: calc(
           100dvh - var(--header-h) - var(--nav-h) -
@@ -139,43 +141,124 @@
         overflow: auto;
         -webkit-overflow-scrolling: touch;
         background: #f8fafb;
-        padding: clamp(10px, 3.5vw, 14px);
+        padding: 12px;
         padding-bottom: calc(
           var(--nav-h) + var(--fab-gap) + env(safe-area-inset-bottom, 0px)
         );
       }
 
+      /* ===== Total amount card (ONLY red border box) ===== */
+      .total-amount-card {
+        /* outer wrap disabled */
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+        margin: 0 2px 12px;
+      }
+      .total-amount-card .inner {
+        border: 1.5px solid var(--rose-border);
+        background: var(--rose-bg);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+      }
+      .total-amount-card .label {
+        margin: 0;
+        color: var(--text-700);
+        font-size: clamp(12px, 3.6vw, 13px);
+        font-weight: 600;
+      }
+      .total-amount-card .amount {
+        margin: 6px 0 0;
+        color: var(--rose-text);
+        font-weight: 700;
+        font-size: clamp(18px, 5.2vw, 20px);
+        font-family: "Noto Sans Devanagari", "Poppins", system-ui, sans-serif;
+      }
+
       .section-heading {
-        margin: 16px 0 12px !important;
+        margin: 10px 4px 10px;
         font-size: clamp(14px, 4.2vw, 15px);
         font-weight: 600;
         color: var(--text-700);
       }
 
-      .total-amount-card {
-        background: #fce4e4;
-        border: 1px solid #f5c2c7;
+      /* ===== Activity list ===== */
+      .activity-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 2px;
+      }
+      .activity-item {
+        background: #fff;
+        border: 1px solid var(--card-border);
         border-radius: 12px;
-        padding: clamp(10px, 3.2vw, 14px);
-        text-align: center;
+        padding: 12px 14px;
         box-shadow: var(--shadow-card);
-        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
       }
-      .total-amount-card .label {
-        margin: 0;
-        color: var(--text-600);
-        font-size: clamp(12px, 3.6vw, 13px);
-        font-weight: 500;
+      .activity-item.deleted {
+        opacity: 0.55;
+        filter: grayscale(0.2);
       }
-      .total-amount-card .amount {
-        margin: 4px 0 0;
-        color: var(--alert-red);
+      .item-details {
+        min-width: 0;
+        padding-right: 4px;
+      }
+      .activity-title {
+        margin: 0 0 4px;
         font-weight: 600;
-        font-size: clamp(18px, 5.2vw, 20px);
-        word-break: break-word;
+        font-size: clamp(13px, 4vw, 14px);
+        color: var(--text-700);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .activity-description {
+        margin: 0;
+        font-size: clamp(11px, 3.6vw, 12px);
+        color: #6b7280;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .activity-amount-date {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-end;
+        flex: 0 0 auto;
+      }
+      .activity-amount {
+        margin: 0;
+        color: var(--rose-text);
+        font-weight: 600;
+        font-size: clamp(13px, 4vw, 14px);
+        font-family: "Noto Sans Devanagari", "Poppins", system-ui, sans-serif;
+      }
+      .activity-date-bubble {
+        display: inline-block;
+        padding: 4px 10px;
+        font-size: clamp(10px, 3.4vw, 12px);
+        color: #475467;
+        background: #f5f6f8;
+        border: 1px solid #d0d5dd;
+        border-radius: 999px;
+        line-height: 1;
+        white-space: nowrap;
+        font-family: "Noto Sans Devanagari", "Poppins", system-ui, sans-serif;
       }
 
-      /* Empty state */
+      /* ===== Empty state ===== */
       .empty-state {
         display: none;
         text-align: center;
@@ -201,78 +284,7 @@
         font-size: clamp(13px, 3.8vw, 14px);
       }
 
-      .activity-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .activity-item {
-        background: #fff;
-        border-radius: 12px;
-        padding: clamp(10px, 3.4vw, 12px) clamp(12px, 3.8vw, 14px);
-        box-shadow: var(--shadow-card);
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        cursor: pointer;
-        gap: 10px;
-      }
-      .activity-item.deleted {
-        opacity: 0.55;
-        filter: grayscale(0.2);
-      }
-      .item-details {
-        min-width: 0; /* allow ellipsis */
-        padding-right: 4px;
-      }
-      .activity-title {
-        margin: 0 0 4px;
-        font-weight: 600;
-        font-size: clamp(13px, 4vw, 14px);
-        color: var(--text-700);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .activity-description {
-        margin: 0;
-        font-size: clamp(11px, 3.6vw, 12px);
-        color: #6b7280;
-        line-height: 1.35;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        word-break: break-word;
-      }
-      .activity-amount-date {
-        text-align: right;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        align-items: flex-end;
-        flex: 0 0 auto; /* prevent squish */
-      }
-      .activity-amount {
-        margin: 0;
-        color: #e24a3a;
-        font-weight: 500;
-        font-size: clamp(13px, 4vw, 14px);
-        word-break: break-word;
-      }
-      .activity-date-bubble {
-        display: inline-block;
-        padding: 4px 10px;
-        font-size: clamp(10px, 3.4vw, 12px);
-        color: #475467;
-        background: #f5f6f8;
-        border: 1px solid #d0d5dd;
-        border-radius: 999px;
-        line-height: 1;
-        white-space: nowrap;
-      }
-
-      /* Bottom action button (single) */
+      /* ===== Single bottom action button ===== */
       .floating-actions {
         position: absolute;
         left: clamp(10px, 3.5vw, 14px);
@@ -296,7 +308,6 @@
         gap: 8px;
         font-weight: 600;
         font-size: clamp(13px, 4vw, 15px);
-        box-shadow: none;
       }
       .action-btn.primary {
         background: #e24a3a;
@@ -306,6 +317,7 @@
         font-size: clamp(16px, 4.4vw, 18px);
       }
 
+      /* ===== Bottom nav mount ===== */
       .bottom-nav {
         position: absolute;
         left: 0;
@@ -337,7 +349,7 @@
         font-weight: 600;
       }
 
-      /* Modal (Add/Edit) */
+      /* ===== Modals + toast (unchanged) ===== */
       .modal-overlay {
         position: absolute;
         inset: 0;
@@ -401,6 +413,7 @@
         padding: 10px 12px;
         font-size: clamp(13px, 3.8vw, 14px);
         background: #fff;
+        font-family: "Noto Sans Devanagari", "Poppins", system-ui, sans-serif;
       }
       .modal-input[readonly] {
         background: #f8fafb;
@@ -416,7 +429,6 @@
         margin-top: 4px;
         min-height: 14px;
       }
-
       .modal-action-buttons {
         display: flex;
         gap: 10px;
@@ -438,7 +450,7 @@
       }
       .btn-danger {
         background: #e24a3a;
-        color: #fff;
+        olor: #fff;
       }
       .btn-outline {
         background: #eef2f6;
@@ -453,7 +465,6 @@
         color: #fff;
       }
 
-      /* Delete confirm uses this card style */
       .delete-card {
         width: 100%;
         max-width: min(420px, 100%);
@@ -482,7 +493,6 @@
         flex: 1;
       }
 
-      /* Top-right toast */
       #toast {
         position: fixed;
         top: calc(12px + env(safe-area-inset-top, 0px));
@@ -540,7 +550,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
         color: #111827;
-        text-decoration: none;
       }
       .toast-x {
         color: #6b7280;
@@ -548,144 +557,6 @@
         font-size: 18px;
         text-align: center;
         line-height: 1;
-      }
-
-      /* ==== FORCE EDGE-TO-EDGE ON ALL SCREENS (drop-in overrides) ==== */
-
-      /* No desktop/tablet frame */
-      @media (min-width: 0) {
-        #party-page.mobile-container {
-          max-width: 100% !important;
-          margin: 0 !important;
-          border-radius: 0 !important;
-          box-shadow: none !important;
-        }
-        body {
-          background: var(--surface) !important;
-        } /* remove outer gray frame */
-      }
-
-      /* Flush header and content with screen edges */
-      .header-row {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-      }
-      .page-content {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-      }
-
-      /* Full-bleed blocks & list */
-      .total-amount-card,
-      .activity-item {
-        border-radius: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        box-shadow: none !important;
-      }
-      .activity-list {
-        gap: 0 !important;
-      }
-
-      /* Headings & empty state also flush */
-      .section-heading,
-      .empty-state {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-
-      /* Floating action stretches to edges (respects safe areas) */
-      .floating-actions {
-        left: max(0px, env(safe-area-inset-left, 0)) !important;
-        right: max(0px, env(safe-area-inset-right, 0)) !important;
-      }
-
-      /* Modals use full width in webviews */
-      .modal-overlay {
-        padding: 0 !important;
-      }
-      .modal-content,
-      .delete-card {
-        max-width: 100% !important;
-        border-radius: 0 !important;
-      }
-
-      /* Never allow horizontal scroll */
-      html,
-      body,
-      #party-page {
-        overflow-x: hidden !important;
-      }
-
-      /* Ultra-small devices (≤320px logical width) */
-      @media (max-width: 360px) {
-        .activity-item {
-          gap: 8px;
-        }
-        .activity-date-bubble {
-          padding: 3px 8px;
-        }
-      }
-
-      #party-phone {
-        font-family: "Noto Sans Devanagari", "Poppins", system-ui, -apple-system,
-          "Segoe UI", Roboto, Arial, sans-serif;
-      }
-
-      /* ===== EDGE-TO-EDGE OVERRIDES (no HTML/JS changes) ===== */
-      .page-content {
-        padding-left: env(safe-area-inset-left, 0) !important;
-        padding-right: env(safe-area-inset-right, 0) !important;
-        padding-top: clamp(8px, 2.4vw, 12px) !important;
-      }
-      .total-amount-card {
-        border-radius: 0 !important;
-        margin: 0 0 10px 0 !important;
-        box-shadow: none !important;
-        padding-left: clamp(10px, 3vw, 14px) !important;
-        padding-right: clamp(10px, 3vw, 14px) !important;
-      }
-      .section-heading {
-        margin: 0 0 10px 0 !important;
-        padding-left: clamp(10px, 3vw, 14px) !important;
-        padding-right: clamp(10px, 3vw, 14px) !important;
-      }
-      .empty-state {
-        padding-left: clamp(10px, 3vw, 14px) !important;
-        padding-right: clamp(10px, 3vw, 14px) !important;
-      }
-      .activity-list {
-        gap: 0 !important;
-      }
-      .activity-item {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border-bottom: 1px solid #e5e7eb !important;
-        padding-left: clamp(10px, 3vw, 14px) !important;
-        padding-right: clamp(10px, 3vw, 14px) !important;
-      }
-      .floating-actions {
-        left: max(6px, env(safe-area-inset-left, 0)) !important;
-        right: max(6px, env(safe-area-inset-right, 0)) !important;
-      }
-      .header-row {
-        padding-left: max(8px, env(safe-area-inset-left, 0)) !important;
-        padding-right: max(8px, env(safe-area-inset-right, 0)) !important;
-      }
-      .modal-overlay {
-        padding: max(8px, env(safe-area-inset-left, 0)) !important;
-      }
-      .modal-content,
-      .delete-card {
-        max-width: 100% !important;
-        border-radius: 12px !important;
-      }
-      html,
-      body,
-      #party-page {
-        overflow-x: hidden !important;
       }
     </style>
   </head>
@@ -702,7 +573,7 @@
             <i class="fa-solid fa-arrow-left"></i>
           </button>
           <div class="title-wrap">
-            <h1 id="party-name">पार्टी नाम</h1>
+            <h1 id="party-name">পार्टी नाम</h1>
             <p id="party-phone">फोन नम्बर</p>
           </div>
           <span style="width: 24px"></span>
@@ -710,9 +581,12 @@
       </header>
 
       <main class="page-content">
+        <!-- 🔴 Only the red-border card -->
         <div class="total-amount-card">
-          <p class="label">कुल रकम</p>
-          <p class="amount" id="total-amount">रू ०</p>
+          <div class="inner">
+            <p class="label">कुल रकम</p>
+            <p class="amount" id="total-amount">रू ०</p>
+          </div>
         </div>
 
         <h2 class="section-heading">हालैका गतिविधिहरू</h2>
@@ -724,10 +598,11 @@
           <p>सुरु गर्न “खर्च थप्नुहोस्” ट्याप गर्नुहोस्।</p>
         </section>
 
+        <!-- List -->
         <div class="activity-list" id="activity-list"></div>
       </main>
 
-      <!-- Bottom action: SINGLE red button with combined label -->
+      <!-- Bottom action -->
       <div class="floating-actions">
         <button class="action-btn primary" id="add-expense-btn" type="button">
           <i class="fa-solid fa-plus button-icon" aria-hidden="true"></i>
@@ -735,44 +610,20 @@
         </button>
       </div>
 
-      <nav class="bottom-nav">
-        <a href="home.html" class="nav-item"
-          ><i class="fa-solid fa-house"></i><span>होम</span></a
-        >
-        <a href="c-site-list.html" class="nav-item"
-          ><i class="fa-solid fa-trowel-bricks"></i><span>साइट</span></a
-        >
-        <a href="karobar.html" class="nav-item"
-          ><i class="fa-solid fa-chart-line"></i><span>कारोबारहरू</span></a
-        >
-        <a href="party.html" class="nav-item active"
-          ><i class="fa-solid fa-user-group"></i><span>पार्टीहरू</span></a
-        >
-        <a href="more.html" class="nav-item"
-          ><i class="fa-solid fa-grip"></i><span>अरू</span></a
-        >
-      </nav>
+      <!-- Shared bottom nav -->
+      <div id="bottom-nav"></div>
 
-      <!-- Top-right toast host -->
+      <!-- Toast -->
       <div id="toast" role="status" aria-live="polite"></div>
 
       <!-- Add/Edit Modal -->
       <div class="modal-overlay" id="expense-modal">
         <div class="modal-content">
-          <h3 class="modal-title" id="modalTitle">খर्च विवरण</h3>
+          <h3 class="modal-title" id="modalTitle">खर्च विवरण</h3>
 
           <div class="form-group" id="grpSite" style="display: none">
             <label for="modalSite">साइट</label>
-            <input
-              id="modalSite"
-              class="modal-input"
-              type="text"
-              readonly
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
-            />
+            <input id="modalSite" class="modal-input" type="text" readonly />
           </div>
 
           <div class="form-group">
@@ -782,10 +633,6 @@
               id="itemName"
               class="modal-input"
               placeholder="वस्तुको नाम..."
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
             />
             <div class="field-error" id="err-itemName"></div>
           </div>
@@ -798,10 +645,6 @@
               class="modal-input"
               placeholder="रू १,०००"
               inputmode="decimal"
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
             />
             <div class="field-error" id="err-amount"></div>
           </div>
@@ -813,15 +656,7 @@
                 <i class="fa-solid fa-calendar-day"></i> आज
               </button>
             </div>
-            <input
-              type="date"
-              id="date"
-              class="modal-input"
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
-            />
+            <input type="date" id="date" class="modal-input" />
             <div class="field-error" id="err-date"></div>
           </div>
 
@@ -831,10 +666,6 @@
               id="description"
               class="modal-textarea"
               placeholder="केहि लेख्नुहोस्"
-              autocomplete="off"
-              autocapitalize="off"
-              autocorrect="off"
-              spellcheck="false"
             ></textarea>
             <div class="field-error" id="err-description"></div>
           </div>
@@ -876,6 +707,7 @@
         Accept: "application/json",
       };
 
+      /* Nepali numerals (display) */
       const NP_DIGITS = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
       const NP_TO_EN = {
         "०": "0",
@@ -895,42 +727,46 @@
           .replace(/[०-९]/g, (d) => NP_TO_EN[d])
           .replace(/[^\d.]/g, "");
       const parseNepaliNumber = (s) => {
-        const x = toEN(s);
-        const n = Number(x);
+        const n = Number(toEN(s));
         return isNaN(n) ? 0 : n;
       };
-
       const npMoney = (n) =>
         `रू ${toNP(Math.abs(Number(n) || 0).toLocaleString("en-IN"))}`;
-      const fmtDateNP = (iso) => {
-        const d = new Date(iso);
-        try {
-          return d.toLocaleDateString("ne-NP");
-        } catch {
-          return toNP(d.toLocaleDateString());
-        }
-      };
-      const localYMD = (d = new Date()) => {
-        const x = d instanceof Date ? d : new Date(d);
-        const y = x.getFullYear(),
-          m = String(x.getMonth() + 1).padStart(2, "0"),
-          dd = String(x.getDate()).padStart(2, "0");
-        return `${y}-${m}-${dd}`;
-      };
+
+      /* Date chip: English month + Nepali digits for day (e.g., "Oct ०५") */
+      const ENG_MON_SHORT = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      function fmtEngShort(iso) {
+        const d = new Date(iso || Date.now());
+        const mon = ENG_MON_SHORT[d.getMonth()] || "";
+        const dayNP = String(d.getDate()).replace(/\d/g, (x) => NP_DIGITS[x]);
+        return `${mon} ${dayNP}`;
+      }
 
       /* Toast */
       function toast(msg, kind = "success") {
         const t = document.getElementById("toast");
         const icon =
           kind === "error"
-            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
-            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
-        t.innerHTML = `
-          <span class="toast-badge ${
-            kind === "error" ? "error" : ""
-          }">${icon}</span>
-          <span class="toast-msg">${msg || ""}</span>
-          <span class="toast-x" aria-label="Close">×</span>`;
+            ? '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+            : '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+        t.innerHTML = `<span class="toast-badge ${
+          kind === "error" ? "error" : ""
+        }">${icon}</span><span class="toast-msg">${
+          msg || ""
+        }</span><span class="toast-x" aria-label="Close">×</span>`;
         t.classList.add("show");
         t.querySelector(".toast-x").onclick = () => t.classList.remove("show");
         clearTimeout(toast._t);
@@ -961,8 +797,8 @@
           if (!res.ok) throw new Error(await res.text());
           const party = await res.json();
           document.getElementById("party-name").textContent = party.name || "—";
-          document.getElementById("party-phone").textContent = String(
-            party.phone_no ?? ""
+          document.getElementById("party-phone").textContent = toNP(
+            String(party.phone_no ?? "")
           );
         } catch (e) {
           console.error(e);
@@ -1000,7 +836,7 @@
             </div>
             <div class="activity-amount-date">
               <p class="activity-amount">- ${npMoney(Math.abs(act.amount))}</p>
-              <span class="activity-date-bubble">${fmtDateNP(act.date)}</span>
+              <span class="activity-date-bubble">${fmtEngShort(act.date)}</span>
             </div>`;
           card.addEventListener("click", () => openModalFor(act));
           list.appendChild(card);
@@ -1079,7 +915,7 @@
         }
       }
 
-      /* Modal wiring */
+      /* Modal wiring (unchanged) */
       const mOverlay = document.getElementById("expense-modal");
       const mTitle = document.getElementById("modalTitle");
       const grpSite = document.getElementById("grpSite");
@@ -1123,7 +959,7 @@
                 setReadOnly(false, true);
                 showButtons();
               }),
-              makeBtn("btn btn-danger", "मेटाउनु", openDeleteModal),
+              makeBtn("btn btn-danger", "মेटाउनु", openDeleteModal),
               makeBtn("btn btn-outline", "बन्द", closeModal)
             );
           }
@@ -1145,10 +981,10 @@
         inpSite.value = act.site_name || "";
         inpName.value = act.title || "";
         inpAmt.value = Math.abs(Number(act.amount) || 0);
-        const d = new Date(act.date);
-        const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
+        const d = new Date(act.date),
+          y = d.getFullYear(),
+          m = String(d.getMonth() + 1).padStart(2, "0"),
+          day = String(d.getDate()).padStart(2, "0");
         inpDate.value = `${y}-${m}-${day}`;
         inpDesc.value = act.remarks || "";
         clearErrors();
@@ -1169,18 +1005,22 @@
         if (e.target === mOverlay) closeModal();
       });
 
-      // SINGLE red button: open create modal for TODAY (user can change date inside)
       document
         .getElementById("add-expense-btn")
         .addEventListener("click", () => {
           openCreateModalForDate(localYMD(new Date()));
         });
-
-      // quick "आज" in main modal
       btnToday.addEventListener("click", () => {
         inpDate.value = localYMD(new Date());
       });
 
+      const localYMD = (d = new Date()) => {
+        const x = d instanceof Date ? d : new Date(d);
+        const y = x.getFullYear(),
+          m = String(x.getMonth() + 1).padStart(2, "0"),
+          dd = String(x.getDate()).padStart(2, "0");
+        return `${y}-${m}-${dd}`;
+      };
       function openCreateModalForDate(ymd) {
         current = {
           kind: "party",
@@ -1195,7 +1035,7 @@
           del: false,
         };
         mode = "create";
-        grpSite.style.display = "none";
+        document.getElementById("grpSite").style.display = "none";
         inpSite.value = "";
         inpName.value = "";
         inpAmt.value = "";
@@ -1208,14 +1048,13 @@
         mOverlay.classList.add("active");
       }
 
-      /* Nepali digits accepted in रकम */
       const inpAmtEl = document.getElementById("amount");
       inpAmtEl.addEventListener("keydown", (e) => {
         const m = NP_TO_EN[e.key];
         if (m !== undefined) {
           e.preventDefault();
-          const el = e.target;
-          const s = el.selectionStart,
+          const el = e.target,
+            s = el.selectionStart,
             t = el.selectionEnd;
           el.value =
             (el.value || "").slice(0, s) + m + (el.value || "").slice(t);
@@ -1227,7 +1066,6 @@
         e.target.value = toEN(e.target.value);
       });
 
-      /* Validation + save */
       function validateInputs() {
         clearErrors();
         let ok = true;
@@ -1235,8 +1073,7 @@
           setErr("itemName", "शीर्षक आवश्यक छ");
           ok = false;
         }
-        const amtVal = parseNepaliNumber(inpAmt.value);
-        if (!(amtVal > 0)) {
+        if (!(parseNepaliNumber(inpAmt.value) > 0)) {
           setErr("amount", "रकम आवश्यक छ");
           ok = false;
         }
@@ -1287,7 +1124,6 @@
           return;
         }
         if (!validateInputs()) return;
-
         const isResource = current.kind === "resource";
         const payload = isResource
           ? {
@@ -1305,7 +1141,6 @@
               date: inpDate.value,
               remarks: inpDesc.value.trim(),
             };
-
         const base = isResource ? "site-resources" : "party-expenses";
         try {
           const res = await fetch(`${API_BASE}/${base}/${current.id}`, {
@@ -1333,7 +1168,6 @@
         }
       }
 
-      /* Soft delete + restore with confirm modal */
       const delOverlay = document.getElementById("delete-modal");
       const delCancel = document.getElementById("del-cancel");
       const delConfirm = document.getElementById("del-confirm");
@@ -1374,7 +1208,7 @@
           if (!res.ok) throw new Error("HTTP " + res.status);
           closeDeleteModal();
           closeModal();
-          toast("मेटाइयो", "success");
+          toast("মेटाइयो", "success");
           loadExpenses();
         } catch (e) {
           console.error(e);
@@ -1420,7 +1254,6 @@
         }
         return false;
       }
-
       async function restoreCurrent() {
         if (!current || !current.id) return;
         const base =
@@ -1440,12 +1273,48 @@
       /* Init */
       loadParty();
       loadExpenses();
-
-      /* Clear inline errors on input */
       ["itemName", "amount", "date", "description"].forEach((id) => {
         const el = document.getElementById(id);
         el && el.addEventListener("input", () => setErr(id, ""));
       });
+    </script>
+
+    <!-- Load shared bottom.html and set Party active -->
+    <script>
+      (function () {
+        const mount = document.getElementById("bottom-nav");
+
+        function setActive(navRoot) {
+          navRoot.querySelectorAll(".nav-item").forEach((a) => {
+            a.classList.toggle("active", a.dataset.page === "party");
+          });
+        }
+        function updateNavHeightVar() {
+          const nav = document.querySelector(".bottom-nav");
+          if (!nav) return;
+          const h = Math.round(nav.getBoundingClientRect().height);
+          document.documentElement.style.setProperty("--nav-h", h + "px");
+        }
+
+        fetch("bottom.html", { cache: "no-store" })
+          .then((r) => r.text())
+          .then((html) => {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            const nav = doc.querySelector("nav.bottom-nav");
+            if (!nav)
+              throw new Error("bottom.html: <nav.bottom-nav> not found");
+            const styleEl = doc.querySelector("style");
+            mount.innerHTML = "";
+            if (styleEl) mount.appendChild(styleEl);
+            mount.appendChild(nav);
+            setActive(mount);
+            updateNavHeightVar();
+            addEventListener("resize", updateNavHeightVar);
+            addEventListener("orientationchange", updateNavHeightVar);
+            addEventListener("pageshow", updateNavHeightVar);
+          })
+          .catch((err) => console.error("Failed to load bottom.html:", err));
+      })();
     </script>
   </body>
 </html>

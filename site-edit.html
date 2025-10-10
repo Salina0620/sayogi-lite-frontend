@@ -3,69 +3,91 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>साइटको जानकारी</title>
+    <title>साइटको जानकारी (सम्पादन)</title>
+
+    <!-- Fonts / Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
     <style>
-      :root{
-        --green:#13a87d; --blue:#186b97; --red:#e2544b;
-        --border:#e5e7eb; --text:#0f172a; --muted:#667085;
-        --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+      :root {
+        --brand-green:#13a87d;
+        --cta-blue:#186b97;
+        --red:#e74c3c;
+        --bg:#fafafa;
+        --surface:#fff;
+        --border:#d0d5dd;
+        --text:#0f172a;
+        --muted:#667085;
+        --safe-top:env(safe-area-inset-top,0px);
+        --safe-bottom:env(safe-area-inset-bottom,0px);
+        --safe-right:env(safe-area-inset-right,0px);
       }
+
       *{ box-sizing:border-box; }
       html,body{ margin:0; height:100%; }
       body{
-        -webkit-font-smoothing:antialiased;
-        font-family:"Noto Sans Devanagari",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-        background:#fff; color:var(--text); overflow:hidden;
+        font-family:"Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        background:var(--surface); color:var(--text); overflow:hidden;
       }
 
       .page{ position:fixed; inset:0; display:flex; flex-direction:column; overflow:hidden; }
 
       /* Header */
-      .header{
-        background:var(--green); color:#fff; display:flex; align-items:center; gap:10px;
-        padding:calc(14px + var(--safe-top)) 16px 14px;
-      }
-      .back{ color:#fff; text-decoration:none; font-size:22px; line-height:1; padding:10px 12px; border-radius:12px; }
-      .title{ margin:0; flex:1; text-align:center; font-weight:700; font-size:20px; transform:translateX(-12px); }
+      .header{ background:var(--brand-green); color:#fff; }
+      .header-row{ display:flex; align-items:center; gap:8px; padding:calc(16px + var(--safe-top)) 16px 12px; }
+      .back{ color:#fff; text-decoration:none; font-size:20px; }
+      .title{ margin:0 auto; font-weight:500; font-size:18px; }
 
       /* Content */
-      .content{ flex:1 1 auto; min-height:0; overflow:auto; background:#f8fafb; padding:16px 16px calc(16px + var(--safe-bottom)); }
-      .vstack{ display:flex; flex-direction:column; gap:16px; }
+      .content{ flex:1; overflow:auto; background:var(--bg); padding:16px 16px calc(18px + var(--safe-bottom)); }
 
-      label{ font-weight:700; font-size:14px; margin:0 0 6px; color:#374151; }
-      .input,.textarea,.select{
-        width:100%; border:1.5px solid var(--border); border-radius:0; padding:12px 14px; font-size:15px; background:#f8fafc; outline:none;
+      .field-label{ display:block; margin:10px 2px 6px; color:#555; font-size:14px; font-weight:500; }
+
+      /* White fields */
+      .form-control,.form-select{
+        height:48px; padding:10px 12px; font-size:15px; color:var(--text);
+        background:#fff; border:1.5px solid var(--border); border-radius:6px; outline:none; width:100%;
       }
-      .input:focus,.textarea:focus,.select:focus{ border-color:var(--green); box-shadow:0 0 0 2px rgba(19,168,125,.18); }
-      .textarea{ min-height:96px; resize:vertical; background:#fff; }
-      .select{ appearance:none; background:#f8fafc; }
+      .form-control::placeholder{ color:#a3aab6; }
+      .form-control:focus,.form-select:focus{ border-color:var(--brand-green); box-shadow:0 0 0 2px rgba(19,168,125,.18); }
+      textarea.form-control{ min-height:96px; height:auto; }
 
-      /* Owner row */
-      .owner-row{ display:grid; grid-template-columns:auto 1fr; gap:0; }
-      .owner-icon{ display:inline-flex; align-items:center; padding:0 12px; border:1.5px solid var(--border); border-right:0; background:#f8fafc; }
-      .owner-select{ border-left:0; border-right:0; border-radius:0; height:48px; }
-
-      /* Photos */
-      .photos-field{ display:flex; flex-direction:column; gap:10px; }
-      .photos-title{ display:flex; align-items:baseline; gap:8px; }
-      .count{ font-size:12px; color:var(--muted); font-weight:700; }
-      .photos-drop{
-        width:100%; border:1.5px dashed #d0d5dd; border-radius:8px; background:#fff; padding:14px; cursor:pointer;
-        display:flex; align-items:center; justify-content:center; gap:10px; color:#475467; font-weight:700;
+      /* Owner row (fixed vertical alignment) */
+      .input-row{ display:grid; grid-template-columns:auto 1fr; align-items:center; }
+      .owner-group .input-group-text{
+        display:flex; align-items:center; justify-content:center;
+        background:#fff; color:#9ca3af; border:1.5px solid var(--border);
+        border-right:0; border-radius:6px 0 0 6px; height:48px; padding:0 12px; line-height:1;
       }
-      .photos-drop:focus-visible{ outline:2px solid rgba(26,177,137,.25); outline-offset:2px; }
-      .plus{ display:inline-grid; place-items:center; width:28px; height:28px; border-radius:8px; border:1px solid #cfd6df; background:#fff; font-size:18px; line-height:1; }
+      .owner-group .form-select{
+        border:1.5px solid var(--border); border-left:0; background:#fff; border-radius:0 6px 6px 0;
+      }
 
-      .thumbs{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-      .thumb{ position:relative; width:100%; padding-top:100%; border:1px solid #e6e7ea; border-radius:10px; overflow:hidden; background:#fff; }
-      .thumb>img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-      .thumb .x{
-        position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%; background:#fff; color:#111;
-        border:1px solid #d0d5dd; font-weight:900; font-size:14px; line-height:20px; text-align:center; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15);
+      /* Image box */
+      .image-upload-box{
+        width:100%; border:1.5px dashed var(--border); border-radius:8px;
+        padding:14px; display:flex; flex-direction:column; align-items:center; gap:6px;
+        color:#475467; background:#fff; cursor:pointer;
+      }
+
+      /* Hide the real file input (no Bootstrap here) */
+      .visually-hidden-input{
+        position:absolute !important;
+        width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+        clip:rect(0 0 0 0); clip-path:inset(50%); border:0;
+      }
+
+      #imagePreview{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+      #imagePreview .thumb{
+        position:relative; width:70px; height:70px; border:1px solid #e6e7ea; border-radius:8px; overflow:hidden; background:#fff; cursor:pointer;
+      }
+      #imagePreview .thumb img{ width:100%; height:100%; object-fit:cover; }
+      #imagePreview .thumb .x{
+        position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%;
+        background:#fff; border:1px solid #d0d5dd; font-weight:900; font-size:14px; line-height:20px; text-align:center; color:#111; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15);
       }
 
       /* Fullscreen viewer */
@@ -76,154 +98,115 @@
       .viewer .prev{ left:14px; } .viewer .next{ right:14px; }
       .show{ display:flex !important; }
 
-      /* Bottom actions */
-      .actions{ position:sticky; bottom:0; background:#fff; padding:14px 0 0; }
-      .btn-row{ display:grid; gap:12px; padding:0 16px 16px; }
-      .btn{ height:52px; border:0; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer; }
-      .btn-primary{ background:#1f6790; color:#fff; }
-      .btn-danger{ background:var(--red); color:#fff; }
+      /* Buttons */
+      .btn{ height:48px; border:0; border-radius:12px; font-weight:700; font-size:16px; cursor:pointer; width:100%; }
+      .btn-primary-action{ background:var(--cta-blue); color:#fff; }
+      .btn-secondary-action{ background:var(--red); color:#fff; }
+      .btn-secondary-action:hover{ background:#c0392b; }
+      .btn-wrap{ display:grid; gap:12px; margin-top:16px; }
 
-      /* Inline errors */
-      .err{ color:#dc2626; font-size:12px; min-height:14px; margin:4px 0 2px; }
-      .is-invalid{ border-color:#dc2626 !important; box-shadow:0 0 0 2px rgba(220,38,38,.12); }
+      /* Errors & toast */
+      .err{ color:var(--red); font-size:12px; margin:4px 2px 0; min-height:14px; }
+      .is-invalid{ border-color:var(--red) !important; box-shadow:0 0 0 2px rgba(231,76,60,.15) !important; }
 
-      /* === Toast (same look as create) === */
-      #toast {
-        position: fixed;
-        top: calc(12px + env(safe-area-inset-top));
-        right: calc(12px + env(safe-area-inset-right));
-        background: #ffffff;
-        border: 0;
-        border-radius: 12px;
-        padding: 10px 14px 10px 10px;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-        display: grid;
-        grid-template-columns: 32px 1fr 24px;
-        align-items: center;
-        gap: 12px;
-        width: max-content;
-        max-width: 92vw;
-        transform: translateY(-8px);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.22s ease, transform 0.22s ease;
-        z-index: 10000;
+      #toast{
+        position:fixed; top:calc(12px + var(--safe-top)); right:calc(12px + var(--safe-right));
+        background:#fff; border:0; border-radius:12px; padding:10px 14px 10px 10px; box-shadow:0 10px 24px rgba(0,0,0,.18);
+        display:grid; grid-template-columns:32px 1fr 24px; align-items:center; gap:12px; width:max-content; max-width:92vw;
+        transform:translateY(-8px); opacity:0; pointer-events:none; transition:.22s ease; z-index:10000;
       }
-      #toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-      .toast-badge {
-        width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #74c69d;
-      }
-      .toast-badge.error { background:#ef4444; }
-      .toast-badge svg { width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
-      .toast-msg { font-size:16px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:0; }
-      .toast-x { color:#4b5563; font-size:18px; line-height:1; cursor:pointer; user-select:none; }
+      #toast.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+      .toast-badge{ width:28px; height:28px; border-radius:50%; display:grid; place-items:center; background:#74c69d; }
+      .toast-badge.error{ background:#ef4444; }
+      #toast svg{ width:18px; height:18px; stroke:#fff; stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+      .toast-msg{ font-size:16px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .toast-x{ color:#4b5563; font-size:18px; line-height:1; cursor:pointer; user-select:none; }
     </style>
   </head>
   <body>
     <div class="page">
       <header class="header">
-        <a class="back" href="javascript:history.back()" aria-label="पछाडि">&#8592;</a>
-        <h1 class="title">साइटको जानकारी</h1>
+        <div class="header-row">
+          <a class="back" href="javascript:history.back()"><i class="fas fa-chevron-left"></i></a>
+          <h1 class="title">साइटको जानकारी</h1>
+          <span style="width:20px"></span>
+        </div>
       </header>
 
       <main class="content">
-        <form id="siteForm" class="vstack" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-          <!-- 1. साइटको नाम -->
-          <div>
-            <label for="name">साइटको नाम</label>
-            <input id="name" class="input" placeholder="रानीपोवा १०, रामको घर"
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-            <div class="err" id="err-name"></div>
+        <form id="siteForm" autocomplete="off" novalidate>
+          <label class="field-label" for="name">साइटको नाम</label>
+          <div class="mb-2">
+            <input id="name" type="text" class="form-control" placeholder="रानीपोवा १०, रामको घर" />
+            <small class="err" id="err-name"></small>
           </div>
 
-          <!-- 2. ठेगाना -->
-          <div>
-            <label for="address">ठेगाना</label>
-            <input id="address" class="input" placeholder="रानीपोवा १०,"
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-            <div class="err" id="err-address"></div>
+          <label class="field-label" for="address">ठेगाना</label>
+          <div class="mb-2">
+            <input id="address" type="text" class="form-control" placeholder="रानीपोवा १०," />
+            <small class="err" id="err-address"></small>
           </div>
 
-          <!-- 3. घरधनी -->
-          <div>
-            <label for="ownerSelect">घरधनी</label>
-            <div class="owner-row">
-              <span class="owner-icon">👤</span>
-              <select id="ownerSelect" class="select owner-select" required
-                autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <label class="field-label" for="ownerSelect">घरधनी</label>
+          <div class="owner-group mb-2">
+            <div class="input-row">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+              <select id="ownerSelect" class="form-select" required>
                 <option value="" selected disabled>घरधनी छान्नुहोस्…</option>
               </select>
             </div>
             <input type="hidden" id="ownerId" />
-            <div class="err" id="err-owner"></div>
+          </div>
+          <small class="err" id="err-owner"></small>
+
+          <label class="field-label" for="start_date">सुरु मिति</label>
+          <div class="mb-2">
+            <input id="start_date" type="date" class="form-control" />
+            <small class="err" id="err-start"></small>
           </div>
 
-          <!-- 4. सुरु मिति -->
-          <div>
-            <label for="start_date">सुरु मिति</label>
-            <input id="start_date" type="date" class="input"
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-            <div class="err" id="err-start"></div>
+          <label class="field-label" for="end_date">समाप्ति मिति</label>
+          <div class="mb-2">
+            <input id="end_date" type="date" class="form-control" />
+            <small class="err" id="err-end"></small>
           </div>
 
-          <!-- 5. समाप्ति मिति -->
-          <div>
-            <label for="end_date">समाप्ति मिति</label>
-            <input id="end_date" type="date" class="input"
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-            <div class="err" id="err-end"></div>
+          <label class="field-label" for="budget">अनुमानित बजेट</label>
+          <div class="mb-2">
+            <input id="budget" type="text" class="form-control" inputmode="numeric" placeholder="८० लाख रुपैयाँ" />
+            <small class="err" id="err-budget"></small>
           </div>
 
-          <!-- 6. अनुमानित बजेट -->
-          <div>
-            <label for="budget">अनुमानित बजेट</label>
-            <input id="budget" class="input" placeholder="८० लाख रुपैयाँ" inputmode="numeric"
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-            <div class="err" id="err-budget"></div>
+          <label class="field-label" for="description">विवरण</label>
+          <div class="mb-2">
+            <textarea id="description" class="form-control" placeholder="विवरण लेख्नुहोस्..." rows="3"></textarea>
+            <small class="err" id="err-description"></small>
           </div>
 
-          <!-- 7. विवरण -->
-          <div>
-            <label for="description">विवरण</label>
-            <textarea id="description" class="textarea" placeholder="विवरण लेख्नुहोस्..."
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
-            <div class="err" id="err-description"></div>
-          </div>
+          <h5 style="font-size:15px; font-weight:400; margin:14px 2px 8px;">साइट कागजातहरू</h5>
+          <label for="filePicker" class="image-upload-box">
+            <i class="fas fa-image"></i><span>फोटो हाल्नुहोस्</span>
+          </label>
+          <!-- Hidden real file input (no native bar) -->
+          <input id="filePicker" type="file" accept="image/*" multiple class="visually-hidden-input" />
+          <div id="imagePreview"></div>
+          <small class="err" id="photoError"></small>
 
-          <!-- 8. साइट कागजातहरू (फोटो) -->
-          <div class="photos-field">
-            <div class="photos-title">
-              <label>साइट कागजातहरू (फोटो)</label>
-              <span id="photoCount" class="count">0/5</span>
-            </div>
-            <span id="photoError" class="err" style="margin-top:0"></span>
-
-            <button id="photosDrop" type="button" class="photos-drop" aria-label="फोटो थप्नुहोस्">
-              <span class="plus">＋</span><span>फोटो हाल्नुहोस्</span>
-            </button>
-            <input id="filePicker" type="file" accept="image/*" multiple hidden />
-            <div id="thumbs" class="thumbs"></div>
-          </div>
-
-          <!-- 9. स्थिति -->
-          <div>
-            <label for="status">स्थिति</label>
-            <select id="status" class="select" required
-              autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          <label class="field-label" for="status">स्थिति</label>
+          <div class="mb-2">
+            <select id="status" class="form-select" required>
               <option value="ongoing">प्रगतिमा</option>
               <option value="completed">सम्पन्न</option>
             </select>
-            <div class="err" id="err-status"></div>
+            <small class="err" id="err-status"></small>
+          </div>
+
+          <div class="btn-wrap mt-4">
+            <button id="save" type="button" class="btn btn-primary-action">अपडेट गर्नुहोस्</button>
+            <button id="cancel" type="button" class="btn btn-secondary-action">रद्द गर्नुहोस्</button>
           </div>
         </form>
       </main>
-
-      <div class="actions">
-        <div class="btn-row">
-          <button id="save" class="btn btn-primary" type="button">अपडेट गर्नुहोस्</button>
-          <button id="delete" class="btn btn-danger" type="button">डिलिट गर्नुहोस्</button>
-        </div>
-      </div>
     </div>
 
     <!-- Fullscreen viewer -->
@@ -234,11 +217,11 @@
       <span id="viewerNext" class="nav next">&#10095;</span>
     </div>
 
-    <!-- Toast host -->
+    <!-- Toast -->
     <div id="toast" role="status" aria-live="polite"></div>
 
     <script>
-      /* ===== Toast (same behavior as create) ===== */
+      /* ===== Toast ===== */
       function showToast(msg, kind = "success") {
         const t = document.getElementById("toast");
         const icon =
@@ -261,33 +244,19 @@
       const API_BASE = API.replace(/\/api\/?$/, "");
       const MAX_IMAGES = 5;
 
-      const raw = localStorage.getItem("auth_token") || "";
-      const TOKEN = raw.includes("|") ? raw.split("|")[1] : raw;
+      const rawToken = localStorage.getItem("auth_token") || "";
+      const TOKEN = rawToken.includes("|") ? rawToken.split("|")[1] : rawToken;
       if (!TOKEN){ showToast("कृपया लगइन गर्नुहोस्।","error"); location.href="login.html"; }
+
+      const headers = { Authorization:"Bearer "+TOKEN, Accept:"application/json" };
 
       const qs = new URLSearchParams(location.search);
       const SITE_ID = qs.get("id");
       if (!SITE_ID){ showToast("साइट ID हरायो।","error"); location.href="c-site-list.html"; }
 
-      const headers = { Authorization:"Bearer "+TOKEN, Accept:"application/json" };
-
-      /* ===== DOM ===== */
-      const ownerSelect  = document.getElementById("ownerSelect");
+      /* ===== DOM refs ===== */
+      const ownerSelect = document.getElementById("ownerSelect");
       const ownerIdInput = document.getElementById("ownerId");
-
-      const thumbsEl   = document.getElementById("thumbs");
-      const dropBtn    = document.getElementById("photosDrop");
-      const picker     = document.getElementById("filePicker");
-      const photoCount = document.getElementById("photoCount");
-      const errorSpan  = document.getElementById("photoError");
-
-      const viewer = document.getElementById("viewer");
-      const viewerImg = document.getElementById("viewerImg");
-      const viewerPrev = document.getElementById("viewerPrev");
-      const viewerNext = document.getElementById("viewerNext");
-      const viewerClose = document.getElementById("viewerClose");
-
-      const form = document.getElementById("siteForm");
       const nameEl = document.getElementById("name");
       const addressEl = document.getElementById("address");
       const startEl = document.getElementById("start_date");
@@ -303,94 +272,89 @@
       const errBudget = document.getElementById("err-budget");
       const errStatus = document.getElementById("err-status");
 
-      /* ===== Helpers ===== */
-      const setVal = (id,v)=>{ const el=document.getElementById(id); if(el) el.value=v??""; };
-      const val = id => (document.getElementById(id)?.value ?? "").trim();
+      const picker = document.getElementById("filePicker");
+      const preview = document.getElementById("imagePreview");
+      const photoError = document.getElementById("photoError");
 
-      // Nepali/English digit helpers
+      const viewer = document.getElementById("viewer");
+      const viewerImg = document.getElementById("viewerImg");
+      const viewerPrev = document.getElementById("viewerPrev");
+      const viewerNext = document.getElementById("viewerNext");
+      const viewerClose = document.getElementById("viewerClose");
+
+      /* ===== Helpers ===== */
       const NP="०१२३४५६७८९", EN="0123456789";
       const toEn = (s) => String(s||"").replace(/[०-९]/g, d => EN[NP.indexOf(d)]);
       const toNp = (s) => String(s||"").replace(/\d/g, d => NP[d]);
       const onlyDigits = (s) => String(s||"").replace(/[^\d]/g,"");
 
-      function setErr(el, msg, input){
-        el.textContent = msg || "";
-        if(input){ input.classList.toggle("is-invalid", !!msg); }
-      }
+      function setErr(el, msg, input){ el.textContent = msg || ""; if(input){ input.classList.toggle("is-invalid", !!msg); } }
       function clearAllErr(){
         [nameEl, ownerSelect, startEl, endEl, budgetEl, statusEl].forEach(i=> i.classList.remove("is-invalid"));
         [errName, errOwner, errStart, errEnd, errBudget, errStatus].forEach(e=> e.textContent="");
       }
 
-      /* ===== Images state ===== */
-      let images = [];
-      let initialServerUrls = [];
+      /* ===== Owners ===== */
       let owners = [];
+      async function fetchOwners(){
+        try{ const res = await fetch(`${API}/owners`, { headers }); if(res.ok) owners = await res.json(); }catch(e){ console.error(e); }
+        renderOwnerOptions(owners);
+      }
+      function renderOwnerOptions(list){
+        ownerSelect.innerHTML = '<option value="" disabled selected>घरधनी छान्नुहोस्…</option>' +
+          (list||[]).map(o=>`<option value="${o.id}">${o.name || "(No name)"}</option>`).join("");
+        if (ownerIdInput.value) ownerSelect.value = ownerIdInput.value;
+        ownerSelect.classList.toggle("has-value", !!ownerSelect.value);
+      }
+      ownerSelect.addEventListener("change", ()=>{
+        ownerIdInput.value = ownerSelect.value || "";
+        ownerSelect.classList.toggle("has-value", !!ownerSelect.value);
+        setErr(errOwner,"",ownerSelect);
+      });
 
-      function updateCount(){ photoCount.textContent = `${images.length}/${MAX_IMAGES}`; }
+      /* ===== Images / viewer ===== */
+      let images = []; // {kind:"server"|"local", src, file?, rel?}
+      let initialServerUrls = [];
 
       function renderThumbs(){
-        thumbsEl.innerHTML = "";
-        images.forEach((it, idx) => {
+        preview.innerHTML = "";
+        images.forEach((it, idx)=>{
           const t = document.createElement("div");
           t.className = "thumb";
-          const img = document.createElement("img");
-          img.src = it.src; img.alt = "photo";
-          t.appendChild(img);
-
-          const x = document.createElement("button");
-          x.type = "button"; x.className = "x"; x.innerHTML = "&times;";
-          x.addEventListener("click", (e)=>{ e.stopPropagation(); removeImage(idx); });
-          t.appendChild(x);
-
-          t.addEventListener("click", ()=> openViewer(idx));
-          thumbsEl.appendChild(t);
+          t.innerHTML = `<img src="${it.src}" alt="photo"><button type="button" class="x">&times;</button>`;
+          t.querySelector(".x").onclick = (e)=>{ e.stopPropagation(); removeImage(idx); };
+          t.onclick = ()=> openViewer(idx);
+          preview.appendChild(t);
         });
-        updateCount();
       }
-
-      function removeImage(index){ images.splice(index,1); renderThumbs(); if(images.length<MAX_IMAGES) errorSpan.textContent=""; }
-      function canAdd(n=1){ return images.length + n <= MAX_IMAGES; }
-
-      function addLocalFiles(fileList){
-        const files = Array.from(fileList || []); if(!files.length) return;
-        const remaining = MAX_IMAGES - images.length;
-        if (remaining <= 0){ errorSpan.textContent = `अधिकतम ${MAX_IMAGES} फोटो मात्र राख्न सकिन्छ।`; return; }
-
+      function removeImage(i){ images.splice(i,1); renderThumbs(); photoError.textContent=""; }
+      function addFiles(fileList){
+        const MAX = 5;
+        const files = Array.from(fileList || []);
+        const remaining = MAX - images.length;
+        if (remaining <= 0){ photoError.textContent = `अधिकतम ${MAX} तस्वीर मात्र चयन गर्न सकिन्छ।`; return; }
         const use = files.slice(0, remaining);
-        const extra = files.length - use.length;
-        errorSpan.textContent = extra>0 ? `अधिकतम ${MAX_IMAGES} फोटो मात्र राख्न सकिन्छ (अझै ${remaining} स्थान खाली).` : "";
-
         const readers = use.map(f => new Promise(res => { const r=new FileReader(); r.onload=()=>res({src:r.result,kind:"local",file:f}); r.readAsDataURL(f); }));
         Promise.all(readers).then(list => { images = images.concat(list); renderThumbs(); });
       }
+      picker.addEventListener("change", (e)=> addFiles(e.target.files));
 
-      dropBtn.addEventListener("click", ()=>{ if (!canAdd()) { showToast("फोटो सीमा पुगिसकेको छ (5/5)।","error"); return; } picker.click(); });
-      picker.addEventListener("change", (e)=> addLocalFiles(e.target.files));
-
-      /* ===== Fullscreen viewer ===== */
       let viewerIndex = 0;
-      function openViewer(i){ viewerIndex=(i+images.length)%images.length; viewerImg.src=images[viewerIndex].src; viewer.classList.add("show"); }
+      function openViewer(i){ if(!images.length) return; viewerIndex=i; viewerImg.src=images[i].src; viewer.classList.add("show"); }
       function closeViewer(){ viewer.classList.remove("show"); }
-      function nav(d){ if(!images.length) return; openViewer((viewerIndex+d+images.length)%images.length); }
+      function nav(d){ if(!images.length) return; viewerIndex=(viewerIndex+d+images.length)%images.length; viewerImg.src=images[viewerIndex].src; }
       viewerPrev.onclick = ()=> nav(-1);
       viewerNext.onclick = ()=> nav(+1);
       viewerClose.onclick = closeViewer;
       viewer.addEventListener("click", (e)=>{ if(e.target===viewer) closeViewer(); });
       document.addEventListener("keydown", (e)=>{ if(!viewer.classList.contains("show")) return; if(e.key==="Escape") closeViewer(); if(e.key==="ArrowLeft") nav(-1); if(e.key==="ArrowRight") nav(+1); });
 
-      /* ===== Owners (dropdown) ===== */
-      async function fetchOwners(){
-        try{ const res = await fetch(`${API}/owners`, { headers }); if(res.ok) owners = await res.json(); }catch(e){ console.error(e); }
-        renderOwnerOptions(owners);
+      function imagesChanged(){
+        const currentServer = images.filter(i=>i.kind==="server").map(i=>i.src);
+        const locals = images.filter(i=>i.kind==="local").length;
+        const removed = initialServerUrls.filter(u => !currentServer.includes(u)).length;
+        return locals>0 || removed>0;
       }
-      function renderOwnerOptions(list){
-        ownerSelect.innerHTML = '<option value="" disabled selected>घरधनी छान्नुहोस्…</option>' + (list||[]).map(o=>`<option value="${o.id}">${o.name || "(No name)"}</option>`).join("");
-        if (ownerIdInput.value) ownerSelect.value = ownerIdInput.value;
-      }
-      ownerSelect.addEventListener("change", ()=> { ownerIdInput.value = ownerSelect.value || ""; setErr(errOwner,"",ownerSelect); });
-
-      /* ===== Image URL helper ===== */
       function absStorageUrl(u){
         if (!u) return "";
         if (/^https?:\/\//i.test(u)) return u;
@@ -399,28 +363,24 @@
         return API_BASE + "/storage/" + u.replace(/^\/?storage\//,"");
       }
 
-      /* ===== Load site ===== */
+      /* ===== Load existing site ===== */
       function extractServerImages(site){
         let urls = Array.isArray(site.images_urls) && site.images_urls.length ? site.images_urls : (Array.isArray(site.images) ? site.images : []);
         return urls.slice(0, MAX_IMAGES).map(absStorageUrl);
       }
-
       async function loadSite(){
         try{
           const res = await fetch(`${API}/sites/${SITE_ID}`, { headers });
           if (!res.ok) throw new Error();
           const site = await res.json();
 
-          setVal("name",        site.name);
-          setVal("address",     site.address);
-          setVal("start_date", (site.start_date||"").slice(0,10));
-          setVal("end_date",   (site.end_date||"").slice(0,10));
-
-          // show existing amount in Nepali digits
-          document.getElementById("budget").value = toNp(String(site.estimated_budget ?? ""));
-
-          setVal("description", site.description);
-          setVal("status",      site.status || "ongoing");
+          nameEl.value = site.name || "";
+          addressEl.value = site.address || "";
+          startEl.value = (site.start_date||"").slice(0,10);
+          endEl.value   = (site.end_date||"").slice(0,10);
+          budgetEl.value = toNp(String(site.estimated_budget ?? ""));
+          descEl.value = site.description || "";
+          statusEl.value = site.status || "ongoing";
 
           const oid = site.owner_id || site.owner?.id || "";
           ownerIdInput.value = oid ? String(oid) : "";
@@ -428,7 +388,6 @@
 
           const rels = Array.isArray(site.images) ? site.images : [];
           const urls = extractServerImages(site);
-
           initialServerUrls = urls.slice();
           images = urls.map((u,i)=>({ src:u, kind:"server", rel:rels[i] || null }));
           renderThumbs();
@@ -437,15 +396,7 @@
         }
       }
 
-      /* ===== Change detection for images ===== */
-      function imagesChanged(){
-        const currentServer = images.filter(i=>i.kind==="server").map(i=>i.src);
-        const locals = images.filter(i=>i.kind==="local").length;
-        const removed = initialServerUrls.filter(u => !currentServer.includes(u)).length;
-        return locals>0 || removed>0;
-      }
-
-      /* ===== Validation ===== */
+      /* ===== Validation & save ===== */
       function validateForm(){
         clearAllErr();
         let ok = true;
@@ -453,7 +404,6 @@
         if(!nameEl.value.trim()){
           setErr(errName,"साइटको नाम आवश्यक छ।", nameEl); ok = false;
         }
-
         if(!ownerSelect.value){
           setErr(errOwner,"घरधनी छान्नुहोस्।", ownerSelect); ok = false;
         }
@@ -462,75 +412,60 @@
         const e = endEl.value ? new Date(endEl.value) : null;
         if(s && e && e < s){
           setErr(errEnd,"समाप्ति मिति सुरु मितिभन्दा पछाडि हुनुपर्छ।", endEl);
-          setErr(errStart,"", startEl);
           ok = false;
         }
 
-        // Budget: allow Nepali digits; if entered, must be numeric
         if(budgetEl.value.trim()){
           const en = onlyDigits(toEn(budgetEl.value));
           if(!en){ setErr(errBudget,"मान्य रकम लेख्नुहोस्।", budgetEl); ok = false; }
         }
-
         if(!statusEl.value){
           setErr(errStatus,"स्थिति छान्नुहोस्।", statusEl); ok = false;
-        }
-
-        if(!ok){
-          const firstInvalid = document.querySelector(".is-invalid");
-          if(firstInvalid) firstInvalid.scrollIntoView({behavior:"smooth", block:"center"});
         }
         return ok;
       }
 
-      /* ===== Save (details + photos) ===== */
       function buildScalarPayload(){
         const budgetEn = onlyDigits(toEn(budgetEl.value));
         return {
-          name:             nameEl.value.trim(),
-          address:          addressEl.value.trim(),
-          owner_id:         ownerSelect.value || null,
-          start_date:       startEl.value || null,
-          end_date:         endEl.value || null,
-          // IMPORTANT: send as STRING to satisfy Laravel 'string' rule
+          name: nameEl.value.trim(),
+          address: addressEl.value.trim(),
+          owner_id: ownerSelect.value || null,
+          start_date: startEl.value || null,
+          end_date: endEl.value || null,
           estimated_budget: budgetEn ? String(budgetEn) : null,
-          description:      descEl.value.trim(),
-          status:           statusEl.value || "ongoing",
+          description: descEl.value.trim(),
+          status: statusEl.value || "ongoing",
         };
       }
 
       async function saveDetails(){
-        if(!validateForm()) { showToast("कृपया फारम ठीक मिलाउनुहोस्।","error"); return; }
-
+        if(!validateForm()){ showToast("कृपया फारम ठीक मिलाउनुहोस्।","error"); return; }
         const payload = buildScalarPayload();
 
-        // 1) Update scalar fields (JSON) with proper 422 handling
-        let res, ok = false, data = null;
+        // 1) Update scalar fields
+        let res, ok=false, data=null;
         try{
           res = await fetch(`${API}/sites/${SITE_ID}`, {
             method:"PATCH", headers:{ ...headers, "Content-Type":"application/json" }, body: JSON.stringify(payload)
           });
           if (!res.ok){
-            // fallback for servers expecting PUT via _method
             res = await fetch(`${API}/sites/${SITE_ID}`, {
               method:"POST", headers:{ ...headers, "Content-Type":"application/json" }, body: JSON.stringify({ ...payload, _method:"PUT" })
             });
           }
           data = await res.json().catch(()=> ({}));
           ok = res.ok;
-        }catch(_){
-          ok = false;
-        }
+        }catch(_){ ok = false; }
 
-        if (!ok) {
-          if (res && res.status === 422 && data && data.errors){
-            // map server errors to inline fields
-            if (data.errors.name)        setErr(errName,   String(data.errors.name[0] || data.errors.name), nameEl);
-            if (data.errors.owner_id)    setErr(errOwner,  String(data.errors.owner_id[0] || data.errors.owner_id), ownerSelect);
-            if (data.errors.start_date)  setErr(errStart,  String(data.errors.start_date[0] || data.errors.start_date), startEl);
-            if (data.errors.end_date)    setErr(errEnd,    String(data.errors.end_date[0] || data.errors.end_date), endEl);
-            if (data.errors.estimated_budget) setErr(errBudget, String(data.errors.estimated_budget[0] || data.errors.estimated_budget), budgetEl);
-            if (data.errors.status)      setErr(errStatus, String(data.errors.status[0] || data.errors.status), statusEl);
+        if (!ok){
+          if (res && res.status === 422 && data?.errors){
+            if (data.errors.name) setErr(errName, String(data.errors.name[0]||data.errors.name), nameEl);
+            if (data.errors.owner_id) setErr(errOwner, String(data.errors.owner_id[0]||data.errors.owner_id), ownerSelect);
+            if (data.errors.start_date) setErr(errStart, String(data.errors.start_date[0]||data.errors.start_date), startEl);
+            if (data.errors.end_date) setErr(errEnd, String(data.errors.end_date[0]||data.errors.end_date), endEl);
+            if (data.errors.estimated_budget) setErr(errBudget, String(data.errors.estimated_budget[0]||data.errors.estimated_budget), budgetEl);
+            if (data.errors.status) setErr(errStatus, String(data.errors.status[0]||data.errors.status), statusEl);
             showToast("त्रुटि भेटियो, कृपया सच्याउनुहोस्।","error");
           } else {
             showToast(data?.message || "अपडेट असफल भयो।","error");
@@ -543,13 +478,11 @@
           try{
             const form = new FormData();
             Object.entries(payload).forEach(([k,v])=> { if(v!==undefined && v!==null) form.append(k, v); });
-
             const keepRel = images.filter(it => it.kind==="server" && it.rel).map(it => it.rel);
             keepRel.forEach(p => form.append("keep_images[]", p));
-
             for(const it of images){ if(it.kind==="local" && it.file) form.append("images[]", it.file); }
-
             form.append("_method","PUT");
+
             const res2 = await fetch(`${API}/sites/${SITE_ID}`, {
               method:"POST", headers:{ Authorization: headers.Authorization, Accept: headers.Accept }, body: form
             });
@@ -559,42 +492,22 @@
           }
         }
 
-        // Success — mimic create page behavior
+        // Success
         sessionStorage.setItem("toast_msg", "साइट सफलतापूर्वक अपडेट भयो");
         sessionStorage.setItem("toast_kind", "success");
-        location.href = "c-site-list.html";
+        history.back();
       }
 
-      async function deleteSite(){
-        if (!confirm("साइट डिलिट गर्ने हो?")) return;
-        try{
-          let res = await fetch(`${API}/sites/${SITE_ID}`, { method:"DELETE", headers });
-          if (!res.ok){
-            res = await fetch(`${API}/sites/${SITE_ID}`, {
-              method:"POST", headers:{ ...headers, "Content-Type":"application/json" }, body: JSON.stringify({ _method:"DELETE" })
-            });
-          }
-          if (!res.ok) throw new Error();
-          sessionStorage.setItem("toast_msg","साइट मेटाइयो");
-          sessionStorage.setItem("toast_kind","success");
-          location.href = "c-site-list.html";
-        }catch(_){
-          showToast("मेटाउन असफल भयो।","error");
-        }
-      }
-
-      // Amount field: keep only Nepali/English digits while typing
+      // Budget input filter
       budgetEl.addEventListener("input", (e)=>{
-        const raw = e.target.value;
-        const normalized = raw.replace(/[^\d०-९]/g,"");
-        e.target.value = normalized;
+        e.target.value = e.target.value.replace(/[^\d०-९\u0900-\u097F\s,.\-]/g,"");
         setErr(errBudget,"", budgetEl);
       });
 
       document.getElementById("save").addEventListener("click", saveDetails);
-      document.getElementById("delete").addEventListener("click", deleteSite);
+      document.getElementById("cancel").addEventListener("click", ()=> history.back());
 
-      /* ===== Init ===== */
+      /* Init */
       (async function init(){
         await fetchOwners();
         await loadSite();

@@ -44,15 +44,14 @@
         --bar-w: clamp(34px, 12vw, 56px);
         --nav-inactive: #6b7280;
         --nav-h: 60px; /* updated by JS */
-        --sheet-overlap: 16px; /* equals .sheet negative margin */
-        --sheet-radius: 24px; /* equals .sheet top radius */
+        --sheet-overlap: 16px;
+        --sheet-radius: 24px;
       }
 
       * {
         box-sizing: border-box;
       }
 
-      /* -------- Frame -------- */
       html,
       body {
         font-family: "Poppins", "Noto Sans Devanagari", system-ui, -apple-system,
@@ -97,7 +96,7 @@
         min-width: 0;
       }
 
-      /* -------- Header -------- */
+      /* Header */
       .app-header {
         background: var(--brand-green);
         color: #fff;
@@ -107,6 +106,19 @@
         z-index: 20;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+        transform: translateZ(0);
+        -webkit-transform: translateZ(0);
+        will-change: transform;
+      }
+      .app-header::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -1px;
+        height: 2px;
+        background: var(--brand-green);
+        pointer-events: none;
       }
 
       .user-bar .user-info {
@@ -130,10 +142,10 @@
         color: #fff;
       }
 
-      /* -------- Scroll area -------- */
+      /* Scroll area */
       .content-area {
         flex: 1 1 auto;
-        background: linear-gradient(#fff, #fff) padding-box, var(--bg);
+        background: #fff;
         overflow: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
@@ -148,7 +160,7 @@
         height: 0;
       }
 
-      /* -------- Hero + Sheet -------- */
+      /* Hero + Sheet */
       .hero {
         background: var(--brand-green);
         color: #fff;
@@ -186,7 +198,7 @@
         z-index: 0;
       }
 
-      /* -------- Pills & Cards -------- */
+      /* Pills & Cards */
       .filter-pills {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -374,7 +386,6 @@
         border-radius: 14px;
         padding: 12px;
       }
-
       .chart-head {
         display: flex;
         align-items: center;
@@ -515,6 +526,7 @@
         font-size: 16px;
         font-weight: 700;
       }
+
       @media (max-height: 650px) {
         :root {
           --chart-h: 120px;
@@ -526,7 +538,7 @@
         }
       }
 
-      /* -------- Bottom nav -------- */
+      /* Bottom nav (icons assumed in same dir as page) */
       .bottom-nav {
         position: fixed;
         left: 0;
@@ -778,68 +790,58 @@
         display: block;
       }
 
-      /* ---- OTP success toast (lightweight) ---- */
-      .flash-toast {
-        position: fixed;
-        top: 16px;
-        right: 16px;
-        left: auto;
-        transform: none;
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        padding: 10px 14px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        z-index: 1055; /* above header */
-        border: 1px solid #e9eef3;
+      /* No-flash guards */
+      #homeIncome,
+      #homeExpense,
+      #sumIncomeTxt,
+      #sumExpenseTxt,
+      #sumProfitTxt,
+      #userName,
+      #avatarInitial,
+      #greetSub,
+      #chartCaption,
+      #chartYAxis,
+      #recent-activities,
+      #recent-cta,
+      .chart-select {
+        transition: visibility 0s linear 0s;
       }
-      .flash-icon {
-        width: 28px;
-        height: 28px;
-        border-radius: 999px;
-        background: #e6f4ea;
-        display: grid;
-        place-items: center;
-        color: var(--brand-green);
-        font-size: 16px;
-        line-height: 1;
+      #homeIncome,
+      #homeExpense,
+      #sumIncomeTxt,
+      #sumExpenseTxt,
+      #sumProfitTxt,
+      #userName,
+      #greetSub,
+      #chartCaption {
+        min-height: 1em;
+        display: inline-block;
       }
-      .flash-text {
-        font-size: 16px;
-        color: var(--text-700);
+      #recent-activities {
+        min-height: 44px;
       }
-      .flash-close {
-        background: transparent;
-        border: 0;
-        font-size: 18px;
-        line-height: 1;
-        color: #667085;
-        margin-left: 6px;
+      body:not(.hdr-ready) #userName,
+      body:not(.hdr-ready) #avatarInitial {
+        visibility: hidden;
       }
-
-      .app-header {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        background: var(--brand-green);
-        transform: translateZ(0);
-        -webkit-transform: translateZ(0);
-        will-change: transform;
+      body:not(.greet-ready) #greetSub {
+        visibility: hidden;
       }
-      .app-header::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -1px; /* overlap next section by 1px */
-        height: 2px;
-        background: var(--brand-green);
-        pointer-events: none;
+      body:not(.totals-ready) #homeIncome,
+      body:not(.totals-ready) #homeExpense {
+        visibility: hidden;
       }
-      .content-area {
-        background: #fff; /* ← replace the linear-gradient(...) */
+      body:not(.recent-ready) #recent-activities,
+      body:not(.recent-ready) #recent-cta {
+        visibility: hidden;
+      }
+      body:not(.chart-ready) #chartYAxis,
+      body:not(.chart-ready) #chartCaption,
+      body:not(.chart-ready) #sumIncomeTxt,
+      body:not(.chart-ready) #sumExpenseTxt,
+      body:not(.chart-ready) #sumProfitTxt,
+      body:not(.chart-ready) .chart-select {
+        visibility: hidden;
       }
     </style>
 
@@ -1010,29 +1012,8 @@
           </section>
         </div>
 
-        <!-- Bottom nav -->
-        <nav class="bottom-nav">
-          <a href="home.html" class="nav-item active" data-tab="home"
-            ><span class="nav-icon ico-home" aria-hidden="true"></span
-            ><span>होम</span></a
-          >
-          <a href="c-site-list.html" class="nav-item" data-tab="sites"
-            ><span class="nav-icon ico-site" aria-hidden="true"></span
-            ><span>साइट</span></a
-          >
-          <a href="karobar.html" class="nav-item" data-tab="ledger"
-            ><span class="nav-icon ico-ledger" aria-hidden="true"></span
-            ><span>कारोबारहरू</span></a
-          >
-          <a href="party.html" class="nav-item" data-tab="parties"
-            ><span class="nav-icon ico-party" aria-hidden="true"></span
-            ><span>पार्टीहरू</span></a
-          >
-          <a href="more.html" class="nav-item" data-tab="more"
-            ><span class="nav-icon ico-more" aria-hidden="true"></span
-            ><span>अरू</span></a
-          >
-        </nav>
+        <!-- Bottom nav mount -->
+        <div id="bottom-nav"></div>
       </main>
     </div>
 
@@ -1106,18 +1087,6 @@
     </div>
 
     <script>
-      /* bottom-nav highlight (unchanged) */
-      document.querySelectorAll(".bottom-nav .nav-item").forEach((item) => {
-        item.addEventListener("click", () => {
-          document
-            .querySelectorAll(".bottom-nav .nav-item")
-            .forEach((n) => n.classList.remove("active"));
-          item.classList.add("active");
-        });
-      });
-    </script>
-
-    <script>
       /* ======= DATA + HELPERS ======= */
       const API_BASE = "http://192.168.1.209:8000/api";
       const RAW_TOKEN = localStorage.getItem("auth_token");
@@ -1147,12 +1116,7 @@
               "'": "&#39;",
             }[m])
         );
-      const nepaliNumber = (n) =>
-        new Intl.NumberFormat("ne-NP", { maximumFractionDigits: 0 }).format(
-          n || 0
-        );
-      const rupee = (n) => `रु ${nepaliNumber(n || 0)}`;
-      const fmtRs = (n) => "रु. " + Number(n || 0).toLocaleString("ne-NP");
+
       const toNpNum = (x) => String(x).replace(/\d/g, (d) => NP_DIG[d]);
       const npToAscii = (s) =>
         String(s ?? "0").replace(/[०-९]/g, (d) => String(NP_DIGITS.indexOf(d)));
@@ -1161,6 +1125,19 @@
         const n = parseFloat(npToAscii(String(v)).replace(/[^\d.-]/g, ""));
         return Number.isFinite(n) ? n : 0;
       };
+      const nepaliNumber = (n) =>
+        toNpNum(
+          Number(n || 0).toLocaleString("ne-NP", { maximumFractionDigits: 0 })
+        );
+      const rupee = (n) => `रु ${nepaliNumber(n)}`;
+      const fmtRs = (n) => "रु. " + nepaliNumber(n);
+
+      function forceNepaliDigitsIn(selectors = []) {
+        selectors.forEach((sel) => {
+          const el = document.querySelector(sel);
+          if (el) el.textContent = toNpNum(el.textContent);
+        });
+      }
 
       const AD_MONTHS_NP = [
         "जनवरी",
@@ -1183,9 +1160,7 @@
         return `${AD_MONTHS_NP[d.getMonth()]} ${toNpNum(d.getDate())}`;
       }
 
-      /* HEADER */
       function setHeaderName() {
-        // Always start with defaults; avoid stale localStorage name.
         const el = document.getElementById("userName");
         if (el) el.textContent = "प्रयोगकर्ताको नाम";
         const av = document.getElementById("avatarInitial");
@@ -1193,7 +1168,7 @@
       }
       function initialsOf(name = "") {
         const n = (name || "").trim();
-        return n ? n.charAt(0).toUpperCase() : "उ"; // single first letter
+        return n ? n.charAt(0).toUpperCase() : "उ";
       }
 
       async function loadUserHeader() {
@@ -1211,9 +1186,12 @@
           const av = document.getElementById("avatarInitial");
           if (av) av.textContent = initialsOf(name);
         } catch (e) {
-          // keep defaults on failure
+          /* keep defaults */
+        } finally {
+          document.body.classList.add("hdr-ready");
         }
       }
+
       function setGreeting() {
         const el = document.getElementById("greetSub");
         if (!el) return;
@@ -1224,8 +1202,9 @@
         else if (h < 20) g = "शुभ साँझ";
         else g = "शुभ रात्री";
         el.textContent = g;
+        document.body.classList.add("greet-ready");
       }
-      // Keep listener (harmless), but we don't read localStorage for name anymore.
+
       window.addEventListener("storage", (e) => {
         if (["user_name", "user", "profile"].includes(e.key)) {
           setHeaderName();
@@ -1233,7 +1212,6 @@
         }
       });
 
-      /* RECENT LIST */
       async function loadRecentTransactions(limit = 5) {
         const list = document.getElementById("recent-activities");
         const ctaBtn = document.getElementById("recent-cta");
@@ -1250,44 +1228,46 @@
             list.innerHTML =
               "<div class='text-muted text-center py-2'>हालैका कुनै गतिविधि छैन</div>";
             if (ctaBtn) ctaBtn.textContent = "सुरु गर्नुहोस् →";
-            return;
+          } else {
+            if (ctaBtn) ctaBtn.textContent = "थप हेर्नुहोस् →";
+            items.forEach((it) => {
+              list.insertAdjacentHTML(
+                "beforeend",
+                `<div class="card transaction-item">
+                  <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="transaction-title">${esc(
+                        it.title || "—"
+                      )}</span>
+                      <span class="transaction-date">${datePillAd(
+                        it.date
+                      )}</span>
+                    </div>
+                    <div class="row">
+                      <div class="col">
+                        <div class="label">आम्दानी</div>
+                        <div class="amount-income">${rupee(it.credit)}</div>
+                      </div>
+                      <div class="col text-end">
+                        <div class="label">खर्च</div>
+                        <div class="amount-expense">${rupee(it.debit)}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`
+              );
+            });
           }
-          if (ctaBtn) ctaBtn.textContent = "थप हेर्नुहोस् →";
-          items.forEach((it) => {
-            list.insertAdjacentHTML(
-              "beforeend",
-              `
-              <div class="card transaction-item">
-                <div class="card-body p-3">
-                  <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="transaction-title">${esc(
-                      it.title || "—"
-                    )}</span>
-                    <span class="transaction-date">${datePillAd(it.date)}</span>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <div class="label">आम्दानी</div>
-                      <div class="amount-income">${rupee(it.credit)}</div>
-                    </div>
-                    <div class="col text-end">
-                      <div class="label">खर्च</div>
-                      <div class="amount-expense">${rupee(it.debit)}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>`
-            );
-          });
         } catch (e) {
           list.innerHTML = `<div class="text-danger">लोड असफल। ${esc(
             e.message
           )}</div>`;
           if (ctaBtn) ctaBtn.textContent = "थप हेर्नुहोस् →";
+        } finally {
+          document.body.classList.add("recent-ready");
         }
       }
 
-      /* CARD TOTALS + FILTERS */
       function rangeFromFilter(filter) {
         const today = new Date(),
           end = today,
@@ -1323,6 +1303,8 @@
         } catch {
           document.getElementById("homeIncome").textContent = fmtRs(0);
           document.getElementById("homeExpense").textContent = fmtRs(0);
+        } finally {
+          document.body.classList.add("totals-ready");
         }
       }
       function setupFilterPills() {
@@ -1336,29 +1318,7 @@
           });
       }
 
-      /* Custom date filter (modal) -> cards */
-      function initDateFilter() {
-        const start = document.getElementById("dfStart");
-        const end = document.getElementById("dfEnd");
-        const today = new Date(),
-          iso = (d) => d.toISOString().slice(0, 10);
-        const s = new Date();
-        s.setDate(today.getDate() - 6);
-        start.value = iso(s);
-        end.value = iso(today);
-        document
-          .getElementById("applyDateFilter")
-          .addEventListener("click", () => {
-            if (start.value && end.value) {
-              loadCardTotals({ start_date: start.value, end_date: end.value });
-              bootstrap.Modal.getInstance(
-                document.getElementById("dateFilterModal")
-              ).hide();
-            }
-          });
-      }
-
-      /* CHART */
+      /* CHART (BS/AD helpers trimmed for brevity—same as yours) */
       const BS_MONTHS = [
         "बैशाख",
         "जेठ",
@@ -1474,13 +1434,11 @@
         const menu = document.getElementById("chartMonthMenu");
         const btn = document.getElementById("chartMonthBtn");
         if (!sel || !menu || !btn) return;
-
         const months = getLast12BsMonths();
         sel.innerHTML = months
           .map((m) => `<option value="${m.value}">${m.label}</option>`)
           .join("");
         sel.value = months[0].value;
-
         menu.innerHTML = months
           .map(
             (m) =>
@@ -1494,13 +1452,11 @@
             syncChartSelectUI();
           });
         });
-
         sel.addEventListener("change", () => {
           applyBsMonth(sel.value);
           updateChartCaptionFromSelect();
           syncChartSelectUI();
         });
-
         applyBsMonth(sel.value);
         updateChartCaptionFromSelect();
         syncChartSelectUI();
@@ -1556,6 +1512,8 @@
           updateChart(toNumber(t?.total_credit), toNumber(t?.total_debit));
         } catch {
           updateChart(0, 0);
+        } finally {
+          document.body.classList.add("chart-ready");
         }
       }
       function updateChartCaptionFromSelect() {
@@ -1566,7 +1524,7 @@
         if (cap) cap.textContent = monthOnly || "—";
       }
 
-      /* SHORTCUTS (fixed order) — staged changes, saved on "लागू" only */
+      /* SHORTCUTS (same as yours) */
       const SHORTCUTS = [
         {
           id: "owner",
@@ -1624,7 +1582,6 @@
       };
       const saveShortcuts = (ids) =>
         localStorage.setItem(SHORTCUT_KEY, JSON.stringify(ids));
-
       const sortByFixedOrder = (ids) => {
         const set = new Set(ids);
         return FIXED_ORDER.filter((id) => set.has(id)).slice(0, MAX_SHORTCUTS);
@@ -1640,8 +1597,7 @@
           if (!sc) return;
           grid.insertAdjacentHTML(
             "beforeend",
-            `
-            <div class="col-4 shortcut-item">
+            `<div class="col-4 shortcut-item">
               <a href="${sc.href}" class="shortcut-link">
                 <div class="shortcut-icon-wrapper">
                   ${
@@ -1652,15 +1608,12 @@
                 </div>
                 <span>${sc.name}</span>
               </a>
-            </div>
-          `
+            </div>`
           );
         });
       }
 
-      /* ----- staged selection inside modal ----- */
-      let stagedSet = null; // Set<string> while modal is open
-
+      let stagedSet = null;
       function renderShortcutPicker(ids) {
         const picker = document.getElementById("shortcutPicker");
         picker.innerHTML = "";
@@ -1670,23 +1623,17 @@
           const on = ids.includes(id);
           picker.insertAdjacentHTML(
             "beforeend",
-            `
-            <button type="button" class="sc-tile" data-id="${id}" aria-selected="${on}">
+            `<button type="button" class="sc-tile" data-id="${id}" aria-selected="${on}">
               <span class="minus-dot">−</span><span class="plus-dot">+</span>
-              <div class="sc-circle">
-                ${
-                  sc.img
-                    ? `<img src="shortcut/${sc.img}" alt="${sc.name}" />`
-                    : `<i class="fa-solid ${sc.icon || ""}"></i>`
-                }
-              </div>
+              <div class="sc-circle">${
+                sc.img
+                  ? `<img src="shortcut/${sc.img}" alt="${sc.name}" />`
+                  : `<i class="fa-solid ${sc.icon || ""}"></i>`
+              }</div>
               <div class="sc-name">${sc.name}</div>
-            </button>
-          `
+            </button>`
           );
         });
-
-        // Toggle only staged set; do NOT touch grid/localStorage yet
         picker.querySelectorAll(".sc-tile").forEach((btn) => {
           btn.addEventListener("click", () => {
             const id = btn.dataset.id;
@@ -1701,14 +1648,10 @@
           });
         });
       }
-
       function setupShortcuts() {
-        // initial grid from saved (normalized order)
         const savedOrdered = sortByFixedOrder(getSavedShortcuts());
         saveShortcuts(savedOrdered);
         renderShortcutGrid(savedOrdered);
-
-        // open modal -> start a staged copy
         document
           .querySelector(".edit-menu-btn")
           .addEventListener("click", (e) => {
@@ -1719,8 +1662,6 @@
               document.getElementById("shortcutModal")
             ).show();
           });
-
-        // apply/save only when "लागू" is clicked
         document
           .getElementById("saveShortcuts")
           .addEventListener("click", () => {
@@ -1732,8 +1673,6 @@
               document.getElementById("shortcutModal")
             ).hide();
           });
-
-        // discard staged changes on close without apply
         document
           .getElementById("shortcutModal")
           .addEventListener("hidden.bs.modal", () => {
@@ -1741,18 +1680,15 @@
           });
       }
 
-      /* ---- OTP success toast helpers ---- */
       function showFlashToast(
         message = "साइट सफलतापूर्वक हटाइयो",
         duration = 3500
       ) {
         const el = document.createElement("div");
         el.className = "flash-toast";
-        el.innerHTML = `
-          <div class="flash-icon"><i class="fa-solid fa-check"></i></div>
-          <div class="flash-text">${esc(message)}</div>
-          <button class="flash-close" aria-label="Close">×</button>
-        `;
+        el.innerHTML = `<div class="flash-icon"><i class="fa-solid fa-check"></i></div>
+                      <div class="flash-text">${esc(message)}</div>
+                      <button class="flash-close" aria-label="Close">×</button>`;
         document.body.appendChild(el);
         const close = () => {
           el.remove();
@@ -1763,7 +1699,7 @@
       function maybeShowOtpToast() {
         const urlFlag = new URLSearchParams(location.search).get("flash");
         const ssFlag = sessionStorage.getItem("show_otp_toast");
-        const lsMsg = localStorage.getItem("flash_msg"); // optional custom text
+        const lsMsg = localStorage.getItem("flash_msg");
         if (urlFlag === "otp_ok" || ssFlag === "1" || lsMsg) {
           const msg = lsMsg || "OTP सफलतापूर्वक प्रमाणित भयो";
           showFlashToast(msg, 3500);
@@ -1779,17 +1715,28 @@
 
       /* BOOT */
       document.addEventListener("DOMContentLoaded", () => {
-        setHeaderName(); // start with defaults
-        loadUserHeader(); // then fetch from API like “अरू” page
+        setHeaderName();
+        loadUserHeader();
         setGreeting();
         loadRecentTransactions(5);
         loadCardTotals();
         setupFilterPills();
-        initDateFilter();
         buildBsMonthDropdown();
         setupShortcuts();
         maybeShowOtpToast();
+
+        /* convert any static placeholders to Nepali digits */
+        forceNepaliDigitsIn([
+          "#homeIncome",
+          "#homeExpense",
+          "#sumIncomeTxt",
+          "#sumExpenseTxt",
+          "#sumProfitTxt",
+          "#chartYAxis",
+          "#chartCaption",
+        ]);
       });
+
       window.addEventListener("resize", () => {
         updateChart(LAST_CHART.inc, LAST_CHART.exp);
       });
@@ -1798,17 +1745,67 @@
       });
     </script>
 
+    <!-- Inject bottom nav from bottom.html -->
     <script>
-      function setNavHeightVar() {
-        const nav = document.querySelector(".bottom-nav");
-        if (!nav) return;
-        const h = Math.round(nav.getBoundingClientRect().height);
-        document.documentElement.style.setProperty("--nav-h", h + "px");
-      }
-      window.addEventListener("DOMContentLoaded", setNavHeightVar);
-      window.addEventListener("resize", setNavHeightVar);
-      window.addEventListener("orientationchange", setNavHeightVar);
-      window.addEventListener("pageshow", setNavHeightVar);
+      (function () {
+        const mount = document.getElementById("bottom-nav");
+
+        const routes = {
+          home: ["home", "index"],
+          site: ["c-site-list", "c-list-info", "new-site-list"],
+          karobar: ["karobar"],
+          party: ["party", "ownerlist"],
+          more: ["more"],
+        };
+
+        function detectPageKey() {
+          const file = (
+            location.pathname.split("/").pop() || "home.html"
+          ).toLowerCase();
+          const name = file.replace(/\.html(?:\?.*)?$/, "");
+          for (const [key, list] of Object.entries(routes)) {
+            if (list.some((n) => name.startsWith(n))) return key;
+          }
+          return "home";
+        }
+
+        function setActive(navRoot) {
+          const activeKey = detectPageKey();
+          navRoot.querySelectorAll(".nav-item").forEach((a) => {
+            a.classList.toggle("active", a.dataset.page === activeKey);
+          });
+        }
+
+        function updateNavHeightVar() {
+          const nav = document.querySelector(".bottom-nav");
+          if (!nav) return;
+          const h = Math.round(nav.getBoundingClientRect().height);
+          document.documentElement.style.setProperty("--nav-h", h + "px");
+        }
+
+        fetch("bottom.html", { cache: "no-store" })
+          .then((r) => r.text())
+          .then((html) => {
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            const nav = doc.querySelector("nav.bottom-nav");
+            if (!nav)
+              throw new Error("bottom.html: <nav.bottom-nav> not found");
+
+            // Inject only the nav (styles should live in this page or a shared CSS)
+            mount.innerHTML = "";
+            mount.appendChild(nav);
+
+            setActive(mount);
+            updateNavHeightVar();
+
+            addEventListener("resize", updateNavHeightVar);
+            addEventListener("orientationchange", updateNavHeightVar);
+            addEventListener("pageshow", updateNavHeightVar);
+          })
+          .catch((err) => {
+            console.error("Failed to load bottom.html:", err);
+          });
+      })();
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

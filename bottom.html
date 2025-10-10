@@ -1,0 +1,78 @@
+
+<html>
+
+<head>
+    <style>
+        .bottom-nav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1030;
+  min-height: 60px;
+  padding-bottom: calc(6px + env(safe-area-inset-bottom));
+  transform: translateZ(0);
+}
+.bottom-nav .nav-item {
+  padding: 6px 0;
+  text-decoration: none;
+  color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  justify-content: center;
+}
+.bottom-nav .nav-item.active {
+  color: #1ab189;
+  font-weight: 700;
+}
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  background-color: #6b7280;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  display: block;
+}
+.bottom-nav .nav-item.active .nav-icon {
+  background-color: #1ab189;
+}
+
+/* icon masks */
+.ico-home  { -webkit-mask-image: url("./home.png");  mask-image: url("./home.png"); }
+.ico-site  { -webkit-mask-image: url("./site.png");  mask-image: url("./site.png"); }
+.ico-ledger{ -webkit-mask-image: url("./income.png");mask-image: url("./income.png"); }
+.ico-party { -webkit-mask-image: url("./party.png"); mask-image: url("./party.png"); }
+.ico-more  { -webkit-mask-image: url("./more.png");  mask-image: url("./more.png"); }
+
+    </style>
+</head>
+
+
+<nav class="bottom-nav">
+    <a href="home.html" class="nav-item" data-page="home">
+      <span class="nav-icon ico-home"></span><span>होम</span>
+    </a>
+    <a href="c-site-list.html" class="nav-item" data-page="site">
+      <span class="nav-icon ico-site"></span><span>साइट</span>
+    </a>
+    <a href="karobar.html" class="nav-item" data-page="karobar">
+      <span class="nav-icon ico-ledger"></span><span>कारोबारहरू</span>
+    </a>
+    <a href="party.html" class="nav-item" data-page="party">
+      <span class="nav-icon ico-party"></span><span>पार्टीहरू</span>
+    </a>
+    <a href="more.html" class="nav-item" data-page="more">
+      <span class="nav-icon ico-more"></span><span>अरू</span>
+    </a>
+  </nav>
+  </html>

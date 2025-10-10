@@ -97,7 +97,7 @@
       .page-content::-webkit-scrollbar { width: 0; height: 0; }
 
       .total-amount-card {
-        background: #fce4e4; border: 1px solid #f5c2c7;
+        background: #fce4e4; border: 1px solid #FF4F4F99;
         border-radius: 12px; padding: 14px; text-align: center;
         box-shadow: var(--shadow-card); margin: 14px 0;
       }
@@ -115,6 +115,7 @@
       .party-phone { margin: 4px 0 0; font-size: 12px; color: #98a2b3; }
       .arrow-icon { color: #d0d5dd; font-size: 18px; margin-left: 12px; }
 
+      /* (Old local bottom nav styles kept as-is; bottom.html will be injected instead) */
       .bottom-nav {
         position: fixed; left: 0; right: 0; bottom: 0; height: var(--nav-h);
         background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-around; align-items: center;
@@ -176,14 +177,8 @@
         <div class="party-list" id="party-list"></div>
       </main>
 
-      <!-- Bottom nav -->
-      <nav class="bottom-nav">
-        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>होम</span></a>
-        <a href="c-site-list.html" class="nav-item"><i class="fa-solid fa-person-digging"></i><span>साइट</span></a>
-        <a href="karobar.html" class="nav-item"><i class="fas fa-chart-bar"></i><span>कारोबारहरु</span></a>
-        <a href="party.html" class="nav-item active"><i class="fas fa-users"></i><span>पार्टीहरु</span></a>
-        <a href="more.html" class="nav-item"><i class="fas fa-grip"></i><span>अरु</span></a>
-      </nav>
+      <!-- Bottom nav from bottom.html -->
+      <div id="bottom-nav"></div>
     </div>
 
     <script>
@@ -218,6 +213,66 @@
         };
       })();
 
+      /* Load shared bottom.html and highlight "party" tab */
+      (function () {
+        const mount = document.getElementById('bottom-nav');
+
+        const routes = {
+          'home':   ['home','index'],
+          'site':   ['c-site-list','c-list-info','new-site-list'],
+          'karobar':['karobar','site-ledger','site-finance','site-income-expense','c-site-ledger','amdani-kharcha'],
+          'party':  ['party','ownerlist'],  // <- this page
+          'more':   ['more']
+        };
+
+        function detectPageKey() {
+          const file = (location.pathname.split('/').pop() || '').toLowerCase();
+          const name = file.replace(/\.html(?:\?.*)?$/, '');
+          for (const [key, list] of Object.entries(routes)) {
+            if (list.some(n => n && name.startsWith(n))) return key;
+          }
+          return 'party'; // default for this page
+        }
+
+        function setActive(navRoot) {
+          const activeKey = detectPageKey();
+          navRoot.querySelectorAll('.nav-item').forEach(a => {
+            a.classList.toggle('active', a.dataset.page === activeKey);
+          });
+        }
+
+        function updateNavHeightVar() {
+          const nav = document.querySelector('.bottom-nav');
+          if (!nav) return;
+          const h = Math.round(nav.getBoundingClientRect().height);
+          document.documentElement.style.setProperty('--nav-h', h + 'px');
+        }
+
+        fetch('bottom.html', { cache: 'no-store' })
+          .then(r => r.text())
+          .then(html => {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const nav = doc.querySelector('nav.bottom-nav');
+            if (!nav) throw new Error('bottom.html: <nav.bottom-nav> not found');
+
+            const styleEl = doc.querySelector('style'); // optional
+
+            mount.innerHTML = '';
+            if (styleEl) mount.appendChild(styleEl);
+            mount.appendChild(nav);
+
+            setActive(mount);
+            updateNavHeightVar();
+
+            addEventListener('resize', updateNavHeightVar);
+            addEventListener('orientationchange', updateNavHeightVar);
+            addEventListener('pageshow', updateNavHeightVar);
+          })
+          .catch(err => {
+            console.error('Failed to load bottom.html:', err);
+          });
+      })();
+
       /* Flash toast helpers */
       function showFlashToast(message, ms = 2500) {
         const el = document.createElement("div");
@@ -250,6 +305,12 @@
         RAW_TOKEN && RAW_TOKEN.indexOf("|") > -1
           ? RAW_TOKEN.split("|")[1]
           : RAW_TOKEN;
+
+      /* ---- Nepali digit helper (global) ---- */
+      const NP_DIGITS = ["०","१","२","३","४","५","६","७","८","९"];
+      function toNepaliDigits(numLike) {
+        return String(numLike).replace(/\d/g, d => NP_DIGITS[d]);
+      }
 
       function extractParties(result) {
         if (Object.prototype.toString.call(result) === "[object Array]") return result;
@@ -301,17 +362,15 @@
           card.innerHTML =
             "<div>" +
             '<p class="party-name">' + (p.name || p.title || "पार्टी") + "</p>" +
-            '<p class="party-phone">' + (p.phone_no ? p.phone_no : "") + "</p>" +   // ← EXACT as API
+            '<p class="party-phone">' + (p.phone_no ? p.phone_no : "") + "</p>" +
             "</div>" +
             '<i class="fas fa-chevron-right arrow-icon"></i>';
 
           (function (id, phone) {
             card.addEventListener("click", function () {
               try {
-                // cache EXACT display (no conversion)
                 localStorage.setItem("party_phone_display_" + id, phone || "");
-              } catch (e) { /* ignore quota */ }
-              // also pass via query to guarantee exact display on first open
+              } catch (e) {}
               const url = "partyinfo.html?party_id=" + encodeURIComponent(id) +
                           "&phone_display=" + encodeURIComponent(phone || "") +
                           "&v=" + Date.now();
@@ -322,8 +381,9 @@
           list.appendChild(card);
         }
 
+        // Show total with guaranteed Nepali digits
         document.getElementById("total-amount").textContent =
-          "रु " + (total || 0).toLocaleString("ne-NP");
+          "रु " + toNepaliDigits((total || 0).toLocaleString("en-IN"));
       }
 
       function goBack() {
@@ -347,8 +407,9 @@
             var metaGrand =
               result && result.meta ? result.meta.overall_total_amount : undefined;
             if (typeof metaGrand === "number" && !isNaN(metaGrand)) {
+              // Force Nepali digits
               document.getElementById("total-amount").textContent =
-                "रु " + metaGrand.toLocaleString("ne-NP");
+                "रु " + toNepaliDigits(metaGrand.toLocaleString("en-IN"));
               return;
             }
 
@@ -364,8 +425,9 @@
                 var siteSum = 0;
                 for (var j = 0; j < rows.length; j++) siteSum += number(rows[j].amount);
                 var grand = partySum + siteSum;
+                // Force Nepali digits
                 document.getElementById("total-amount").textContent =
-                  "रु " + grand.toLocaleString("ne-NP");
+                  "रु " + toNepaliDigits(grand.toLocaleString("en-IN"));
               })
               .catch(function () { /* ignore site-resources error */ });
           })

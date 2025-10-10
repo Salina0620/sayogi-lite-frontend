@@ -200,24 +200,8 @@
 
     </main>
 
-    <!-- BOTTOM NAV -->
-    <nav class="bottom-nav">
-      <a href="home.html" class="nav-item">
-        <i class="bi bi-house"></i><span>होम</span>
-      </a>
-      <a href="c-site-list.html" class="nav-item">
-        <i class="bi bi-bricks"></i><span>साइट</span>
-      </a>
-      <a href="karobar.html" class="nav-item">
-        <i class="bi bi-graph-up"></i><span>कारोबारहरू</span>
-      </a>
-      <a href="party.html" class="nav-item">
-        <i class="bi bi-people"></i><span>पार्टीहरू</span>
-      </a>
-      <a href="#" class="nav-item active">
-        <i class="bi bi-grid-3x3-gap"></i><span>अरू</span>
-      </a>
-    </nav>
+    <!-- BOTTOM NAV from bottom.html -->
+    <div id="bottom-nav"></div>
   </div>
 
   <!-- ✅ Logout Modal (Bootstrap) -->
@@ -242,6 +226,68 @@
     </div>
   </div>
 
+  <!-- Load shared bottom.html + set active tab = "more" -->
+  <script>
+    (function () {
+      const mount = document.getElementById('bottom-nav');
+
+      const routes = {
+        'home':   ['home','index'],
+        'site':   ['c-site-list','c-list-info','new-site-list'],
+        'karobar':['karobar','site-ledger','site-finance','site-income-expense','c-site-ledger','amdani-kharcha'],
+        'party':  ['party','ownerlist'],
+        'more':   ['more','settings','reports','trash-history','profile'] // this page -> "more"
+      };
+
+      function detectPageKey() {
+        const file = (location.pathname.split('/').pop() || '').toLowerCase();
+        const name = file.replace(/\.html(?:\?.*)?$/, '');
+        for (const [key, list] of Object.entries(routes)) {
+          if (list.some(n => n && name.startsWith(n))) return key;
+        }
+        return 'more';
+      }
+
+      function setActive(navRoot) {
+        const activeKey = detectPageKey();
+        navRoot.querySelectorAll('.nav-item').forEach(a => {
+          a.classList.toggle('active', a.dataset.page === activeKey);
+        });
+      }
+
+      function updateNavHeightVar() {
+        const nav = document.querySelector('.bottom-nav');
+        if (!nav) return;
+        const h = Math.round(nav.getBoundingClientRect().height);
+        document.documentElement.style.setProperty('--nav-h', h + 'px');
+      }
+
+      fetch('bottom.html', { cache: 'no-store' })
+        .then(r => r.text())
+        .then(html => {
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const nav = doc.querySelector('nav.bottom-nav');
+          if (!nav) throw new Error('bottom.html: <nav.bottom-nav> not found');
+
+          const styleEl = doc.querySelector('style'); // optional
+
+          mount.innerHTML = '';
+          if (styleEl) mount.appendChild(styleEl);
+          mount.appendChild(nav);
+
+          setActive(mount);
+          updateNavHeightVar();
+
+          addEventListener('resize', updateNavHeightVar);
+          addEventListener('orientationchange', updateNavHeightVar);
+          addEventListener('pageshow', updateNavHeightVar);
+        })
+        .catch(err => {
+          console.error('Failed to load bottom.html:', err);
+        });
+    })();
+  </script>
+
   <script>
     const API_BASE = "http://192.168.1.209:8000/api";
     const RAW_TOKEN = localStorage.getItem("auth_token");
@@ -250,22 +296,71 @@
     const AUTH_HEADERS = { Authorization: `Bearer ${TOKEN}`, Accept: "application/json" };
 
     function initialsOf(name="") {
-      const p = name.trim().split(/\s+/);
+      const p = name.trim().split(/\स+/);
+      if (!p[0]) return "U";
       if (p.length === 1) return p[0].charAt(0).toUpperCase();
       return (p[0].charAt(0) + p[p.length-1].charAt(0)).toUpperCase();
     }
 
-    async function loadUser(){
+    const nameEl = document.getElementById("userName");
+    const avatarEl = document.getElementById("avatar");
+
+    // --- Instant UI update helpers ---
+    function updateDisplayName(name){
+      const safe = (name && String(name).trim()) || "प्रयोगकर्ता नाम";
+      nameEl.textContent = safe;
+      avatarEl.textContent = initialsOf(safe);
+    }
+
+    function readNameFromLocal(){
+      // prefer user_name; fall back to user.name
+      let name = localStorage.getItem("user_name") || "";
+      if (!name) {
+        try {
+          const u = JSON.parse(localStorage.getItem("user") || "{}");
+          name = (u && u.name) || "";
+        } catch {}
+      }
+      if (name) updateDisplayName(name);
+    }
+
+    async function fetchNameFromAPI(){
       try{
         const res = await fetch(`${API_BASE}/user`, { headers: AUTH_HEADERS });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) throw new Error("user fetch failed");
         const user = await res.json();
-        document.getElementById("userName").textContent = user?.name || "प्रयोगकर्ता नाम";
-        document.getElementById("avatar").textContent   = initialsOf(user?.name || "U");
+        const name = user?.name || user?.user?.name || "";
+        if (name) {
+          updateDisplayName(name);
+          // keep local cache aligned for future pages
+          localStorage.setItem("user_name", name);
+          try {
+            const u = JSON.parse(localStorage.getItem("user") || "{}");
+            if (u && typeof u === "object") {
+              u.name = name;
+              localStorage.setItem("user", JSON.stringify(u));
+            }
+          } catch {}
+        }
       }catch(e){
         console.warn("user fetch failed", e);
       }
     }
+
+    // --- Live sync: update immediately when profile page changes localStorage ---
+    window.addEventListener("storage", (e)=>{
+      if (e.key === "user_name" || e.key === "user") {
+        readNameFromLocal();
+      }
+    });
+    // Also refresh name when returning to this tab/page
+    window.addEventListener("focus", readNameFromLocal);
+    document.addEventListener("visibilitychange", ()=>{ if (!document.hidden) readNameFromLocal(); });
+    window.addEventListener("pageshow", readNameFromLocal);
+
+    // Boot: show quickly from local cache, then confirm with API
+    readNameFromLocal();
+    fetchNameFromAPI();
 
     // Share
     document.getElementById("btnShare").addEventListener("click", async (e) => {
@@ -287,7 +382,7 @@
       window.location.href = "https://play.google.com/store/apps/details?id=com.yourapp";
     });
 
-    // ✅ Logout handler (opens via data attributes; this only handles API + redirect)
+    // ✅ Logout handler
     async function doLogout(){
       const btn = document.getElementById("confirmLogout");
       const spn = btn.querySelector(".spinner-border");
@@ -295,7 +390,7 @@
       try{
         await fetch(`${API_BASE}/logout`, { method:"POST", headers: AUTH_HEADERS });
       }catch(e){
-        // ignore network/API errors — still clear token locally
+        // ignore errors
       }
       localStorage.removeItem("auth_token");
       window.location.href = "login.html";
@@ -308,11 +403,9 @@
       const spn = btn.querySelector(".spinner-border");
       btn.disabled = false; spn.classList.add("d-none");
     });
-
-    document.addEventListener("DOMContentLoaded", loadUser);
   </script>
 
-  <!-- Icons + Bootstrap JS (keep after your script; data API works at click time) -->
+  <!-- Icons + Bootstrap JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
